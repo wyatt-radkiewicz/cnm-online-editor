@@ -1,0 +1,112 @@
+MODE MUSIC
+0 music/super_city.mid1 music/shop.mid2 music/title.mid3 music/Desert.mid4 music/Lava.mid5 music/deephaus.mid6 music/beastchurger.mid7 music/Boss.mid10 music/deep_ocean.mid11 music/dropper.mid12 music/tteddy.mid13 music/train.mid14 music/casimoe.mid15 music/easter_island.mid16 music/arena.mid17 music/ice.midMODE SOUNDS
+0 sounds/gun.wav1 sounds/hurt.wav2 sounds/knife.wav3 sounds/eat.wav4 sounds/drink.wav5 sounds/money.wav6 sounds/explosion.wav7 sounds/rocket.wav8 sounds/laser.wav9 sounds/magic.wav10 sounds/minigun.wav11 sounds/sniper.wav12 sounds/checkpoint.wav13 sounds/bandit.wav14 sounds/electricity.wav15 sounds/heavy.wav16 sounds/fireball.wav17 sounds/chainsaw.wav18 sounds/slime.wav19 sounds/bozo.wav20 sounds/lava_monster.wav21 sounds/scream.wav22 sounds/slime_walker.wav23 sounds/swoosh.wav24 sounds/stomp.wav25 sounds/boots.wav26 sounds/swim.wav27 sounds/dragon.wav28 sounds/breath.wav29 sounds/spider.wav30 sounds/lockon.wav31 sounds/web.wav32 sounds/break.wav33 sounds/bounce.wav34 sounds/spikes.wav35 sounds/unlock.wav36 sounds/bigrock.wav37 sounds/smallrock1.wav38 sounds/smallrock2.wav39 sounds/rocksmash.wav40 sounds/bow.wav41 sounds/splash.wav42 sounds/vortex_fail.wav43 sounds/menu_blip.wav44 sounds/menu_blip2.wav45 sounds/enemy_hurt1.wav46 sounds/teleport.wav47 sounds/death.wav48 sounds/gib.wav49 sounds/wind.wav50 sounds/howl.wavMODE MUSIC_VOLUME_OVERRIDE
+MODE LEVELSELECT_ORDER
+legacy_city _lavaland _CASIMOE _tt _AC _ocean _ice _ei _kumo _deephaus _train _sc _tut _MODE MAXPOWER0
+spd 2jmp 2grav 1hpcost 1strength 2ability 1MODE MAXPOWER1
+spd 2jmp 2grav 1hpcost 1strength 2ability 1MODE MAXPOWER2
+spd 2jmp 1.4grav 0.8hpcost 1strength 2ability 2MODE MAXPOWER3
+spd 3jmp 3grav 1hpcost 1strength 3ability 1MODE MAXPOWER4
+spd 4jmp 1grav 1hpcost 1strength 2ability 4MODE MAXPOWER5
+spd 1.9jmp 1.4grav 0.8hpcost 1strength 2ability 3MODE MAXPOWER6
+spd 1.4jmp 3grav 1hpcost 1strength 2.5ability 1MODE MAXPOWER7
+spd 1.75jmp 2grav 1hpcost 1strength 3.5ability 3MODE MAXPOWER8
+spd 2jmp 2grav 1hpcost 1strength 2ability 4MODE MAXPOWER9
+spd 2jmp 2grav 1hpcost 1strength 2ability 1MODE LUA_AUTORUN
+SetWobjTypeFrame(NormalID(0), 0, 160, 736, 32, 32)
+SetWobjTypeFrame(NormalID(1), 0, 96, 288, 32, 32)
+
+function LUA_CREATE0(w)
+	SetFloat(w, 0, 1)
+	SetHitbox(w, 0, 0, 32, 32)
+	SetSpeed(w, 4.5)
+	SetHealth(w, 10)
+	SetFlag(w, flag_solid, 1)
+	SetFlag(w, flag_movestand, 1)
+	SetInt(w, 0, 0)
+	SetMoney(w, 0)
+	SetItem(w, 0)
+end
+
+function LUA_UPDATE0(w)
+	PhysicsBegin(w)
+	if GetInt(w, 0) == 0 then
+		SetVelX(w, GetFloat(w, 0)*GetSpeed(w))
+		if IsCollidingWithBlocks(w, GetVelX(w)*4, 0) then
+			SetFloat(w, 0, GetFloat(w, 0)*-1)
+		end
+		if RandInt(50) == 25 and IsGrounded(w) then
+			SetVelY(w, -10)
+		end
+		cp = GetClosestPlayer(w)
+		if Exists(IsCollidingWithType(w, wobj_player, 0, -3, GetSpeed(w)*2, 0)) then
+			SetInt(w, 0, 1)
+			SetLinkNode(w, GetNode(cp))
+			SetLinkUUID(w, GetUUID(cp))
+			SetVelX(w, 0)
+			SetVelY(w, 0)
+			SetMoney(w, GetItem(cp))
+			SetItem(w, GetItem(cp))
+			CreateWobj(wobj_dropped_item, GetX(w), GetY(w)-32, item_unbound_wand, 0)
+		end
+	else
+		other = GetLinkWobj(w)
+		if DistanceToWobj(w, other) > 64 or GetY(other)+16 > GetY(w) or GetHealth(w) < 1 then
+			SetInt(w, 0, 0)
+			return
+		end
+
+		SetVelX(w, 0)
+		if GetVelX(other) < 0 then
+			SetVelX(w, -GetSpeed(w))
+			GetFloat(w, -1)
+		end
+		if GetVelX(other) > 0 then
+			SetVelX(w, GetSpeed(w))
+			GetFloat(w, 1)
+		end
+		if GetVelY(other) < 0 and IsGrounded(w) then
+			SetVelY(w, -10)
+		end
+		if GetMoney(w) ~= GetItem(w) and GetItem(w) == item_none then
+			CreateWobj(wobj_lua1, GetX(w), GetY(w), 0, GetFlag(w, flag_flip_x) and -1 or 1)
+		end
+		if GetItem(w) ~= item_unbound_wand and GetItem(w) ~= item_none then
+			SetInt(w, 0, 0)
+			return
+		end
+		if GetFrame() % 5 == 0 then
+			SetVelX(other, 0)
+			SetVelY(other, 0)
+			SetX(other, GetX(w))
+			SetY(other, GetY(w)-24)
+		end
+		SetMoney(w, GetItem(w))
+		SetItem(w, GetItem(other))
+	end
+	if GetVelX(w) < -0.1 then
+		SetFlag(w, flag_flip_x, true)
+	end
+	if GetVelX(w) > 0.1 then
+		SetFlag(w, flag_flip_x, false)
+	end
+	ApplyGravity(w)
+	ApplyWindForces(w)
+	PhysicsEnd(w)
+end
+function LUA_CREATE1(w)
+	SetHitbox(w, 0, 0, 32, 32)
+	SetSpeed(w, 7)
+	SetStrength(w, 4)
+	SetFlag(w, flag_player_weapon, 1)
+	SetInt(w, 0, 15)
+end
+function LUA_UPDATE1(w)
+	SetX(w, GetX(w)+GetSpeed(w)*GetFloat(w, 0))
+	SetInt(w, 0, GetInt(w, 0)-1)
+	if GetInt(w, 0) < 0 then
+		DestroyWobj(w)
+	end
+	ApplyPlayerWeaponDamage(w)
+end
+__ENDLUA__
