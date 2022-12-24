@@ -1,5 +1,5 @@
 # CNM Online Editor
-!(title.png)
+!(/title.png)
 An editor for the game CNM Online.
 
 Currently, all I have is a library set up that can decompile cnmb/cnms files into .json format and back into those cnmb/cnms files. I plan on making a GUI level editor with many more quality of life features than the original game though.
