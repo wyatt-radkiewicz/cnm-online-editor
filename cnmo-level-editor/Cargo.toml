@@ -1,5 +1,5 @@
 [package]
-name = "cnmo-level-editor"
+name = "cnmo_level_editor"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,3 +9,5 @@ edition = "2021"
 cnmo-parse = { path = "../cnmo-parse", features = ["level_data", "serde"] }
 serde_json = "1.0.91"
 anyhow = "1.0.68"
+eframe = "0.20.1"
+rfd = "0.10.0"

@@ -99,7 +99,7 @@ impl VersionSpecs {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, num_derive::FromPrimitive, num_derive::ToPrimitive)]
+#[derive(Debug, PartialEq, Eq, num_derive::FromPrimitive, num_derive::ToPrimitive)]
 pub enum DifficultyRating {
     Tutorial,
     ReallyEasy,
@@ -120,6 +120,21 @@ impl DifficultyRating {
 
     pub fn get_difficulty_id(&self) -> u8 {
         num_traits::ToPrimitive::to_u8(self).unwrap_or(3)
+    }
+
+    pub fn to_string_pretty(&self) -> String {
+        match self {
+            &Self::Tutorial => "Tutorial".to_string(),
+            &Self::ReallyEasy => "Really Easy".to_string(),
+            &Self::Easy => "Easy".to_string(),
+            &Self::Normal => "Normal".to_string(),
+            &Self::KindaHard => "Kinda Hard".to_string(),
+            &Self::Hard => "Hard".to_string(),
+            &Self::Ultra => "Ultra!".to_string(),
+            &Self::Extreme => "Extreme!".to_string(),
+            &Self::Dealth => "Death!!!".to_string(),
+            &Self::UltraDeath => "ULTRA DEATH!".to_string(),
+        }
     }
 }
 
