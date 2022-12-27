@@ -9,5 +9,9 @@ edition = "2021"
 cnmo-parse = { path = "../cnmo-parse", features = ["level_data", "serde"] }
 serde_json = "1.0.91"
 anyhow = "1.0.68"
-eframe = "0.20.1"
+eframe = { version = "0.20.1", features = ["wgpu"] }
 rfd = "0.10.0"
+log = { version = "0.4.17", features = ["std"] }
+image = "0.24.5"
+cgmath = "0.18.0"
+bytemuck = "1.12.3"

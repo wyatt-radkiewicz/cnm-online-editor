@@ -346,6 +346,9 @@ impl WobjType {
                     None => ItemType::Apple,
                 },
             }),
+            14 => Ok(Self::DroppedItem { item: ItemType::Knife }),
+            15 => Ok(Self::DroppedItem { item: ItemType::Apple }),
+            4 => Ok(Self::DroppedItem { item: ItemType::Shotgun }),
             51 | 52 | 53 => Ok(Self::TtNode {
                 node_type: match wobj_type_id {
                     51 => TtNodeType::ChaseTrigger,
