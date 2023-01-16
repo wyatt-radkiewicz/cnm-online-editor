@@ -9,7 +9,7 @@ pub struct GfxCommonResources {
 }
 
 impl GfxCommonResources {
-    pub fn insert_resource<P: AsRef<std::path::Path>>(cc: &eframe::CreationContext, gfx_path: P) {
+    pub fn insert_resource<P: AsRef<std::path::Path>>(cc: &eframe::CreationContext, gfx_path: P) -> (Vec<[u8; 3]>, (u32, u32), Vec<Vec<bool>>) {
         let wgpu_render_state = cc.wgpu_render_state.as_ref().expect("Need a WGPU render state for app to function!");
         let device = &wgpu_render_state.device;
         let queue = &wgpu_render_state.queue;
@@ -61,6 +61,9 @@ impl GfxCommonResources {
             }]
         });
 
+        let palette = texture.palette.clone();
+        let dimensions = texture.dimensions.clone();
+
         if paint_callback_resources.contains::<GfxCommonResources>() {
             let resource = paint_callback_resources.get_mut::<GfxCommonResources>().unwrap();
             resource.texture_bind_group = texture_bind_group;
@@ -72,5 +75,19 @@ impl GfxCommonResources {
                 texture,
             });
         }
+
+        let image = image::load_from_memory(&std::fs::read("gfx.bmp").unwrap()).unwrap();
+        let rgba = image.to_rgba8();
+        let (width, height) = rgba.dimensions();
+        let mut opaques = (0..width).map(|_| { (0..height).map(|_| { true }).collect::<Vec<bool>>() }).collect::<Vec<Vec<bool>>>();
+
+        for y in 0..height {
+            for x in 0..width {
+                let rgba = rgba.get_pixel(x, y).0;
+                opaques[x as usize][y as usize] = rgba[0] == 0 && rgba[1] == 255 && rgba[2] == 255 && rgba[3] == 255;
+            }
+        }
+
+        (palette, dimensions, opaques)
     }
 }

@@ -234,6 +234,7 @@ pub enum WobjType {
     DisapearingPlatform {
         time_on: f32,
         time_off: f32,
+        starts_on: bool,
     },
     KamakaziSlime,
     SpringBoard {
@@ -409,8 +410,9 @@ impl WobjType {
                 speed: custom_float,
             }),
             83 => Ok(Self::DisapearingPlatform {
-                time_on: (custom_int / FRAME_RATE) as f32,
+                time_on: ((custom_int / FRAME_RATE) as f32).abs(),
                 time_off: custom_float / FRAME_RATE as f32,
+                starts_on: custom_int >= 0,
             }),
             86 => Ok(Self::SpringBoard { jump_velocity: custom_float }),
             92 => Ok(Self::BreakablePlatform { time_till_fall: custom_int as f32 / FRAME_RATE as f32 }),
@@ -440,11 +442,11 @@ impl WobjType {
                 consume_key: custom_int != 0,
             }),
             105 => Ok(Self::Vortex { attract_enemies: custom_int != 0 }),
-            19 | 20 | 21 | 22 => Ok(Self::WandRune {
+            19 | 20 | 21 | 22 | 23 => Ok(Self::WandRune {
                 rune_type: match wobj_type_id {
                     19 => RuneType::Ice,
                     20 => RuneType::Air,
-                    21 => RuneType::Fire,
+                    21 | 23 => RuneType::Fire,
                     22 => RuneType::Lightning,
                     _ => panic!("Unknown wand rune type!"),
                 },
@@ -640,8 +642,8 @@ impl WobjType {
             &Self::MovingPlatform { vertical, dist, speed } => {
                 (if vertical { 82 } else { 10 }, (dist / speed) as i32, speed)
             },
-            &Self::DisapearingPlatform { time_on, time_off } => {
-                (83, (time_on * FRAME_RATE as f32) as i32, time_off * FRAME_RATE as f32)
+            &Self::DisapearingPlatform { time_on, time_off, starts_on } => {
+                (83, (time_on * FRAME_RATE as f32) as i32 * if starts_on { -1 } else { 1 }, time_off * FRAME_RATE as f32)
             },
             &Self::SpringBoard { jump_velocity } => {
                 (86, 0, jump_velocity)

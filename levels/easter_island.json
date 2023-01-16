@@ -1,0 +1,3578 @@
+{
+  "version": {
+    "version": 1,
+    "num_teleports": 512,
+    "num_spawns": 128,
+    "num_spawn_modes": 3,
+    "teleport_name_size": 41,
+    "max_tile_frames": 32,
+    "ending_text_lines": 48,
+    "ending_text_line_len": 32,
+    "background_layers": 32,
+    "title_ending_text_line": 47,
+    "preview_tile_index": 256
+  },
+  "spawners": [
+    {
+      "pos": [
+        2356.0,
+        108.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2416.0,
+        112.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2472.0,
+        112.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2384.0,
+        140.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2500.0,
+        136.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2848.0,
+        32.0
+      ],
+      "type_data": {
+        "TextSpawner": {
+          "dialoge_box": true,
+          "text": "I SEE A STONE\nUP AHEAD HERE\n"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1168.0,
+        816.0
+      ],
+      "type_data": "SilverSlime",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1964.0,
+        180.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HeavyHammer"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2440.0,
+        136.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyRed"
+    },
+    {
+      "pos": [
+        2736.0,
+        436.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2768.0,
+        436.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3104.0,
+        324.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2960.0,
+        324.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2924.0,
+        1164.0
+      ],
+      "type_data": {
+        "Slime": {
+          "flying": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2200.0,
+        704.0
+      ],
+      "type_data": {
+        "Slime": {
+          "flying": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2556.0,
+        588.0
+      ],
+      "type_data": {
+        "Slime": {
+          "flying": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2712.0,
+        576.0
+      ],
+      "type_data": {
+        "Heavy": {
+          "speed": 3.0,
+          "face_left": false
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2892.0,
+        864.0
+      ],
+      "type_data": {
+        "Heavy": {
+          "speed": 3.0,
+          "face_left": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2736.0,
+        864.0
+      ],
+      "type_data": {
+        "Heavy": {
+          "speed": 0.5,
+          "face_left": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3208.0,
+        936.0
+      ],
+      "type_data": "SpikeGuy",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3024.0,
+        1212.0
+      ],
+      "type_data": "SpikeGuy",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2988.0,
+        960.0
+      ],
+      "type_data": {
+        "SpiderWalker": {
+          "speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2912.0,
+        960.0
+      ],
+      "type_data": {
+        "SpiderWalker": {
+          "speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2624.0,
+        1088.0
+      ],
+      "type_data": {
+        "SpiderWalker": {
+          "speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2216.0,
+        960.0
+      ],
+      "type_data": "RockGuySlider",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2064.0,
+        868.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1924.0,
+        828.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1892.0,
+        828.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1836.0,
+        812.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1648.0,
+        884.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1620.0,
+        884.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1540.0,
+        884.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1588.0,
+        884.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1396.0,
+        544.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 6.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1440.0,
+        544.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 5.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1488.0,
+        544.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1536.0,
+        544.0
+      ],
+      "type_data": {
+        "EaterBug": {
+          "pop_up_speed": 3.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1824.0,
+        440.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1792.0,
+        440.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1760.0,
+        436.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1480.0,
+        408.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1512.0,
+        408.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1544.0,
+        408.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1540.0,
+        440.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1512.0,
+        440.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1484.0,
+        440.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1316.0,
+        324.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1120.0,
+        444.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1072.0,
+        444.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1040.0,
+        444.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        484.0,
+        428.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": {
+            "Small2": {
+              "face_left": false
+            }
+          }
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        444.0,
+        428.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": {
+            "Small2": {
+              "face_left": false
+            }
+          }
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        52.0,
+        712.0
+      ],
+      "type_data": "PlayerSpawn",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        16.0,
+        744.0
+      ],
+      "type_data": {
+        "BackgroundSwitcher": {
+          "shape": "Horizontal",
+          "enabled_layers": {
+            "start": 0,
+            "end": 31
+          }
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        72.0,
+        684.0
+      ],
+      "type_data": {
+        "TunesTrigger": {
+          "size": "VeryBig",
+          "music_id": 15
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        176.0,
+        668.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Shotgun"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        392.0,
+        720.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": {
+            "Small2": {
+              "face_left": false
+            }
+          }
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        848.0,
+        672.0
+      ],
+      "type_data": "SpikeGuy",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        960.0,
+        928.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Sniper"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        992.0,
+        928.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "KeyRed"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1056.0,
+        512.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        64.0,
+        316.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "PlayerCountBased",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        96.0,
+        316.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "SpeedPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "PlayerCountBased",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        96.0,
+        284.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "SpeedPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "PlayerCountBased",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3200.0,
+        1056.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3200.0,
+        1056.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3200.0,
+        1056.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2976.0,
+        696.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2848.0,
+        224.0
+      ],
+      "type_data": {
+        "MovingFire": {
+          "vertical": false,
+          "dist": 160,
+          "speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3104.0,
+        224.0
+      ],
+      "type_data": {
+        "MovingFire": {
+          "vertical": false,
+          "dist": 160,
+          "speed": 4.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3328.0,
+        960.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Green",
+          "consume_key": false
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        1996.0,
+        60.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "KeyGreen"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3368.0,
+        960.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Sniper"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3620.0,
+        1048.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3840.0,
+        1048.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4020.0,
+        1048.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Medium"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4240.0,
+        616.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4264.0,
+        600.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4256.0,
+        588.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4232.0,
+        604.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4212.0,
+        624.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4232.0,
+        648.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4228.0,
+        660.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4204.0,
+        648.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4196.0,
+        624.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4064.0,
+        768.0
+      ],
+      "type_data": {
+        "BreakableWall": {
+          "skin_id": null,
+          "health": 10.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4064.0,
+        800.0
+      ],
+      "type_data": {
+        "BreakableWall": {
+          "skin_id": null,
+          "health": 10.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4416.0,
+        576.0
+      ],
+      "type_data": {
+        "BreakableWall": {
+          "skin_id": null,
+          "health": 10.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4416.0,
+        608.0
+      ],
+      "type_data": {
+        "BreakableWall": {
+          "skin_id": null,
+          "health": 10.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4352.0,
+        960.0
+      ],
+      "type_data": "RockGuySlider",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4224.0,
+        960.0
+      ],
+      "type_data": {
+        "BreakableWall": {
+          "skin_id": null,
+          "health": 1000000.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4688.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4660.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4620.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4552.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4508.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4580.0,
+        732.0
+      ],
+      "type_data": {
+        "RockGuy": {
+          "rock_guy_type": "Small1"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        5212.0,
+        448.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyRed"
+    },
+    {
+      "pos": [
+        5344.0,
+        544.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4816.0,
+        416.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HealthPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4816.0,
+        416.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HealthPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4816.0,
+        416.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HealthPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4816.0,
+        416.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HealthPotion"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        5164.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5312.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5440.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5572.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5708.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5824.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5936.0,
+        896.0
+      ],
+      "type_data": "RockGuySmasher",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5728.0,
+        960.0
+      ],
+      "type_data": "RockGuySlider",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        5388.0,
+        960.0
+      ],
+      "type_data": "RockGuySlider",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        4944.0,
+        960.0
+      ],
+      "type_data": "RockGuySlider",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": "KeyBlue"
+    },
+    {
+      "pos": [
+        4896.0,
+        832.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "HeavyHammer"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4944.0,
+        832.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Awp"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4992.0,
+        832.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "RocketLauncher"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6240.0,
+        832.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Blue",
+          "consume_key": false
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6580.0,
+        812.0
+      ],
+      "type_data": {
+        "UpgradeTrigger": {
+          "trigger_type": "CrystalWings"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6580.0,
+        692.0
+      ],
+      "type_data": {
+        "UpgradeTrigger": {
+          "trigger_type": "Vortex"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        3408.0,
+        960.0
+      ],
+      "type_data": "Checkpoint",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        4864.0,
+        832.0
+      ],
+      "type_data": "Checkpoint",
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6548.0,
+        832.0
+      ],
+      "type_data": {
+        "SpringBoard": {
+          "jump_velocity": 0.0
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6472.0,
+        788.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Flamethrower"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6472.0,
+        748.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Minigun"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6472.0,
+        704.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "RocketLauncher"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6512.0,
+        676.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "LaserRifle"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6552.0,
+        676.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "GoldenShotgun"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6524.0,
+        732.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "LightningWand"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6516.0,
+        788.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "FissionGun"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        6580.0,
+        752.0
+      ],
+      "type_data": {
+        "DroppedItem": {
+          "item": "Cake"
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 1
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2080.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2072.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2064.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2056.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2048.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        2040.0,
+        192.0
+      ],
+      "type_data": {
+        "LockedBlock": {
+          "color": "Red",
+          "consume_key": true
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiplayerOnly",
+        "max_spawns": 0
+      },
+      "dropped_item": null
+    }
+  ],
+  "cells": "AAAA0QAAACoAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYABQMABgAFAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAFAwAAAAUDAAAABQMABgAAAwAGAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAADAAAABAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAABQMABgAAAwAGAAADAAYAAAMABgAFAwAGAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAUDAAYAAAMAAAAFAwAAAAUDAAYABQMABgAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAQDAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAMDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAMDAAAAAwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAMDAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAADAwAAAAMDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAIAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAADAwAAAAADAAAACAMAAAAAAwAAAAADAAAACAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAwMAAAADAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABwMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAAAAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAUDAAYABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAcDAAAAAAMAAAAAAwAAAAADAAYACAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAIAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAIAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAgDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAFAwAGAAADAAYAAAMABgAHAwAAAAADAAAAAAMAAAAAAwAGAAcDAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAwMAAAADAwAAAAADAAAAAwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAABAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAAAwAAAAADAAAAAAMABgAHAwAGAAADAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAMDAAAAAAMAAAAAAwAAAAMDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAFAwAGAAUDAAYABQMABgAFAwAGAAUDAAYABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAgDAAYAAAMABgAAAwAGAAADAAAAAAMAAAAAAwAAAAADAAYABwMABgAAAwAGAAADAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMABgAIAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAEDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAAAAUDAAAABQMABgAAAwAGAAgDAAYAAAMABgAAAwAGAAgDAAAAAAMAAAAAAwAAAAADAAAAAQMAAAABAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAHAwAGAAADAAYAAAMABgAAAwAAAAADAAAAAAMAAAAAAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAGAAADAAYABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYABQMAAAAFAwAAAAUDAAYAAAMABgAHAwAGAAADAAYAAAMABgAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAUDAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABwMABgAAAwAGAAADAAYAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAYAAAMABgAAAwAGAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAQMAAAABAwAAAAEDAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMABgAAAwAGAAADAAYAAAMAAAAFAwAAAAUDAAAABQMAAAAFAwAGAAADAAYABwMABgAAAwAGAAADAAYABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAACAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAABQMAAAAFAwAAAAUDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMABgAAAwAGAAADAAYAAAMABgAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAABAwAAAAADAAAAAAMAAAAAAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAUDAAAABQMAAAAFAwAAAAUDAAYABQMABgAAAwAGAAcDAAYAAAMABgAAAwAGAAUDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAEAwAGAAADAAYAAAMABgAAAwAGAAADAAYABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAIDAAAAAgMAAAAAAwAAAAADAAAAAAMAAAADAwAAAAMDAAAAAAMAAAADAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAGAAUDAAYAAAMABgAHAwAGAAADAAYAAAMAAAAFAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAACAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAQDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAEDAAAAAgMAAAACAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAABAwAAAAIDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAADAAYABAMABgAEAwAGAAQDAAYABQMABgAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYABQMABgAAAwAGAAADAAAABQMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMABgAIAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAHAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAABAwAAAAEDAAAAAQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAEDAAAAAgMAAAACAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAUDAAYABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAgDAAYAAAMABgAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAIDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAIAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAHAwAAAAADAAAACAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAgDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAAAwAAAAADAAYABwMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABwMAAAAAAwAAAAADAAAABAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAMDAAAAAAMAAAADAwAAAAMDAAAAAAMAAAAAAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAQMAAAACAwAAAAIDAAAAAgMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYACAMABgAAAwAGAAADAAYAAAMABgAHAwAGAAUDAAYABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAgDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAIAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAACAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAADAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAQDAAYABAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAcDAAYAAAMABgAAAwAGAAADAAYABwMABgAAAwAGAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAADAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAABQMAAAAFAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAGAAADAAYAAAMAAAAAAwAAAAIDAAAAAgMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAIAwAGAAgDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAHAwAGAAADAAYAAAMABgAAAwAGAAcDAAYAAAMABgAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAAAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAHAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAHAwAAAAADAAAABwMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAcDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAIDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAIDAAAAAgMAAAACAwAAAAUDAAAAAwMABgAAAwAGAAADAAYAAAMAAAAAAwAAAAADAAAAAAMABgAAAwAGAAADAAAAAAMAAAACAwAAAAIDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABwMABgAHAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAAAAAMAAAAAAwAAAAADAAYAAAMABgAAAwAAAAADAAAAAgMAAAACAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAEAwAGAAQDAAYAAAMABgAAAwAGAAcDAAYABwMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAEAwAAAAQDAAAABAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMABgAAAwAGAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAABAwAAAAEDAAAAAQMAAAABAwAAAAIDAAAAAgMABgAAAwAGAAADAAYAAAMABgAAAwAAAAQDAAAABAMAAAAEAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYACAMABgAIAwAGAAADAAYAAAMABgAHAwAGAAcDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAEAwAGAAQDAAYABAMABgAAAwAGAAADAAYAAAMABgAEAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAcDAAYABwMABgAAAwAGAAADAAYABwMABgAHAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAAAAUDAAAABQMAAAAFAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAYAAAMAAAAFAwAAAAUDAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAGAAADAAAABQMAAAAFAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYABAMABgAEAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAABQMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAYAAAMABgAEAwAGAAQDAAYAAAMABgAAAwAGAAADAAYAAAMABgAEAwAAAAQDAAAABAMAAAAFAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAUDAAYAAAMABgAAAwAGAAADAAYAAAMABgAAAwAGAAADAAAABAMABgAEAwAGAAADAAYAAAMABgAAAwAGAAQDAAYABAMAAAAEAwAAAAQDAAAABQMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAABQMAAAAFAwAAAAUDAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAM=",
+  "tile_properties": [
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          3,
+          67
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          2,
+          67
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          4,
+          67
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          14,
+          81
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          15,
+          82
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          15,
+          83
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          12,
+          83
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 1,
+      "frames": [
+        [
+          12,
+          82
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "title": "EASTER ISLAND",
+    "subtitle": null,
+    "preview_loc": [
+      3,
+      36
+    ],
+    "difficulty_rating": "Extreme"
+  },
+  "background_layers": [
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Color": 197
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        -780.5629,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        20.0,
+        0.0
+      ],
+      "speed": [
+        -0.05,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 1568,
+          "w": 320,
+          "h": 96
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        -1454.492,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        128.0
+      ],
+      "scroll_speed": [
+        15.0,
+        0.0
+      ],
+      "speed": [
+        -0.1,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 320,
+          "y": 1682,
+          "w": 38,
+          "h": 16
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        -2908.984,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        144.0
+      ],
+      "scroll_speed": [
+        12.5,
+        0.0
+      ],
+      "speed": [
+        -0.2,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 320,
+          "y": 1698,
+          "w": 38,
+          "h": 16
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        -4364.3955,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        160.0
+      ],
+      "scroll_speed": [
+        10.0,
+        0.0
+      ],
+      "speed": [
+        -0.3,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 320,
+          "y": 1714,
+          "w": 38,
+          "h": 96
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": true,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        176.0
+      ],
+      "scroll_speed": [
+        10.0,
+        25.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 256,
+          "y": 3808,
+          "w": 255,
+          "h": 64
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        239.0
+      ],
+      "scroll_speed": [
+        10.0,
+        25.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 256,
+          "y": 3840,
+          "w": 255,
+          "h": 23
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": true,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        160.0
+      ],
+      "scroll_speed": [
+        9.0,
+        24.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        200,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 256,
+          "y": 3872,
+          "w": 32,
+          "h": 64
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        100.0,
+        176.0
+      ],
+      "scroll_speed": [
+        8.0,
+        23.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        200,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 288,
+          "y": 3872,
+          "w": 32,
+          "h": 64
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        192.0
+      ],
+      "scroll_speed": [
+        6.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 3808,
+          "w": 256,
+          "h": 64
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        100.0,
+        144.0
+      ],
+      "scroll_speed": [
+        5.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        250,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 320,
+          "y": 3872,
+          "w": 64,
+          "h": 96
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        144.0
+      ],
+      "scroll_speed": [
+        5.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        250,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 385,
+          "y": 3872,
+          "w": 64,
+          "h": 96
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": true,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    },
+    {
+      "pos": [
+        0.0,
+        0.0
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "scroll_speed": [
+        0.0,
+        0.0
+      ],
+      "speed": [
+        0.0,
+        0.0
+      ],
+      "spacing": [
+        0,
+        0
+      ],
+      "image": {
+        "Bitmap": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      "transparency": 0,
+      "repeat_up": false,
+      "repeat_down": false,
+      "repeat_horizontally": false,
+      "in_foreground": false
+    }
+  ]
+}

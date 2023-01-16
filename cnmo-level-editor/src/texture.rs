@@ -4,6 +4,8 @@ pub struct Texture {
     pub sampler: wgpu::Sampler,
     pub texture: wgpu::Texture,
     pub view: wgpu::TextureView,
+    pub palette: Vec<[u8; 3]>,
+    pub dimensions: (u32, u32),
 }
 
 impl Texture {
@@ -18,7 +20,7 @@ impl Texture {
             mip_level_count: 1,
             sample_count: 1,
             dimension: wgpu::TextureDimension::D2,
-            format: wgpu::TextureFormat::Rgba8UnormSrgb,
+            format: wgpu::TextureFormat::Rgba8Unorm,
             usage: wgpu::TextureUsages::COPY_DST | wgpu::TextureUsages::TEXTURE_BINDING,
         });
         let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
@@ -36,24 +38,31 @@ impl Texture {
             texture,
             view,
             sampler,
+            palette: Vec::new(),
+            dimensions: (size.clone().into().0, size.clone().into().1),
         }
     }
 
     pub fn from_file<P: AsRef<std::path::Path>>(device: &wgpu::Device, queue: &wgpu::Queue, path: P) -> Self {
-        let image = match std::fs::read(path.as_ref()) {
-            Ok(contents) => image::load_from_memory(&contents),
-            Err(err) => Err(image::ImageError::IoError(err)),
+        let reader = match std::fs::File::open(path.as_ref()) {
+            Ok(reader) => reader,
+            Err(_) => return Self::new(device, None, (1, 1)),
         };
-
-        if image.is_err() {
-            log::warn!("Can't load the texture from the path: {}", path.as_ref().as_os_str().to_string_lossy());
-            return Self::new(device, Some("texture"), (1, 1));
-        }
-
-        let image = image.unwrap();
+        let decoder = match image::codecs::bmp::BmpDecoder::new(reader) {
+            Ok(decoder) => decoder,
+            Err(_) => {
+                log::warn!("{} isn't a bmp file!", path.as_ref().as_os_str().to_string_lossy());
+                return Self::new(device, None, (1, 1));
+            },
+        };
+        let image = image::load_from_memory(&std::fs::read(path.as_ref()).unwrap()).unwrap();
         let rgba = image.to_rgba8();
         let dimensions = <image::DynamicImage as image::GenericImageView>::dimensions(&image);
-        let texture = Self::new(device, Some("texture"), dimensions);
+        let mut texture = Self::new(device, Some("texture"), dimensions);
+        texture.palette = match decoder.get_palette() {
+            Some(slice) => slice.to_owned(),
+            None => Vec::new(),
+        };
         queue.write_texture(
             wgpu::ImageCopyTexture {
                 texture: &texture.texture,

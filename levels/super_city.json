@@ -1,0 +1,285 @@
+{
+  "version": {
+    "version": 1,
+    "num_teleports": 512,
+    "num_spawns": 128,
+    "num_spawn_modes": 3,
+    "teleport_name_size": 41,
+    "max_tile_frames": 32,
+    "ending_text_lines": 48,
+    "ending_text_line_len": 32,
+    "background_layers": 32,
+    "title_ending_text_line": 47,
+    "preview_tile_index": 256
+  },
+  "spawners": [],
+  "cells": "AAAAEAAAAAoAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAgMAAAACAwAAAAIDAAAAAgMAAAACAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAQAAAwABAAADAAEAAAMAAQAAAwABAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwABAAADAAYAAAMABgAAAwAGAAADAAEAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAEAAAMAAQAAAwABAAADAAEAAAMAAQAAAwAAAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAMDAAAAAwMAAAADAwAAAAADAAAAAAMAAQAAAwABAAADAAEAAAMAAQAAAwABAAADAAAAAAMAAAAAAwAAAAADAAAAAAMAAAAEAwAAAAkDAAAACAMAAAAIAwAAAAgDAAAAAwMAAAADAwAAAAMDAAAAAwMAAAADAwAAAAMDAAAAAwMAAAADAwAAAAMDAAAAAwMAAAADAwAAAAkDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAwAAAAgDAAAACAMAAAAIAw==",
+  "tile_properties": [
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          5,
+          66
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          2,
+          69
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          3,
+          69
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          2,
+          68
+        ]
+      ],
+      "collision_data": {
+        "Heightmap": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          27,
+          27,
+          27,
+          27,
+          27,
+          27,
+          27,
+          27
+        ]
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          3,
+          68
+        ]
+      ],
+      "collision_data": {
+        "Heightmap": [
+          27,
+          27,
+          27,
+          27,
+          27,
+          27,
+          27,
+          27,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          19,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          11,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "solid": false,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          6,
+          66
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          4,
+          66
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          0,
+          67
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          6,
+          68
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    },
+    {
+      "solid": true,
+      "transparency": 0,
+      "damage_type": "None",
+      "anim_speed": 10,
+      "frames": [
+        [
+          7,
+          68
+        ]
+      ],
+      "collision_data": {
+        "Box": {
+          "x": 0,
+          "y": 0,
+          "w": 32,
+          "h": 32
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "title": "SUPER CITY",
+    "subtitle": null,
+    "preview_loc": [
+      0,
+      0
+    ],
+    "difficulty_rating": "KindaHard"
+  },
+  "background_layers": []
+}

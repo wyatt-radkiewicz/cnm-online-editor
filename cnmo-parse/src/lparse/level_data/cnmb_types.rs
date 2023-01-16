@@ -14,16 +14,21 @@ use super::{
 };
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, strum::Display, Copy, Clone)]
 pub enum BackgroundImage {
     Color(u8),
     Bitmap(Rect),
 }
 
+impl Default for BackgroundImage {
+    fn default() -> Self {
+        Self::Bitmap(Rect { x: 0, y: 0, w: 0, h: 0 })
+    }
+}
+
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct BackgroundLayer {
-    pub pos: Point,
     pub origin: Point,
     pub scroll_speed: Point,
     pub speed: Point,
@@ -39,7 +44,6 @@ pub struct BackgroundLayer {
 
 impl BackgroundLayer {
     pub fn from_lparse(cnmb: &LParse, _version: &VersionSpecs, index: usize) -> Result<Self, Error> {
-        let background_pos = &cnmb.try_get_entry("BG_POS")?.try_get_f32()?[index * 2..index * 2 + 2];
         let background_origin = &cnmb.try_get_entry("BG_ORIGIN")?.try_get_f32()?[index * 2..index * 2 + 2];
         let background_scroll = &cnmb.try_get_entry("BG_SCROLL")?.try_get_f32()?[index * 2..index * 2 + 2];
         let background_spacing = &cnmb.try_get_entry("BG_SPACING")?.try_get_i32()?[index * 2..index * 2 + 2];
@@ -57,7 +61,6 @@ impl BackgroundLayer {
         };
 
         Ok(Self {
-            pos: Point(background_pos[0], background_pos[1]),
             origin: Point(background_origin[0], background_origin[1]),
             scroll_speed: Point(background_scroll[0], background_scroll[1]),
             speed: Point(background_speed[0], background_speed[1]),
@@ -73,7 +76,6 @@ impl BackgroundLayer {
 
     pub fn save(
         &self,
-        bg_pos: &mut Vec<f32>,
         bg_origin: &mut Vec<f32>,
         bg_scroll: &mut Vec<f32>,
         bg_spacing: &mut Vec<i32>,
@@ -85,8 +87,6 @@ impl BackgroundLayer {
         bg_trans: &mut Vec<u8>,
         _version: &VersionSpecs,
     ) {
-        bg_pos.push(self.pos.0);
-        bg_pos.push(self.pos.1);
         bg_origin.push(self.origin.0);
         bg_origin.push(self.origin.1);
         bg_scroll.push(self.scroll_speed.0);
@@ -125,8 +125,9 @@ pub(super) fn save_background_vec(cnmb: &mut LParse, version: &VersionSpecs, bac
     let mut bg_trans = Vec::new();
 
     for background in &backgrounds[0..backgrounds.len().min(version.background_layers)] {
+        bg_pos.push(0.0);
+        bg_pos.push(0.0);
         background.save(
-            &mut bg_pos,
             &mut bg_origin,
             &mut bg_scroll,
             &mut bg_spacing,
@@ -153,7 +154,7 @@ pub(super) fn save_background_vec(cnmb: &mut LParse, version: &VersionSpecs, bac
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone, strum::Display)]
 pub enum DamageType {
     None,
     Lava(i32),
@@ -162,14 +163,14 @@ pub enum DamageType {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone, strum::Display)]
 pub enum CollisionType {
     Box(Rect),
     Heightmap([u8; TILE_SIZE]),
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TileProperties {
     pub solid: bool,
     pub transparency: u8,
@@ -177,6 +178,19 @@ pub struct TileProperties {
     pub anim_speed: Duration,
     pub frames: Vec<(i32, i32)>,
     pub collision_data: CollisionType,
+}
+
+impl Default for TileProperties {
+    fn default() -> Self {
+        Self {
+            solid: false,
+            transparency: 0,
+            damage_type: DamageType::None, 
+            anim_speed: Duration(10),
+            frames: vec![(1, 0)],
+            collision_data: CollisionType::Box(Rect { x: 0, y: 0, w: 32, h: 32 })
+        }
+    }
 }
 
 impl TileProperties {
@@ -302,11 +316,17 @@ pub(super) fn save_tile_properties_vec(
     let mut bp_hitbox = Vec::new();
     let mut bp_colltype = Vec::new();
 
-    for (idx, tile_property) in tile_properties.iter().enumerate() {
-        let mut tile = tile_property;
-        if idx == version.preview_tile_index {
-            tile = &metadata_tile;
-        }
+    let air_tile = &TileProperties {
+        frames: vec![(0, 0)],
+        ..Default::default()
+    };
+
+    for idx in 0..tile_properties.len().max(version.preview_tile_index) + 1 {
+        let tile = match idx {
+            idx if idx == 0 || (idx != version.preview_tile_index && idx >= tile_properties.len()) => &air_tile,
+            idx if idx == version.preview_tile_index => metadata_tile,
+            _ => &tile_properties[idx - 1],
+        };
         tile.save(
             &mut bp_flags,
             &mut bp_trans,
@@ -338,20 +358,67 @@ pub(super) fn save_tile_properties_vec(
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
-pub struct TileId(u16);
+#[derive(Debug, Default, Copy, Clone)]
+pub struct TileId(pub Option<u16>);
+
+impl PartialEq for TileId {
+    fn eq(&self, other: &Self) -> bool {
+        match (self.0, other.0) {
+            (Some(my_id), Some(other_id)) => my_id == other_id,
+            (None, None) => true,
+            _ => false,
+        }
+    }
+}
+impl Eq for TileId {}
+
+impl TileId {
+    pub fn from_raw_id(raw: u16, version: &VersionSpecs) -> Self {
+        if raw == 0 {
+            Self(None)
+        } else {
+            if raw as usize > version.preview_tile_index {
+                Self(Some(raw - 2))
+            } else {
+                Self(Some(raw - 1))
+            }
+        }
+    }
+
+    pub fn get_raw_id(&self, version: &VersionSpecs) -> u16 {
+        if let Some(id) = self.0 {
+            if id as usize > version.preview_tile_index {
+                id + 2
+            } else {
+                id + 1
+            }
+        } else {
+            0
+        }
+    }
+}
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Default, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Cell {
     pub foreground: TileId,
     pub background: TileId,
     pub light: u8,
 }
 
-#[derive(Debug)]
+impl Default for Cell {
+    fn default() -> Self {
+        Self {
+            foreground: Default::default(),
+            background: Default::default(),
+            light: super::consts::LIGHT_NORMAL,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Cells {
-    cells: Vec<Cell>,
+    pub cells: Vec<Cell>,
     width: usize,
     height: usize,
 }
@@ -365,8 +432,8 @@ impl serde::Serialize for Cells {
         bytes.write_u32(self.width as u32);
         bytes.write_u32(self.height as u32);
         for cell in self.cells.iter() {
-            bytes.write_u16(cell.background.0);
-            bytes.write_u16(cell.foreground.0);
+            bytes.write_u16(cell.background.get_raw_id(&VersionSpecs::from_version(1).unwrap()));
+            bytes.write_u16(cell.foreground.get_raw_id(&VersionSpecs::from_version(1).unwrap()));
             bytes.write_u8(cell.light);
         }
         
@@ -408,8 +475,8 @@ impl<'de> serde::de::Visitor<'de> for CellsVisitor {
         for _ in 0..width*height {
             let (background, foreground, light) = match (bytes.read_u16(), bytes.read_u16(), bytes.read_u8()) {
                 (Ok(background), Ok(foreground), Ok(light)) => (
-                    TileId(background),
-                    TileId(foreground),
+                    TileId::from_raw_id(background, &VersionSpecs::from_version(1).unwrap()),
+                    TileId::from_raw_id(foreground, &VersionSpecs::from_version(1).unwrap()),
                     light
                 ),
                 _ => return Err(serde::de::Error::custom("Width and height don't match number of cells!")),
@@ -440,7 +507,7 @@ impl Cells {
         }
     }
 
-    pub fn from_lparse(cnmb: &LParse) -> Result<Self, Error> {
+    pub fn from_lparse(cnmb: &LParse, num_tile_properties: usize) -> Result<Self, Error> {
         let block_header = cnmb.try_get_entry("BLOCKS_HEADER")?.try_get_i32()?;
         let width = block_header[0] as usize;
         let height = block_header[1] as usize;
@@ -449,10 +516,24 @@ impl Cells {
         let background_layer = cnmb.try_get_entry("BLK_LAYER1")?.try_get_u16()?;
         let light_layer = cnmb.try_get_entry("BLK_LIGHT")?.try_get_u16()?;
 
-        let cells = (0..width*height).map(|index| Cell {
-            background: TileId(background_layer[index]),
-            foreground: TileId(foreground_layer[index]),
-            light: u8::try_from(light_layer[index]).unwrap_or(LIGHT_NORMAL),
+        let cells = (0..width*height).map(|index| {
+            let mut background = TileId::from_raw_id(background_layer[index], &VersionSpecs::from_version(1).unwrap());
+            let mut foreground = TileId::from_raw_id(foreground_layer[index], &VersionSpecs::from_version(1).unwrap());
+            if let Some(id) = background.0 {
+                if id as usize >= num_tile_properties {
+                    background.0 = None;
+                }
+            }
+            if let Some(id) = foreground.0 {
+                if id as usize >= num_tile_properties {
+                    foreground.0 = None;
+                }
+            }
+            Cell {
+                background,
+                foreground,
+                light: u8::try_from(light_layer[index]).unwrap_or(LIGHT_NORMAL),
+            }
         }).collect();
 
         Ok(Self {
@@ -462,7 +543,7 @@ impl Cells {
         })
     }
 
-    pub(super) fn save(&self, cnmb: &mut LParse, num_tile_properties: usize, _version: &VersionSpecs) {
+    pub(super) fn save(&self, cnmb: &mut LParse, num_tile_properties: usize, version: &VersionSpecs) {
         let mut blocks_header = Vec::new();
         let mut blk_layer0 = Vec::new();
         let mut blk_layer1 = Vec::new();
@@ -470,11 +551,11 @@ impl Cells {
 
         blocks_header.push(self.width as i32);
         blocks_header.push(self.height as i32);
-        blocks_header.push(num_tile_properties as i32);
+        blocks_header.push((num_tile_properties.max(version.preview_tile_index) + 1) as i32);
 
         for cell in self.cells.iter() {
-            blk_layer0.push(cell.foreground.0);
-            blk_layer1.push(cell.background.0);
+            blk_layer0.push(cell.foreground.get_raw_id(version));
+            blk_layer1.push(cell.background.get_raw_id(version));
             blk_light.push(cell.light as u16);
         }
 
@@ -484,20 +565,14 @@ impl Cells {
         cnmb.entries.insert("BLK_LIGHT".to_string(), EntryData::U16(blk_light));
     }
 
-    pub fn get_cell(&self, x: usize, y: usize) -> Option<&Cell> {
-        if x < self.width && y < self.height {
-            Some(&self.cells[y * self.width + x])
-        } else {
-            None
-        }
+    pub fn get_cell(&self, x: i32, y: i32) -> &Cell {
+        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
+        &self.cells[index as usize]
     }
 
-    pub fn get_cell_mut(&mut self, x: usize, y: usize) -> Option<&mut Cell> {
-        if x < self.width && y < self.height {
-            Some(&mut self.cells[y * self.width + x])
-        } else {
-            None
-        }
+    pub fn get_cell_mut(&mut self, x: i32, y: i32) -> &mut Cell {
+        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
+        &mut self.cells[index as usize]
     }
 
     pub fn get_width(&self) -> usize {
@@ -513,19 +588,16 @@ impl Cells {
             return;
         }
 
-        let mut new_cells = Vec::new();
-        for row in 0..self.height.min(new_height) {
-            new_cells.append(&mut self.cells.iter()
-                .cloned()
-                .skip(row * self.width)
-                .take(self.width)
-                .chain((self.width..new_width).map(|_| Cell::default()))
-                .collect::<Vec<Cell>>());
-        }
-        for _ in self.height..new_height {
-            new_cells.append(&mut (0..new_width).map(|_| Cell::default()).collect());
-        }
+        let mut new_cells = Self::new(new_width, new_height);
+        self.paste(&mut new_cells, (0, 0), (new_width as i32 - 1, new_height as i32 - 1), (0, 0));
+        *self = new_cells;
+    }
 
-        self.cells = new_cells;
+    pub fn paste(&self, other: &mut Self, src_min: (i32, i32), src_max: (i32, i32), dst: (i32, i32)) {
+        for y in src_min.1..=src_max.1 {
+            for x in src_min.0..=src_max.0 {
+                *other.get_cell_mut(x-src_min.0+dst.0, y-src_min.1+dst.1) = *self.get_cell(x, y);
+            }
+        }
     }
 }

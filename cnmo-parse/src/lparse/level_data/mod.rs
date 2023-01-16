@@ -3,7 +3,7 @@ use crate::lparse::{
     LParse
 };
 
-use self::cnmb_types::BackgroundLayer;
+use self::cnmb_types::{BackgroundLayer, TileProperties};
 
 pub mod cnmb_types;
 pub mod cnms_types;
@@ -11,11 +11,11 @@ pub mod consts;
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Copy, Clone)]
-pub struct Duration(i32);
+pub struct Duration(pub i32);
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Copy, Clone)]
-pub struct Point(f32, f32);
+pub struct Point(pub f32, pub f32);
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
@@ -180,7 +180,7 @@ impl LevelMetaData {
             solid: false,
             transparency: consts::CLEAR,
             damage_type: cnmb_types::DamageType::Lava(self.difficulty_rating.get_difficulty_id() as i32),
-            anim_speed: Duration(0),
+            anim_speed: Duration(1),
             frames: vec![(self.preview_loc.0 as i32, self.preview_loc.1 as i32)],
             collision_data: cnmb_types::CollisionType::Box(crate::Rect { x: 0, y: 0, w: 0, h: 0 }),
         }
@@ -201,6 +201,7 @@ pub struct LevelData {
 impl LevelData {
     pub fn from_version(version: u32) -> Result<Self, Error> {
         let version = VersionSpecs::from_version(version)?;
+        let background_layers = (0..version.background_layers).map(|_| cnmb_types::BackgroundLayer::default()).collect();
 
         Ok(Self {
             version,
@@ -213,7 +214,7 @@ impl LevelData {
                 preview_loc: (0, 0),
                 difficulty_rating: DifficultyRating::Normal,
             },
-            background_layers: Vec::new(),
+            background_layers,
         })
     }
 
@@ -224,7 +225,7 @@ impl LevelData {
 
         let version = VersionSpecs::from_version(cnmb.version.version)?;
         let tile_properties = Self::tile_properties_from_lparse(cnmb, &version, ignore_warnings)?;
-        let cells = cnmb_types::Cells::from_lparse(cnmb)?;
+        let cells = cnmb_types::Cells::from_lparse(cnmb, tile_properties.len())?;
         let spawners = Self::spawners_from_lparse(cnms, &version, ignore_warnings)?;
         let metadata = LevelMetaData::from_lparse(cnmb, cnms, &version, ignore_warnings)?;
         let background_layers = Self::background_layers_from_lparse(cnmb, &version)?;
@@ -243,14 +244,27 @@ impl LevelData {
         cnms_types::save_spawner_vec(cnms, &self.version, self.metadata.get_full_title(), &self.spawners);
         cnmb_types::save_background_vec(cnmb, &self.version, &self.background_layers);
         cnmb_types::save_tile_properties_vec(cnmb, &self.version, &self.metadata.get_tile_property(), &self.tile_properties);
-        self.cells.save(cnmb, self.tile_properties.len(), &self.version);
+        self.cells.save(cnmb, self.tile_properties.len() + 1, &self.version);
     }
 
     fn tile_properties_from_lparse(cnmb: &LParse, version: &VersionSpecs, ignore_warnings: bool) -> Result<Vec<cnmb_types::TileProperties>, Error> {
         let mut tile_properties = Vec::new();
 
         for index in 0..cnmb.try_get_entry("BLOCKS_HEADER")?.try_get_i32()?[2] as usize {
-            tile_properties.push(cnmb_types::TileProperties::from_lparse(cnmb, version, index, ignore_warnings)?);
+            if index == version.preview_tile_index {
+                continue;
+            }
+            let tile = cnmb_types::TileProperties::from_lparse(cnmb, version, index, ignore_warnings)?;
+            match tile {
+                TileProperties {
+                    damage_type: cnmb_types::DamageType::None,
+                    anim_speed: Duration(1),
+                    frames,
+                    collision_data: cnmb_types::CollisionType::Box(crate::Rect { x: 0, y: 0, w: 32, h: 32 }),
+                    ..
+                } if frames.len() == 1 && frames[0] == (0, 0) => {},
+                tile => tile_properties.push(tile),
+            };
         }
 
         Ok(tile_properties)
