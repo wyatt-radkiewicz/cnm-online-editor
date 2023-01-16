@@ -17,7 +17,7 @@ pub mod item_type;
 pub mod wobj_type;
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, strum::Display, PartialEq)]
 pub enum SpawnerMode {
     MultiAndSingleplayer,
     SingleplayerOnly,

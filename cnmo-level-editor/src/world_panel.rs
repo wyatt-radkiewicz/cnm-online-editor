@@ -720,8 +720,9 @@ impl WorldPanel {
     }
     fn update_level_spawners(&mut self, sprites: &mut Vec<Sprite>, _ui: &mut egui::Ui, level_data: &mut level_data::LevelData, rect: &egui::Rect, response: &egui::Response, editor_data: &mut EditorData, pointer_pos: &egui::Pos2) {
         // let top_left = self.camera.get_top_left_world_space();
-        // let cam_size = self.camera.get_proj_size_world_space();
-        for (idx, spawner) in level_data.spawners.iter().enumerate() {
+        let cam_size = self.camera.get_proj_size_world_space();
+        let mut delete_idx = None;
+        for (idx, spawner) in level_data.spawners.iter_mut().enumerate() {
             draw_spawner(sprites, spawner,  &self.camera, editor_data, matches!(editor_data.tool, Tool::Spawners));
             let spawner_rect = get_spawner_size(spawner);
             if pointer_pos.x > spawner.pos.0 &&
@@ -729,8 +730,28 @@ impl WorldPanel {
                 pointer_pos.y > spawner.pos.1 &&
                 pointer_pos.y < spawner.pos.1 + spawner_rect.1 &&
                 matches!(editor_data.tool, Tool::Spawners) {
-                editor_data.selected_spawner = Some(idx);
+                if response.ctx.input().pointer.primary_clicked() {
+                    editor_data.selected_spawner = Some(idx);
+                }
+                if response.ctx.input().pointer.secondary_clicked() {
+                    editor_data.selected_spawner = None;
+                    delete_idx = Some(idx);
+                }
+                if response.dragged() {
+                    spawner.pos.0 += ((response.drag_delta().x * response.ctx.pixels_per_point()) / rect.width()) * cam_size.x;
+                    spawner.pos.1 += ((response.drag_delta().y * response.ctx.pixels_per_point()) / rect.height()) * cam_size.y;
+                }
             }
+            if editor_data.selected_spawner == Some(idx) && matches!(editor_data.tool, Tool::Spawners) {
+                sprites.push(Sprite::new_pure_color(
+                    (spawner.pos.0, spawner.pos.1, 0.0),
+                    (spawner_rect.0, spawner_rect.1),
+                    (0.0, 0.2, 1.0, 0.5)
+                ));
+            }
+        }
+        if let Some(idx) = delete_idx {
+            level_data.spawners.remove(idx);
         }
     }
 }

@@ -1,4 +1,8 @@
+use std::f32::consts::E;
+
 use cnmo_parse::lparse::level_data::cnmb_types::BackgroundImage;
+use cnmo_parse::lparse::level_data::cnms_types::{SpawnerMode, Spawner};
+use cnmo_parse::lparse::level_data::cnms_types::item_type::ItemType;
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
 
@@ -326,6 +330,47 @@ impl PropertiesPanel {
                 ui.heading("Spawner Properties");
             });
             ui.separator();
+            if let Some(idx) = editor_data.selected_spawner {
+                let spawner = &mut level_data.spawners[idx];
+
+                egui::Grid::new("spawner_properties_grid").num_columns(2).striped(true).show(ui, |ui| {
+                    ui.label("Spawning Mode: ");
+                    egui::ComboBox::new("spawning_mode_combobox", "")
+                        .selected_text(spawner.spawning_criteria.mode.to_string())
+                        .show_ui(ui, |ui| {
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiAndSingleplayer, SpawnerMode::MultiAndSingleplayer.to_string());
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiplayerOnly, SpawnerMode::MultiplayerOnly.to_string());
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::SingleplayerOnly, SpawnerMode::SingleplayerOnly.to_string());
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::PlayerCountBased, SpawnerMode::PlayerCountBased.to_string()).on_hover_text_at_pointer(
+                            "This will show in both single and multiplayer and will spawn an wobj for every\n
+                            player in the server/game, this means the max spawns will be max_spawns*player_count"
+                        );
+                    });
+                    ui.end_row();
+                    ui.label("Delay between spawns: ").on_hover_text_at_pointer("Delay in seconds");
+                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.spawn_delay_secs)).on_hover_text_at_pointer("Delay in seconds");
+                    ui.end_row();
+                    ui.label("Number of maximum respawns: ");
+                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.max_spawns));
+                    ui.end_row();
+                    ui.label("Drops item: ");
+                    let dropped_item_response = ui.selectable_label(spawner.dropped_item != None, "Drops item");
+                    if dropped_item_response.clicked() {
+                        if spawner.dropped_item == None {
+                            spawner.dropped_item = Some(ItemType::Shotgun);
+                        } else {
+                            spawner.dropped_item = None;
+                        }
+                    }
+                    ui.end_row();
+                    if let Some(item) = &mut spawner.dropped_item {
+                        ui.label("Dropped Item: ");
+                        show_item_combobox(item, ui);
+                        ui.end_row();
+                    }
+                });
+            }
+            ui.separator();
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
                 ui.heading("Spawners");
             });
@@ -496,4 +541,12 @@ impl PropertiesPanel {
         self.tile_viewer.max_height = None;
         self.tile_viewer.show(ui, level_data, editor_data);
     }
+}
+
+fn show_item_combobox(item: &mut ItemType, ui: &mut egui::Ui) {
+
+}
+
+fn show_wobj_properties(spawner: &mut Spawner, ui: &mut egui::Ui) {
+    
 }
