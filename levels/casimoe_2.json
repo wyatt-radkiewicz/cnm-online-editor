@@ -11,7 +11,7 @@
     "background_layers": 32,
     "title_ending_text_line": 47,
     "preview_tile_index": 256
-  },sdf
+  },
   "spawners": [
     {
       "pos": [
@@ -26,7 +26,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -47,7 +47,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -64,7 +64,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -81,7 +81,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -99,7 +99,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -117,7 +117,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -135,7 +135,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -153,7 +153,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -171,7 +171,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -189,7 +189,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -207,7 +207,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -225,7 +225,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -242,7 +242,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -259,7 +259,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -276,7 +276,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -293,7 +293,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -310,7 +310,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -327,7 +327,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -344,7 +344,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -361,7 +361,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "PlayerCountBased",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -378,7 +378,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "PlayerCountBased",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -395,7 +395,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "PlayerCountBased",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -412,7 +412,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "PlayerCountBased",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -429,7 +429,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "PlayerCountBased",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -446,7 +446,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -463,7 +463,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -480,7 +480,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": "KeyRed"
     },
@@ -493,7 +493,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -506,7 +506,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -519,7 +519,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -532,7 +532,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -545,7 +545,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -558,7 +558,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -571,7 +571,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -584,7 +584,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -597,7 +597,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -610,7 +610,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -623,7 +623,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -636,7 +636,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -649,7 +649,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -662,7 +662,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -675,7 +675,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -688,7 +688,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -701,7 +701,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -714,7 +714,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -727,7 +727,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -740,7 +740,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -753,7 +753,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -766,7 +766,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -779,7 +779,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -792,7 +792,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -805,7 +805,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -822,7 +822,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -839,7 +839,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -857,7 +857,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -874,7 +874,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -891,7 +891,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -908,7 +908,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -925,7 +925,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -942,7 +942,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -955,7 +955,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -976,7 +976,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -994,7 +994,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 0.0,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 1
+        "max_respawns": 1
       },
       "dropped_item": null
     },
@@ -1012,7 +1012,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1030,7 +1030,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1048,7 +1048,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1066,7 +1066,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1084,7 +1084,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1102,7 +1102,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1120,7 +1120,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1138,7 +1138,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1156,7 +1156,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1174,7 +1174,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1192,7 +1192,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1210,7 +1210,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1228,7 +1228,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1246,7 +1246,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1264,7 +1264,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1282,7 +1282,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1300,7 +1300,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1318,7 +1318,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1336,7 +1336,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1354,7 +1354,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1372,7 +1372,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1390,7 +1390,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1408,7 +1408,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1426,7 +1426,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1444,7 +1444,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1462,7 +1462,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1480,7 +1480,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1498,7 +1498,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1516,7 +1516,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1534,7 +1534,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1551,7 +1551,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1568,7 +1568,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1585,7 +1585,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1602,7 +1602,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1619,7 +1619,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1636,7 +1636,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1653,7 +1653,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1670,7 +1670,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1687,7 +1687,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1704,7 +1704,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1721,7 +1721,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1738,7 +1738,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1755,7 +1755,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1772,7 +1772,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1789,7 +1789,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1806,7 +1806,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1823,7 +1823,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1840,7 +1840,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1857,7 +1857,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1874,7 +1874,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1891,7 +1891,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1908,7 +1908,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1925,7 +1925,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1942,7 +1942,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1959,7 +1959,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1976,7 +1976,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -1993,7 +1993,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2010,7 +2010,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2027,7 +2027,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2044,7 +2044,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2061,7 +2061,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2078,7 +2078,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2095,7 +2095,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2112,7 +2112,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2129,7 +2129,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2146,7 +2146,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2163,7 +2163,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2180,7 +2180,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2197,7 +2197,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2214,7 +2214,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2231,7 +2231,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2248,7 +2248,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2265,7 +2265,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2282,7 +2282,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2299,7 +2299,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2316,7 +2316,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2333,7 +2333,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2350,7 +2350,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2367,7 +2367,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2384,7 +2384,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2401,7 +2401,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2418,7 +2418,7 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
       },
       "dropped_item": null
     },
@@ -2435,7 +2435,24 @@
       "spawning_criteria": {
         "spawn_delay_secs": 33333.332,
         "mode": "MultiAndSingleplayer",
-        "max_spawns": 0
+        "max_respawns": 0
+      },
+      "dropped_item": null
+    },
+    {
+      "pos": [
+        5928.0,
+        3464.0
+      ],
+      "type_data": {
+        "BozoPin": {
+          "flying_speed": 0.1
+        }
+      },
+      "spawning_criteria": {
+        "spawn_delay_secs": 0.0,
+        "mode": "MultiAndSingleplayer",
+        "max_respawns": 0
       },
       "dropped_item": null
     }
@@ -2624,20 +2641,16 @@
     }
   ],
   "metadata": {
-    "title": "CASIMOE",
+    "title": "CASIMOE 2",
     "subtitle": "MOE'S CASINO",
     "preview_loc": [
-      3,
+      7,
       34
     ],
     "difficulty_rating": "Dealth"
   },
   "background_layers": [
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2664,10 +2677,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2699,10 +2708,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         155.0
@@ -2734,10 +2739,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         100.0,
         120.0
@@ -2769,10 +2770,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2804,10 +2801,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2839,10 +2832,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2874,10 +2863,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         165.0
@@ -2909,10 +2894,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2944,10 +2925,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -2979,10 +2956,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3014,10 +2987,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3049,10 +3018,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3084,10 +3049,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3119,10 +3080,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3154,10 +3111,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3189,10 +3142,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3224,10 +3173,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3259,10 +3204,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3294,10 +3235,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3329,10 +3266,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3364,10 +3297,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3399,10 +3328,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3434,10 +3359,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3469,10 +3390,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3504,10 +3421,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3539,10 +3452,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3574,10 +3483,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3609,10 +3514,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3644,10 +3545,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3679,10 +3576,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0
@@ -3714,10 +3607,6 @@
       "in_foreground": false
     },
     {
-      "pos": [
-        0.0,
-        0.0
-      ],
       "origin": [
         0.0,
         0.0

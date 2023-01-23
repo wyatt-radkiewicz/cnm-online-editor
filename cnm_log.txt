@@ -1,6 +1,4 @@
 WELCOME TO CNM ONLINE!
+Cannot load the level file: "levels/testbg.cnms"!
 WELCOME TO CNM ONLINE Alpha 8.11!
-nocip
-Unknown command!
-noclip
-noclip
+Cannot load the level file: "levels/testbg.cnms"!

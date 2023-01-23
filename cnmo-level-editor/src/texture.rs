@@ -1,3 +1,5 @@
+use std::io::Cursor;
+
 use eframe::egui_wgpu::wgpu;
 
 pub struct Texture {
@@ -44,18 +46,25 @@ impl Texture {
     }
 
     pub fn from_file<P: AsRef<std::path::Path>>(device: &wgpu::Device, queue: &wgpu::Queue, path: P) -> Self {
-        let reader = match std::fs::File::open(path.as_ref()) {
-            Ok(reader) => reader,
-            Err(_) => return Self::new(device, None, (1, 1)),
-        };
-        let decoder = match image::codecs::bmp::BmpDecoder::new(reader) {
+        Self::from_memory(device, queue, match std::fs::read(path.as_ref()) {
+            Ok(ref buffer) => buffer.as_slice(),
+            Err(_) => {
+                log::error!("Can't open image file: {:?}.", path.as_ref());
+                log::error!("Loading backup image file instead.");
+                include_bytes!("gfx_backup.bmp")
+            },
+        })
+    }
+
+    pub fn from_memory(device: &wgpu::Device, queue: &wgpu::Queue, buffer: &[u8]) -> Self {
+        let decoder = match image::codecs::bmp::BmpDecoder::new(Cursor::new(buffer)) {
             Ok(decoder) => decoder,
             Err(_) => {
-                log::warn!("{} isn't a bmp file!", path.as_ref().as_os_str().to_string_lossy());
+                log::warn!("not a bmp file!");
                 return Self::new(device, None, (1, 1));
             },
         };
-        let image = image::load_from_memory(&std::fs::read(path.as_ref()).unwrap()).unwrap();
+        let image = image::load_from_memory(buffer).unwrap();
         let rgba = image.to_rgba8();
         let dimensions = <image::DynamicImage as image::GenericImageView>::dimensions(&image);
         let mut texture = Self::new(device, Some("texture"), dimensions);

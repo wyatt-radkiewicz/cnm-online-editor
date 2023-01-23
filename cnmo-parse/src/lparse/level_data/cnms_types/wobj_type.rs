@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::lparse::{
     Error,
     LParse,
@@ -11,16 +13,18 @@ use super::{
 };
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum TunesTriggerSize {
+    #[default]
     Small,
     Big,
     VeryBig,
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum RuneType {
+    #[default]
     Fire,
     Ice,
     Air,
@@ -28,32 +32,36 @@ pub enum RuneType {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum TtNodeType {
+    #[default]
     NormalTrigger,
     ChaseTrigger,
     Waypoint(i32),
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum PushZoneType {
+    #[default]
     Horizontal,
     Vertical,
     HorizontalSmall,
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum KeyColor {
+    #[default]
     Red,
     Green,
     Blue
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum RockGuyType {
+    #[default]
     Medium,
     Small1,
     Small2 {
@@ -62,10 +70,11 @@ pub enum RockGuyType {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum UpgradeTriggerType {
     Wings,
     DeephausBoots,
+    #[default]
     CrystalWings,
     Vortex,
     MaxPowerRune {
@@ -75,11 +84,17 @@ pub enum UpgradeTriggerType {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Teleport {
     pub name: String,
     pub cost: i32,
     pub loc: Point,
+}
+
+impl Display for Teleport {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Teleport")
+    }
 }
 
 impl Teleport {
@@ -112,15 +127,22 @@ impl Teleport {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
 pub enum BackgroundSwitcherShape {
+    #[default]
     Small,
     Horizontal,
     Vertical,
 }
 
+impl Default for WobjType {
+    fn default() -> Self {
+        Self::Slime { flying: false }
+    }
+}
+
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, strum::Display, strum::EnumIter)]
 pub enum WobjType {
     Teleport(Teleport),
     Slime {
@@ -553,12 +575,16 @@ impl WobjType {
             },
             &Self::TextSpawner { dialoge_box, ref text } => {
                 let wobj_type_id = if dialoge_box { 108 } else { 9 };
-                if ending_text.len() == version.title_ending_text_line {
-                    ending_text.push("".to_string()); // Can't use the line that is used for the title!
+                let start = ending_text.len() as i32;
+                for line in text.lines() {
+                    if ending_text.len() == version.title_ending_text_line {
+                        ending_text.push("".to_string()); // Can't use the line that is used for the title!
+                    }
+                    ending_text.push(line.trim_end().to_string());
                 }
-                ending_text.push(text.clone());
+                let end = ending_text.len() as i32 - 1;
 
-                (wobj_type_id, ending_text.len() as i32 - 1, 0.0)
+                (wobj_type_id, start, end as f32)
             },
             &Self::BackgroundSwitcher { shape, ref enabled_layers } => {
                 let wobj_type_id = match shape {

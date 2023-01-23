@@ -1,11 +1,13 @@
 use std::f32::consts::E;
 
 use cnmo_parse::lparse::level_data::cnmb_types::BackgroundImage;
+use cnmo_parse::lparse::level_data::cnms_types::wobj_type::WobjType;
 use cnmo_parse::lparse::level_data::cnms_types::{SpawnerMode, Spawner};
 use cnmo_parse::lparse::level_data::cnms_types::item_type::ItemType;
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
 
+use crate::game_config_panel::GameConfigPanel;
 use crate::tile_viewer;
 use crate::editor_data::{
     EditorData,
@@ -13,28 +15,36 @@ use crate::editor_data::{
 };
 use crate::world_panel::WorldPanel;
 
-pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, editor_data: &mut EditorData, editor_mode: &mut super::EditorMode, level_data: &mut level_data::LevelData, ui: &mut egui::Ui, bg_panel: &mut crate::bgpanel::BgPanel) {
+crate::create_instance_resource!(LevelIconPreviewSpriteInstances);
+
+pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, editor_data: &mut EditorData, editor_mode: &mut super::EditorMode, level_data: &mut level_data::LevelData, ui: &mut egui::Ui, bg_panel: &mut crate::bgpanel::BgPanel, cfg_panel: &mut crate::game_config_panel::GameConfigPanel) {
     ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
         ui.heading("File");
     });
+    let text_response = ui.text_edit_singleline(&mut editor_data.level_file_name);
+    editor_data.editing_text &= !text_response.lost_focus();
+    editor_data.editing_text |= text_response.has_focus();
+    text_response.on_hover_text("The level filename (without the extension)");
     if ui.button("New Level").clicked() {
         *level_data = level_data::LevelData::from_version(1).expect("Can't create version 1 level type?");
         log::info!("Created a new level!");
         editor_data.reset_selected_tiles();
+        editor_data.level_file_name = "newlvl".to_string();
     }
     if ui.button("Load Level").clicked() {
-        let path = rfd::FileDialog::new()
-            .set_directory("./")
-            .set_title("Load an editor project file")
-            .add_filter("Level Editor Files", &["json"])
-            .pick_file();
+        // let path = rfd::FileDialog::new()
+        //     .set_directory("./")
+        //     .set_title("Load an editor project file")
+        //     .add_filter("Level Editor Files", &["json"])
+        //     .pick_file();
+        let path = Some(std::path::Path::new("levels/").join(editor_data.level_file_name.clone() + ".json"));
         if let Some(path) = path {
             let file = std::fs::File::open(path);
             if let Ok(file) = file {
                 if let Ok(data) = serde_json::from_reader(file) {
                     *level_data = data;
                     editor_data.reset_selected_tiles();
-                    editor_data.cells_history = vec![level_data.cells.clone()];
+                    editor_data.cells_history = vec![(level_data.cells.clone(), level_data.spawners.clone())];
                     log::info!("Loaded the level!");
                 } else {
                     log::error!("Invalid editor project file!");
@@ -47,11 +57,12 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
         }
     }
     if ui.button("Save Level").clicked() {
-        let path = rfd::FileDialog::new()
-            .set_directory("./")
-            .set_title("Save an editor project file")
-            .add_filter("Level Editor Files", &["json"])
-            .save_file();
+        // let path = rfd::FileDialog::new()
+        //     .set_directory("./")
+        //     .set_title("Save an editor project file")
+        //     .add_filter("Level Editor Files", &["json"])
+        //     .save_file();
+        let path = Some(std::path::Path::new("levels/").join(editor_data.level_file_name.clone() + ".json"));
         if let Some(path) = path {
             let file = std::fs::File::create(path);
             if let Ok(file) = file {
@@ -64,6 +75,7 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
             log::warn!("File open dialog didn't return path!");
         }
     }
+    ui.label("");
     if ui.button("Decompile Level").clicked() {
         let paths = rfd::FileDialog::new()
             .set_directory("./")
@@ -91,7 +103,7 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
                     Ok(data) => {
                         *level_data = data;
                         editor_data.reset_selected_tiles();
-                        editor_data.cells_history = vec![level_data.cells.clone()];
+                        editor_data.cells_history = vec![(level_data.cells.clone(), level_data.spawners.clone())];
                         log::info!("Successfully decompiled the level files!");
                     },
                     Err(err) => {
@@ -106,21 +118,23 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
             log::warn!("File open dialog didn't return path!");
         }
     }
-    if ui.button("Compile Level").clicked() {
-        let cnmb_path = rfd::FileDialog::new()
-            .set_directory("./")
-            .set_title("Save an original cnm level file")
-            .add_filter("CNMB Level Files", &["cnmb"])
-            .save_file();
-        let cnms_path = if let Some(_) = cnmb_path {
-            rfd::FileDialog::new()
-                .set_directory("./")
-                .set_title("Save an original cnm level file")
-                .add_filter("CNMS Level Files", &["cnms"])
-                .save_file()
-        } else {
-            None
-        };
+    let mut compile = || {
+        // let cnmb_path = rfd::FileDialog::new()
+        //     .set_directory("./")
+        //     .set_title("Save an original cnm level file")
+        //     .add_filter("CNMB Level Files", &["cnmb"])
+        //     .save_file();
+        let cnmb_path = Some(std::path::Path::new("levels/").join(editor_data.level_file_name.clone() + ".cnmb"));
+        let cnms_path = Some(std::path::Path::new("levels/").join(editor_data.level_file_name.clone() + ".cnms"));
+        // let cnms_path = if let Some(_) = cnmb_path {
+        //     rfd::FileDialog::new()
+        //         .set_directory("./")
+        //         .set_title("Save an original cnm level file")
+        //         .add_filter("CNMS Level Files", &["cnms"])
+        //         .save_file()
+        // } else {
+        //     None
+        // };
         if let (Some(cnmb_path), Some(cnms_path)) = (cnmb_path, cnms_path) {
             log::info!("Compiling to {} and {}", cnmb_path.as_os_str().to_string_lossy(), cnms_path.as_os_str().to_string_lossy());
             let cnmb = cnmo_parse::lparse::LParse::new(1);
@@ -138,6 +152,19 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
         } else {
             log::warn!("Can't open cnm lparse files");
         }
+    };
+    if ui.button("Compile Level").clicked() {
+        compile();
+    }
+    ui.label("");
+    if ui.button("Play Test!").clicked() {
+        compile();
+        log::info!("running: {:?}", std::env::current_dir().expect("Need permission on current dir").join("CNMONLIN.exe"));
+        match std::process::Command::new(std::env::current_dir().expect("Need permission on current dir").join("CNMONLIN.exe"))
+            .spawn() {
+            Ok(_) => log::info!("Starting playtest session"),
+            Err(_) => log::info!("Couldn't start CNMONLN.exe"),
+        }
     }
     ui.separator();
     ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
@@ -145,14 +172,34 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
     });
     egui::Grid::new("level_metadata").num_columns(2).show(ui, |ui| {
         ui.label("Level Title: ");
-        ui.text_edit_singleline(&mut level_data.metadata.title);
+        let text_response = ui.text_edit_singleline(&mut level_data.metadata.title);
+        editor_data.editing_text &= !text_response.lost_focus();
+        editor_data.editing_text |= text_response.has_focus();
         ui.end_row();
         {
             let mut level_name = level_data.metadata.subtitle.as_ref().unwrap_or(&"".to_string()).clone();
             ui.label("Level Subtitle: ");
-            if ui.text_edit_singleline(&mut level_name).changed() {
+            let text_response = ui.text_edit_singleline(&mut level_name);
+            editor_data.editing_text &= !text_response.lost_focus();
+            editor_data.editing_text |= text_response.has_focus();
+            if text_response.changed() {
                 level_data.metadata.subtitle = Some(level_name);
             }
+            ui.end_row();
+        }
+        {
+            ui.label("Level Icon X").on_hover_text("What 32x32 X tile the icon starts at in GFX.bmp\nIcons are 3x2 tiles big (96 by 32 pixels)");
+            ui.label("Level Icon Y").on_hover_text("What 32x32 Y tile the icon starts at in GFX.bmp\nIcons are 3x2 tiles big (96 by 32 pixels)");
+            ui.end_row();
+            let loc = &mut level_data.metadata.preview_loc;
+            ui.add(egui::DragValue::new(&mut loc.0).clamp_range(0..=editor_data.gfx_size.0 / 32 - 3));
+            ui.add(egui::DragValue::new(&mut loc.1).clamp_range(0..=editor_data.gfx_size.1 / 32 - 2));
+            ui.end_row();
+            let (rect, _) = ui.allocate_exact_size(egui::Vec2::new(96.0, 64.0), egui::Sense::focusable_noninteractive());
+            crate::instanced_sprites::InstancedSprites::new()
+                .with_camera(crate::camera::Camera::new().with_projection(96.0, 64.0, None, true))
+                .with_sprites(vec![crate::instanced_sprites::Sprite::new((0.0, 0.0, 0.0), (96.0, 64.0), (loc.0 as f32 * 32.0, loc.1 as f32 * 32.0, 96.0, 64.0))])
+                .paint::<LevelIconPreviewSpriteInstances>(ui, rect);
             ui.end_row();
         }
         {
@@ -193,22 +240,35 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
                 editor_data.reset_selected_tiles();
                 editor_data.cells_history = vec![];
             }
+            if ui.selectable_value(editor_mode, super::EditorMode::GameConfig, "Game Config").clicked() {
+                editor_data.reset_selected_tiles();
+                editor_data.cells_history = vec![];
+            }
         });
         ui.end_row();
 
         if ui.ctx().input().key_pressed(egui::Key::T) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Tile;
             editor_data.reset_selected_tiles();
+            editor_data.editing_text = false;
         }
         if ui.ctx().input().key_pressed(egui::Key::B) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Background;
             world_panel.editing_background = true;
             editor_data.reset_selected_tiles();
+            editor_data.editing_text = false;
         }
         if ui.ctx().input().key_pressed(egui::Key::L) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Level;
             world_panel.editing_background = false;
             editor_data.reset_selected_tiles();
+            editor_data.editing_text = false;
+        }
+        if ui.ctx().input().key_pressed(egui::Key::G) && ui.ctx().input().modifiers.ctrl {
+            *editor_mode = super::EditorMode::GameConfig;
+            world_panel.editing_background = false;
+            editor_data.reset_selected_tiles();
+            editor_data.editing_text = false;
         }
     });
     ui.separator();
@@ -232,6 +292,18 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
             if ui.selectable_label(world_panel.show_grid, "Show grid").clicked() || ui.ctx().input().key_pressed(egui::Key::G) {
                 world_panel.show_grid = !world_panel.show_grid;
             }
+            if matches!(editor_data.tool, Tool::Spawners) {
+                egui::ComboBox::new("spawner_grid_size", "Spawner Grid Size")
+                    .selected_text(if editor_data.spawner_grid_size < 1.0 { "no grid".to_string() } else { editor_data.spawner_grid_size.to_string() })
+                    .show_ui(ui, |ui| {
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 1.0, "no grid");
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 4.0, "4 pixels");
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 8.0, "8 pixels");
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 16.0, "half tile");
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 32.0, "full tile");
+                    ui.selectable_value(&mut editor_data.spawner_grid_size, 64.0, "2 tiles");
+                });
+            }
             if ui.selectable_label(world_panel.show_original_screen_size, "Show CNM screen size").clicked() {
                 world_panel.show_original_screen_size = !world_panel.show_original_screen_size;
             }
@@ -239,23 +311,23 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
             show_background_list(ui, world_panel);
             ui.label("Tools");
             if ui.selectable_label(matches!(editor_data.tool, Tool::Brush), "Brush (B)").clicked() ||
-                ui.ctx().input().key_pressed(egui::Key::B) {
+                (ui.ctx().input().key_pressed(egui::Key::B) && !editor_data.editing_text) {
                 editor_data.tool = Tool::Brush;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Eraser), "Eraser (E)").clicked() ||
-                ui.ctx().input().key_pressed(egui::Key::E) {
+                (ui.ctx().input().key_pressed(egui::Key::E) && !editor_data.editing_text) {
                 editor_data.tool = Tool::Eraser;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Fill), "Fill (F)").clicked() ||
-                ui.ctx().input().key_pressed(egui::Key::F) {
+                (ui.ctx().input().key_pressed(egui::Key::F) && !editor_data.editing_text) {
                 editor_data.tool = Tool::Fill;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::TilePicker), "Tile Picker (R)").clicked() ||
-                ui.ctx().input().key_pressed(egui::Key::R) {
+                (ui.ctx().input().key_pressed(egui::Key::R) && !editor_data.editing_text) {
                 editor_data.tool = Tool::TilePicker;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Spawners), "Spawners (S)").clicked() ||
-                ui.ctx().input().key_pressed(egui::Key::S) {
+                (ui.ctx().input().key_pressed(egui::Key::S) && !editor_data.editing_text) {
                 editor_data.tool = Tool::Spawners;
             }
         },
@@ -273,6 +345,43 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
         },
         super::EditorMode::Tile => {
 
+        },
+        super::EditorMode::GameConfig => {
+            if ui.button("Save Game Config").clicked() {
+                let _ = std::fs::copy("audio.cnma", "audio.cnma.backup");
+                match editor_data.game_config_file.save("audio.cnma") {
+                    Ok(_) => log::info!("Successfully saved the game config file!"),
+                    Err(err) => log::error!("Couldn't save config due to {}", err),
+                };
+            }
+            if ui.button("Restore Last Load").clicked() {
+                match cnmo_parse::cnma::Cnma::from_file("audio.cnma.backup") {
+                    Ok(file) => {
+                        editor_data.game_config_file = file;
+                        log::info!("Successfully reloaded audio.cnma.backup!");
+                    },
+                    Err(_) => {
+                        match cnmo_parse::cnma::Cnma::from_file("audio.cnma") {
+                            Ok(file) => {
+                                editor_data.game_config_file = file;
+                                log::info!("Successfully reloaded audio.cnma!");
+                            },
+                            Err(err) => log::error!("Couldn't load config due to {}", err),
+                        }
+                    },
+                };
+            }
+            ui.label("");
+            ui.label("");
+            if cfg_panel.preview_gfx {
+                if ui.button("Close preview").clicked() {
+                    cfg_panel.preview_gfx = false;
+                }
+            } else {
+                if ui.button("Open GFX.BMP Preivew").clicked() {
+                    cfg_panel.preview_gfx = true;
+                }
+            }
         },
     }
 }
@@ -292,15 +401,81 @@ impl PropertiesPanel {
         }
     }
 
-    pub fn show_propeties_panel(&mut self, editor_data: &mut EditorData, editor_mode: &mut super::EditorMode, level_data: &mut level_data::LevelData, ui: &mut egui::Ui, world_panel: &mut WorldPanel) {
+    pub fn show_propeties_panel(&mut self, editor_data: &mut EditorData, editor_mode: &mut super::EditorMode, level_data: &mut level_data::LevelData, ui: &mut egui::Ui, world_panel: &mut WorldPanel, game_config_panel: &mut GameConfigPanel) {
         match editor_mode {
-            &mut super::EditorMode::Level => self.show_level_panel(editor_data, level_data, ui),
+            &mut super::EditorMode::Level => self.show_level_panel(editor_data, level_data, ui, world_panel),
             &mut super::EditorMode::Background => self.show_background_panel(editor_data, level_data, ui, world_panel),
             &mut super::EditorMode::Tile => self.show_tile_panel(editor_data, level_data, ui),
+            &mut super::EditorMode::GameConfig => self.show_game_config(editor_data, ui, game_config_panel),
         }
     }
+
+    fn show_game_config(&mut self, editor_data: &mut EditorData, ui: &mut egui::Ui, panel: &mut GameConfigPanel) {
+        if panel.preview_gfx {
+            ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
+                ui.heading("Previewing...");
+            });
+            return;
+        }
+        ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
+            ui.heading("Sections");
+        });
+        ui.separator();
+        for (idx, mode) in editor_data.game_config_file.modes.iter().enumerate() {
+            if self.dragging_bg == idx && Some(self.dragging_bg) != self.dragging_bg_source && self.dragging_bg_source != None {
+                ui.label("Move here");
+            } else {
+                let response = 
+                    ui.selectable_label(panel.selected_mode.unwrap_or(editor_data.game_config_file.modes.len()) == idx, mode.to_string());
+                if response.clicked() {
+                    panel.selected_mode = Some(idx);
+                }
+                if ui.rect_contains_pointer(response.rect) {
+                    if response.ctx.input().pointer.primary_clicked() {
+                        self.dragging_bg_source = Some(idx);
+                    }
+                    self.dragging_bg = idx;
+                }
+            }
+        }
+
+        if let Some(src) = self.dragging_bg_source {
+            if self.dragging_bg != src {
+                egui::Area::new("config_mode_dragging")
+                    .interactable(false)
+                    .fixed_pos(ui.ctx().pointer_interact_pos().unwrap_or_default())
+                    .show(ui.ctx(), |ui| {
+                    ui.label(editor_data.game_config_file.modes[src].to_string());
+                });
+            }
+        }
+        if ui.ctx().input().pointer.any_released() {
+            if let Some(src) = self.dragging_bg_source {
+                let temp = editor_data.game_config_file.modes.remove(src);
+                if self.dragging_bg <= src {
+                    editor_data.game_config_file.modes.insert(self.dragging_bg, temp);
+                } else {
+                    editor_data.game_config_file.modes.insert(self.dragging_bg - 1, temp);
+                }
+            }
+            self.dragging_bg = 0;
+            self.dragging_bg_source = None;
+        }
+
+        egui::ComboBox::new("game_config_mode_add_combo_box", "")
+            .selected_text("Add A New Config Section")
+            .show_ui(ui, |ui| {
+            use strum::IntoEnumIterator;
+            for mode in cnmo_parse::cnma::Mode::iter() {
+                if ui.button(mode.to_string()).clicked() {
+                    panel.selected_mode = Some(editor_data.game_config_file.modes.len());
+                    editor_data.game_config_file.modes.push(mode);
+                }
+            }
+        });
+    }
     
-    fn show_level_panel(&mut self, editor_data: &mut EditorData, level_data: &mut level_data::LevelData, ui: &mut egui::Ui) {
+    fn show_level_panel(&mut self, editor_data: &mut EditorData, level_data: &mut level_data::LevelData, ui: &mut egui::Ui, world_panel: &mut WorldPanel) {
         if !matches!(editor_data.tool, Tool::Spawners) {
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
                 ui.heading("Tiles");
@@ -351,7 +526,7 @@ impl PropertiesPanel {
                     ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.spawn_delay_secs)).on_hover_text_at_pointer("Delay in seconds");
                     ui.end_row();
                     ui.label("Number of maximum respawns: ");
-                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.max_spawns));
+                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.max_respawns));
                     ui.end_row();
                     ui.label("Drops item: ");
                     let dropped_item_response = ui.selectable_label(spawner.dropped_item != None, "Drops item");
@@ -368,6 +543,7 @@ impl PropertiesPanel {
                         show_item_combobox(item, ui);
                         ui.end_row();
                     }
+                    show_spawner_properties(spawner, ui, editor_data, world_panel);
                 });
             }
             ui.separator();
@@ -375,6 +551,19 @@ impl PropertiesPanel {
                 ui.heading("Spawners");
             });
             ui.separator();
+            egui::ScrollArea::vertical().auto_shrink([true, true]).show(ui, |ui| {
+                use strum::IntoEnumIterator;
+                use std::mem::discriminant;
+
+                egui::Grid::new("spawner_list_grid").striped(true).show(ui, |ui| {
+                    for spawner_type in WobjType::iter() {
+                        if ui.selectable_label(discriminant(&editor_data.spawner_template.type_data.clone()) == discriminant(&spawner_type), spawner_type.to_string()).clicked() {
+                            editor_data.spawner_template.type_data = spawner_type;
+                        }
+                        ui.end_row();
+                    }
+                });
+            });
         }
     }
     
@@ -508,12 +697,12 @@ impl PropertiesPanel {
                         ui.add(egui::DragValue::new(&mut rect.y).speed(1.0));
                     });
                     ui.end_row();
-                    ui.label("Rect W: ").on_hover_text("Start of the background image in GFX.BMP");
+                    ui.label("Rect W: ").on_hover_text("Size of the background image in GFX.BMP");
                     ui.horizontal(|ui| {
                         ui.add(egui::DragValue::new(&mut rect.w).speed(1.0));
                     });
                     ui.end_row();
-                    ui.label("Rect H: ").on_hover_text("Start of the background image in GFX.BMP");
+                    ui.label("Rect H: ").on_hover_text("Size of the background image in GFX.BMP");
                     ui.horizontal(|ui| {
                         ui.add(egui::DragValue::new(&mut rect.h).speed(1.0));
                     });
@@ -544,9 +733,523 @@ impl PropertiesPanel {
 }
 
 fn show_item_combobox(item: &mut ItemType, ui: &mut egui::Ui) {
+    egui::ComboBox::new("item_combo_box", "")
+        .selected_text(item.to_string())
+        .show_ui(ui, |ui| {
+        use strum::IntoEnumIterator;
 
+        for item_type in ItemType::iter() {
+            ui.selectable_value(item, item_type, item_type.to_string());
+        }
+    });
 }
 
-fn show_wobj_properties(spawner: &mut Spawner, ui: &mut egui::Ui) {
-    
+fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data: &mut EditorData, world_panel: &mut WorldPanel) {
+    use cnmo_parse::lparse::level_data::cnms_types::{
+        wobj_type::{
+            TtNodeType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, PushZoneType, UpgradeTriggerType, KeyColor
+        },
+    };
+    let mut editing_text = false;
+    let mut lost_text_focus = true;
+    match &mut spawner.type_data {
+        &mut WobjType::Teleport(ref mut teleport) => {
+            ui.label("Name: ");
+            let text_response = ui.text_edit_singleline(&mut teleport.name);
+            lost_text_focus |= text_response.lost_focus();
+            editing_text |= text_response.has_focus();
+            ui.end_row();
+            ui.label("Cost: ");
+            ui.add(egui::DragValue::new(&mut teleport.cost));
+            ui.end_row();
+            ui.label("Location X: ");
+            ui.add(egui::DragValue::new(&mut teleport.loc.0));
+            ui.end_row();
+            ui.label("Location Y: ");
+            ui.add(egui::DragValue::new(&mut teleport.loc.1));
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view on teleport location").clicked() {
+                world_panel.camera.pos.x = teleport.loc.0;
+                world_panel.camera.pos.y = teleport.loc.1;
+            }
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view back on teleport").clicked() {
+                world_panel.camera.pos.x = spawner.pos.0;
+                world_panel.camera.pos.y = spawner.pos.1;
+            }
+            ui.end_row();
+            if editor_data.spawner_grid_size > 1.0 {
+                ui.label("");
+                if ui.button("Snap teleport location to grid").clicked() {
+                    teleport.loc.0 = (teleport.loc.0 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                    teleport.loc.1 = (teleport.loc.1 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                }
+                ui.end_row();
+            }
+        },
+        &mut WobjType::TeleportArea1{ ref mut link_id, ref mut loc } => {
+            ui.label("Location X: ");
+            ui.add(egui::DragValue::new(&mut loc.0));
+            ui.end_row();
+            ui.label("Location Y: ");
+            ui.add(egui::DragValue::new(&mut loc.1));
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view on teleport location").clicked() {
+                world_panel.camera.pos.x = loc.0;
+                world_panel.camera.pos.y = loc.1;
+            }
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view back on trigger area").clicked() {
+                world_panel.camera.pos.x = spawner.pos.0;
+                world_panel.camera.pos.y = spawner.pos.1;
+            }
+            ui.end_row();
+            if editor_data.spawner_grid_size > 1.0 {
+                ui.label("");
+                if ui.button("Snap teleport location to grid").clicked() {
+                    loc.0 = (loc.0 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                    loc.1 = (loc.1 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                }
+                ui.end_row();
+            }
+        },
+        &mut WobjType::TunesTrigger { ref mut size, ref mut music_id } => {
+            ui.label("Trigger Size: ");
+            egui::ComboBox::new("trigger_size_combo_box", "")
+                .selected_text(size.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(size, TunesTriggerSize::Small, "1x1");
+                ui.selectable_value(size, TunesTriggerSize::Big, "2x2");
+                ui.selectable_value(size, TunesTriggerSize::VeryBig, "3x3");
+            });
+            ui.end_row();
+            ui.label("Music ID: ");
+            ui.add(egui::DragValue::new(music_id));
+            ui.end_row();
+        },
+        &mut WobjType::TextSpawner { ref mut dialoge_box, ref mut text } => {
+            ui.label("");
+            if ui.selectable_label(*dialoge_box, "Is dialoge box").clicked() {
+                *dialoge_box = !*dialoge_box;
+            }
+            ui.end_row();
+            ui.label("Lines");
+            ui.end_row();
+            ui.text_edit_multiline(text);
+        },
+        &mut WobjType::BackgroundSwitcher { ref mut shape, ref mut enabled_layers } => {
+            ui.label("Enabled Layers");
+            ui.end_row();
+            ui.label("Start layer");
+            ui.add(egui::DragValue::new(&mut enabled_layers.start).clamp_range(0..=32));
+            ui.end_row();
+            ui.label("End layer");
+            ui.add(egui::DragValue::new(&mut enabled_layers.end).clamp_range(0..=32));
+            ui.end_row();
+            ui.label("Shape: ");
+            egui::ComboBox::new("bgswitcher_shape", "")
+                .selected_text(shape.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(shape, BackgroundSwitcherShape::Small, "Small");
+                ui.selectable_value(shape, BackgroundSwitcherShape::Horizontal, "Horizontal");
+                ui.selectable_value(shape, BackgroundSwitcherShape::Vertical, "Vertical");
+            });
+            ui.end_row();
+            ui.label("");
+            if ui.button("Test background layers").clicked() {
+                world_panel.background_range = enabled_layers.start as usize..=enabled_layers.end as usize;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::DroppedItem { ref mut item } => {
+            ui.label("Item: ");
+            egui::ComboBox::new("item_type", "")
+                .selected_text(item.to_string())
+                .show_ui(ui, |ui| {
+                use strum::IntoEnumIterator;
+                for item_type in ItemType::iter() {
+                    ui.selectable_value(item, item_type, item_type.to_string());
+                }
+            });
+        },
+        &mut WobjType::TtNode { ref mut node_type } => {
+            ui.label("Node Type: ");
+            egui::ComboBox::new("ttnode_type", "")
+                .selected_text(node_type.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(node_type, TtNodeType::ChaseTrigger, "Dead Brother");
+                ui.selectable_value(node_type, TtNodeType::NormalTrigger, "Golden Brother");
+                ui.selectable_value(node_type, TtNodeType::Waypoint(0), "Waypoint");
+            });
+            ui.end_row();
+            if let TtNodeType::Waypoint(id) = node_type {
+                ui.label("Waypoint ID: ");
+                ui.add(egui::DragValue::new(id).clamp_range(0..=63));
+                ui.end_row();
+            }
+        },
+        &mut WobjType::RotatingFireColunmPiece { ref mut origin_x, ref mut degrees_per_second } => {
+            ui.label("Origin X: ");
+            ui.add(egui::DragValue::new(origin_x));
+            ui.end_row();
+            ui.label("Degrees Per Second: ");
+            ui.add(egui::DragValue::new(degrees_per_second));
+            ui.end_row();
+        },
+        &mut WobjType::MovingFire { ref mut vertical, ref mut dist, ref mut speed } => {
+            ui.label("");
+            if ui.selectable_label(*vertical, "Is Vertical").clicked() {
+                *vertical = !*vertical;
+            }
+            ui.end_row();
+            ui.label("Distance: ");
+            ui.add(egui::DragValue::new(dist));
+            ui.end_row();
+            ui.label("Speed: ");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+        },
+        &mut WobjType::PushZone { ref mut push_zone_type, ref mut push_speed } => {
+            ui.label("Zone Type: ");
+            egui::ComboBox::new("push_zone_type", "")
+                .selected_text(push_zone_type.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(push_zone_type, PushZoneType::Horizontal, "Horizontal");
+                ui.selectable_value(push_zone_type, PushZoneType::Vertical, "Vertical");
+                ui.selectable_value(push_zone_type, PushZoneType::HorizontalSmall, "HorizontalSmall");
+            });
+            ui.end_row();
+            ui.label("Speed: ");
+            ui.add(egui::DragValue::new(push_speed));
+            ui.end_row();
+        },
+        &mut WobjType::VerticalWindZone { ref mut acceleration } => {
+            ui.label("Gravity (acceleration): ");
+            ui.add(egui::DragValue::new(acceleration));
+            ui.end_row();
+        },
+        &mut WobjType::SuperDragonLandingZone { ref mut waypoint_id } => {
+            ui.label("Waypoint ID: ");
+            ui.add(egui::DragValue::new(waypoint_id).clamp_range(0..=15));
+            ui.end_row();
+        },
+        &mut WobjType::Jumpthrough { ref mut big } => {
+            ui.label("");
+            if ui.selectable_label(*big, "Big").clicked() {
+                *big = !*big;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::HealthSetTrigger { ref mut target_health } => {
+            ui.label("Target HP: ");
+            ui.add(egui::DragValue::new(target_health));
+            ui.end_row();
+        },
+        &mut WobjType::GraphicsChangeTrigger { ref mut gfx_file } => {
+            ui.label("Graphics File: ");
+            ui.text_edit_singleline(gfx_file);
+            ui.end_row();
+        },
+        &mut WobjType::BossBarInfo { ref mut boss_name } => {
+            ui.label("Boss Name: ");
+            ui.text_edit_singleline(boss_name);
+            ui.end_row();
+        },
+        &mut WobjType::BgSpeed { ref mut vertical_axis, ref mut layer, ref mut speed } => {
+            ui.label("");
+            if ui.selectable_label(*vertical_axis, "Is Y Speed").clicked() {
+                *vertical_axis = !*vertical_axis;
+            }
+            ui.end_row();
+            ui.label("Layer ID: ");
+            ui.add(egui::DragValue::new(layer).clamp_range(0..=31));
+            ui.end_row();
+            ui.label("Speed (pixels per frame): ");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+        },
+        &mut WobjType::BgTransparency { ref mut layer, ref mut transparency } => {
+            ui.label("Layer ID: ");
+            ui.add(egui::DragValue::new(layer).clamp_range(0..=31));
+            ui.end_row();
+            ui.label("Transparency: ");
+            ui.add(egui::DragValue::new(transparency).clamp_range(0..=7));
+            ui.end_row();
+        },
+        &mut WobjType::TeleportTrigger1 { ref mut link_id, ref mut delay_secs } => {
+            ui.label("Link ID: ");
+            ui.add(egui::DragValue::new(link_id).clamp_range(0..=255));
+            ui.end_row();
+            ui.label("Trigger Delay (secs): ");
+            ui.add(egui::DragValue::new(delay_secs));
+            ui.end_row();
+        },
+        &mut WobjType::SfxPoint { ref mut sound_id } => {
+            ui.label("Sound Effect ID: ");
+            ui.add(egui::DragValue::new(sound_id).clamp_range(0..=255));
+            ui.end_row();
+        },
+        &mut WobjType::BreakableWall { ref mut skin_id, ref mut health } => {
+            ui.label("Wall HP: ");
+            ui.add(egui::DragValue::new(health));
+            ui.end_row();
+            if let Some(id) = skin_id {
+                ui.label("Skin ID: ");
+                ui.add(egui::DragValue::new(id).clamp_range(0..=5));
+                ui.end_row();
+                ui.label("");
+                if ui.button("Don't use custom skin").clicked() {
+                    *skin_id = None;
+                }
+                ui.end_row();
+            } else {
+                ui.label("");
+                if ui.button("Use custom skin").clicked() {
+                    *skin_id = Some(0);
+                }
+            }
+        },
+        &mut WobjType::MovingPlatform { ref mut vertical, ref mut dist, ref mut speed } => {
+            ui.label("");
+            if ui.selectable_label(*vertical, "Is Vertical").clicked() {
+                *vertical = !*vertical;
+            }
+            ui.end_row();
+            ui.label("Distance: ");
+            ui.add(egui::DragValue::new(dist));
+            ui.end_row();
+            ui.label("Speed: ");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+        },
+        &mut WobjType::DisapearingPlatform { ref mut time_on, ref mut time_off, ref mut starts_on } => {
+            ui.label("");
+            if ui.selectable_label(*starts_on, "Starts on").clicked() {
+                *starts_on = !*starts_on;
+            }
+            ui.end_row();
+            ui.label("Time On");
+            ui.add(egui::DragValue::new(time_on));
+            ui.end_row();
+            ui.label("Time Off");
+            ui.add(egui::DragValue::new(time_off));
+            ui.end_row();
+        },
+        &mut WobjType::SpringBoard { ref mut jump_velocity } => {
+            ui.label("Jump velocity");
+            ui.add(egui::DragValue::new(jump_velocity));
+            ui.end_row();
+        },
+        &mut WobjType::BreakablePlatform { ref mut time_till_fall } => {
+            ui.label("Time till falling: ");
+            ui.add(egui::DragValue::new(time_till_fall));
+            ui.end_row();
+        },
+        &mut WobjType::CustomizeableMoveablePlatform { ref mut bitmap_x32, ref mut target_relative, ref mut speed, ref mut start_paused, ref mut one_way } => {
+            ui.label("Bitmap Tile X: ");
+            ui.add(egui::DragValue::new(&mut bitmap_x32.0));
+            ui.end_row();
+            ui.label("Bitmap Tile Y: ");
+            ui.add(egui::DragValue::new(&mut bitmap_x32.1));
+            ui.end_row();
+            ui.label("Target Relative X: ");
+            ui.add(egui::DragValue::new(&mut target_relative.0));
+            ui.end_row();
+            ui.label("Target Relative Y: ");
+            ui.add(egui::DragValue::new(&mut target_relative.1));
+            ui.end_row();
+            ui.label("Speed (pixels per frame): ");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+            if ui.selectable_label(*start_paused, "Starts Paused").clicked() {
+                *start_paused = !*start_paused;
+            }
+            if ui.selectable_label(*one_way, "Only 1 Way").clicked() {
+                *one_way = !*one_way;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::LockedBlock { ref mut color, ref mut consume_key } => {
+            ui.label("Color: ");
+            egui::ComboBox::new("color_combo_box", "")
+                .selected_text(color.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(color, KeyColor::Red, "Red");
+                ui.selectable_value(color, KeyColor::Green, "Green");
+                ui.selectable_value(color, KeyColor::Blue, "Blue");
+            });
+            ui.end_row();
+            ui.label("");
+            if ui.selectable_label(*consume_key, "Consume key").clicked() {
+                *consume_key = !*consume_key;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::Vortex { ref mut attract_enemies } => {
+            ui.label("");
+            if ui.selectable_label(*attract_enemies, "Attract Enemies").clicked() {
+                *attract_enemies = !*attract_enemies;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::WandRune { ref mut rune_type } => {
+            ui.label("Rune Type: ");
+            egui::ComboBox::new("rune_type_combo_box", "")
+                .selected_text(rune_type.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(rune_type, RuneType::Air, "Air");
+                ui.selectable_value(rune_type, RuneType::Fire, "Fire");
+                ui.selectable_value(rune_type, RuneType::Ice, "Ice");
+                ui.selectable_value(rune_type, RuneType::Lightning, "Lightning");
+            });
+            ui.end_row();
+        },
+        &mut WobjType::UpgradeTrigger { ref mut trigger_type } => {
+            ui.label("Upgrade Type: ");
+            egui::ComboBox::new("upgrade_type_combo_box", "")
+                .selected_text(trigger_type.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(trigger_type, UpgradeTriggerType::Wings, "Wings");
+                ui.selectable_value(trigger_type, UpgradeTriggerType::CrystalWings, "Crystal Wings");
+                ui.selectable_value(trigger_type, UpgradeTriggerType::DeephausBoots, "Deephaus Boots");
+                ui.selectable_value(trigger_type, UpgradeTriggerType::Vortex, "Vortex");
+                ui.selectable_value(trigger_type, UpgradeTriggerType::None, "Remove Upgrades");
+                ui.selectable_value(trigger_type, UpgradeTriggerType::MaxPowerRune { skin_power_override: None }, "Max Power Rune");
+            });
+            ui.end_row();
+            if let UpgradeTriggerType::MaxPowerRune { skin_power_override } = trigger_type {
+                if let Some(id) = skin_power_override {
+                    ui.label("Skin ID: ");
+                    ui.add(egui::DragValue::new(id).clamp_range(0..=31));
+                    ui.end_row();
+                    ui.label("");
+                    if ui.button("Don't override skin").clicked() {
+                        *skin_power_override = None;
+                    }
+                    ui.end_row();
+                } else {
+                    ui.label("");
+                    if ui.button("Override skin").clicked() {
+                        *skin_power_override = Some(0);
+                    }
+                    ui.end_row();
+                }
+            }
+        },
+        &mut WobjType::Slime { ref mut flying } => {
+            ui.label("");
+            if ui.selectable_label(*flying, "Flying Type").clicked() {
+                *flying = !*flying;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::Heavy { ref mut speed, ref mut face_left } => {
+            ui.label("");
+            if ui.selectable_label(*face_left, "Face left").clicked() {
+                *face_left = !*face_left;
+            }
+            ui.end_row();
+            ui.label("Speed");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+        },
+        &mut WobjType::Dragon { ref mut space_skin } => {
+            ui.label("");
+            if ui.selectable_label(*space_skin, "Use space skin").clicked() {
+                *space_skin = !*space_skin;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::Bozo { ref mut mark_ii } => {
+            ui.label("");
+            if ui.selectable_label(*mark_ii, "Mark II Version Boss").clicked() {
+                *mark_ii = !*mark_ii;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::LavaMonster { ref mut face_left } => {
+            ui.label("");
+            if ui.selectable_label(*face_left, "Face left").clicked() {
+                *face_left = !*face_left;
+            }
+            ui.end_row();
+        }
+        &mut WobjType::TtMinion { ref mut small } => {
+            ui.label("");
+            if ui.selectable_label(*small, "Small").clicked() {
+                *small = !*small;
+            }
+            ui.end_row();
+        },
+        &mut WobjType::MegaFish { ref mut water_level, ref mut swimming_speed } => {
+            ui.label("Water level");
+            ui.add(egui::DragValue::new(water_level));
+            ui.end_row();
+            ui.label("Speed");
+            ui.add(egui::DragValue::new(swimming_speed));
+            ui.end_row();
+        },
+        &mut WobjType::LavaDragonHead { ref mut len, ref mut health } => {
+            ui.label("Number of segments");
+            ui.add(egui::DragValue::new(len).clamp_range(2..=31));
+            ui.end_row();
+            ui.label("Health");
+            ui.add(egui::DragValue::new(health));
+            ui.end_row();
+        },
+        &mut WobjType::BanditGuy { ref mut speed } |
+        &mut WobjType::BozoLaserMinion { ref mut speed } |
+        &mut WobjType::SpiderWalker { ref mut speed } |
+        &mut WobjType::TtBoss { ref mut speed } => {
+            ui.label("Speed");
+            ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+        },
+        &mut WobjType::BozoPin { ref mut flying_speed } => {
+            ui.label("Flying Speed");
+            ui.add(egui::DragValue::new(flying_speed));
+            ui.end_row();
+        },
+        &mut WobjType::EaterBug { ref mut pop_up_speed } => {
+            ui.label("Pop Down Speed");
+            ui.add(egui::DragValue::new(pop_up_speed));
+            ui.end_row();
+        },
+        &mut WobjType::SuperDragon { ref mut waypoint_id } => {
+            ui.label("Landing waypoint");
+            ui.add(egui::DragValue::new(waypoint_id).clamp_range(0..=15));
+            ui.end_row();
+        },
+        &mut WobjType::RockGuy { ref mut rock_guy_type } => {
+            ui.label("Size: ");
+            egui::ComboBox::new("rock_guy_type_combo_box", "")
+                .selected_text(rock_guy_type.to_string())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(rock_guy_type, RockGuyType::Medium, "Meduim");
+                ui.selectable_value(rock_guy_type, RockGuyType::Small1, "Small");
+                ui.selectable_value(rock_guy_type, RockGuyType::Small2 { face_left: false }, "Very Small");
+            });
+            ui.end_row();
+            if let RockGuyType::Small2 { face_left } = rock_guy_type {
+                ui.label("");
+                if ui.selectable_label(*face_left, "Face Left").clicked() {
+                    *face_left = !*face_left;
+                }
+                ui.end_row();
+            }
+        },
+        &mut WobjType::Lua { ref mut lua_wobj_type } => {
+            ui.label("Lua Type ID");
+            ui.add(egui::DragValue::new(lua_wobj_type).clamp_range(0..=15));
+            ui.end_row();
+        },
+        _ => {},
+    }
+
+    editor_data.editing_text &= !lost_text_focus;
+    editor_data.editing_text |= editing_text;
 }

@@ -33,6 +33,7 @@ impl TilePanel {
     }
 
     pub fn update(&mut self, ui: &mut egui::Ui, level_data: &mut LevelData, editor_data: &mut EditorData) {
+        editor_data.info_bar = "Tile editor".to_string();
         if editor_data.selected_tiles.len() > 1 || editor_data.selected_tiles.len() == 0 {
             ui.label("Please select only 1 tile to edit!");
             return;

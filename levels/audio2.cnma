@@ -38,7 +38,7 @@ function LUA_UPDATE0(w)
 		if RandInt(50) == 25 and IsGrounded(w) then
 			SetVelY(w, -10)
 		end
-		cp = GetClosestPlayer(w)
+		cp = GetClosestPlayer(w)asdfasdsdff
 		if Exists(IsCollidingWithType(w, wobj_player, 0, -3, GetSpeed(w)*2, 0)) then
 			SetInt(w, 0, 1)
 			SetLinkNode(w, GetNode(cp))

@@ -1,7 +1,10 @@
+use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::f32::consts::E;
 
 use cnmo_parse::lparse::level_data::cnmb_types::{TileProperties, Cells, TileId, BackgroundLayer};
+use cnmo_parse::lparse::level_data::cnms_types::SpawningCriteria;
+use cnmo_parse::lparse::level_data::cnms_types::wobj_type::WobjType;
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
 use crate::editor_data::{EditorData, Tool};
@@ -27,6 +30,9 @@ pub struct WorldPanel {
     pub editing_background: bool,
     pub show_original_screen_size: bool,
     panning_speed: f32,
+    pub right_clicked_spawner_idx: Option<usize>,
+    pub close_context_menu: bool,
+    pub hovered_on_context_menu: bool,
 }
 
 impl WorldPanel {
@@ -44,6 +50,9 @@ impl WorldPanel {
             editing_background: false,
             show_original_screen_size: false,
             panning_speed: 0.0,
+            right_clicked_spawner_idx: None,
+            close_context_menu: false,
+            hovered_on_context_menu: false,
         }
     }
 
@@ -51,6 +60,9 @@ impl WorldPanel {
         // Draw the level
         let (rect, response) =
             ui.allocate_exact_size(ui.available_size(), egui::Sense::hover().union(egui::Sense::click_and_drag()));
+        if response.clicked() {
+            editor_data.editing_text = false;
+        }
         self.update_camera(ui, &rect, &response, editor_data);
         let pointer_pos = {
             let cam_size = self.camera.get_proj_size_world_space();
@@ -71,6 +83,23 @@ impl WorldPanel {
         if !self.editing_background {
             self.show_grid(&mut sprites, ui, level_data, editor_data, &rect, &response, &pointer_pos);
         }
+        if response.hovered() && response.ctx.input().modifiers.ctrl && response.ctx.input().key_pressed(egui::Key::Z) {
+            if let Some(history) = editor_data.cells_history.pop() {
+                level_data.cells = history.0;
+                level_data.spawners = history.1;
+                editor_data.selected_spawner = None;
+                log::info!("Undid transformation");
+            } else {
+                log::info!("There are no transformations in the history buffer!");
+            }
+        }
+        let grid_size = if matches!(editor_data.tool, Tool::Spawners) { editor_data.spawner_grid_size } else { 32.0 };
+        editor_data.info_bar = format!(
+            "pixel: ({}, {}), snapped: ({}, {}), grid: ({}, {})",
+            pointer_pos.x as i32, pointer_pos.y as i32,
+            (pointer_pos.x / grid_size).floor() as i32, (pointer_pos.y / grid_size).floor() as i32,
+            ((pointer_pos.x / grid_size).floor() * grid_size) as i32, ((pointer_pos.y / grid_size).floor() * grid_size) as i32,
+        );
         InstancedSprites::new()
             .with_camera(self.camera.clone())
             .with_sprites(sprites)
@@ -287,7 +316,7 @@ impl WorldPanel {
         
         if tile_placing_enabled && self.copy_selection == None {
             if editor_data.light_placing == None &&  matches!(editor_data.tool, Tool::Eraser) && (response.ctx.input().pointer.primary_clicked() || response.ctx.input().pointer.secondary_clicked()) {
-                editor_data.cells_history.push(level_data.cells.clone());
+                editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
                 if editor_data.cells_history.len() > 512 {
                     editor_data.cells_history.remove(0);
                 }
@@ -360,7 +389,7 @@ impl WorldPanel {
 
         if let Tool::Fill = editor_data.tool {
             if (response.ctx.input().pointer.primary_clicked() || response.ctx.input().pointer.secondary_clicked()) && !self.grabbing_resize && response.hovered() {
-                editor_data.cells_history.push(level_data.cells.clone());
+                editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
                 if editor_data.cells_history.len() > 512 {
                     editor_data.cells_history.remove(0);
                 }
@@ -494,7 +523,7 @@ impl WorldPanel {
 
         if let Tool::Brush = editor_data.tool {
             if tile_placing_enabled && (response.ctx.input().pointer.primary_clicked() || response.ctx.input().pointer.secondary_clicked()) {
-                editor_data.cells_history.push(level_data.cells.clone());
+                editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
                 if editor_data.cells_history.len() > 512 {
                     editor_data.cells_history.remove(0);
                 }
@@ -562,143 +591,154 @@ impl WorldPanel {
                 ));
             }
         }
-
-        if response.ctx.input().modifiers.ctrl && response.ctx.input().key_pressed(egui::Key::Z) {
-            if let Some(cells) = editor_data.cells_history.pop() {
-                level_data.cells = cells;
-                log::info!("Undid cells transformation");
-            } else {
-                log::info!("There are no cell transformations in the history buffer!");
-            }
-        }
     }
 
     fn show_grid(&mut self, sprites: &mut Vec<Sprite>, ui: &mut egui::Ui, level_data: &mut level_data::LevelData, editor_data: &mut EditorData, rect: &egui::Rect, response: &egui::Response, pointer_pos: &egui::Pos2) {
+        let grid_size = if matches!(editor_data.tool, Tool::Spawners) { editor_data.spawner_grid_size } else { 32.0 };
         let mut max_width = level_data.cells.get_width() as f32 * 32.0;
         let mut max_height = level_data.cells.get_height() as f32 * 32.0;
         let (mut min_x, mut min_y) = (0.0, 0.0);
         let cam_size = self.camera.get_proj_size_world_space();
         let grab_size = cam_size.y / (32.0 * 4.0);
 
-        if self.resizing_bounds.0 || self.resizing_bounds.1 || self.resizing_bounds.2 || self.resizing_bounds.3 {
-            if self.resizing_bounds.0 {
-                max_height = pointer_pos.y;
-                if max_height - 64.0 < min_y {
-                    max_height = min_y + 64.0;
-                }
-                if response.drag_released() {
-                    editor_data.cells_history.push(level_data.cells.clone());
-                    if editor_data.cells_history.len() > 512 {
-                        editor_data.cells_history.remove(0);
+        if !matches!(editor_data.tool, Tool::Spawners) {
+            if self.resizing_bounds.0 || self.resizing_bounds.1 || self.resizing_bounds.2 || self.resizing_bounds.3 {
+                if self.resizing_bounds.0 {
+                    max_height = pointer_pos.y;
+                    if max_height - 64.0 < min_y {
+                        max_height = min_y + 64.0;
                     }
-                    level_data.cells.resize(level_data.cells.get_width(), max_height as usize / 32);
-                }
-            }
-            if self.resizing_bounds.1 {
-                min_y = pointer_pos.y;
-                if min_y + 64.0 > max_height {
-                    min_y = max_height - 64.0;
-                }
-                if response.drag_released() {
-                    editor_data.cells_history.push(level_data.cells.clone());
-                    if editor_data.cells_history.len() > 512 {
-                        editor_data.cells_history.remove(0);
+                    if response.drag_released() {
+                        editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+                        if editor_data.cells_history.len() > 512 {
+                            editor_data.cells_history.remove(0);
+                        }
+                        level_data.cells.resize(level_data.cells.get_width(), max_height as usize / 32);
                     }
-                    let src_offset = min_y as i32 / 32;
-                    let new_height = level_data.cells.get_height() as i32 - src_offset;
-                    let mut cells = Cells::new(level_data.cells.get_width(), new_height as usize);
-                    level_data.cells.paste(&mut cells, (0, src_offset), (level_data.cells.get_width() as i32 - 1, new_height + src_offset), (0, 0));
-                    level_data.cells = cells;
                 }
-            }
-            if self.resizing_bounds.2 {
-                min_x = pointer_pos.x;
-                if min_x + 64.0 > max_width {
-                    min_x = max_width - 64.0;
-                }
-                if response.drag_released() {
-                    editor_data.cells_history.push(level_data.cells.clone());
-                    if editor_data.cells_history.len() > 512 {
-                        editor_data.cells_history.remove(0);
+                if self.resizing_bounds.1 {
+                    min_y = pointer_pos.y;
+                    if min_y + 64.0 > max_height {
+                        min_y = max_height - 64.0;
                     }
-                    let src_offset = min_x as i32 / 32;
-                    let new_width = level_data.cells.get_width() as i32 - src_offset;
-                    let mut cells = Cells::new(new_width as usize, level_data.cells.get_height());
-                    level_data.cells.paste(&mut cells, (src_offset, 0), (new_width + src_offset, level_data.cells.get_height() as i32 - 1), (0, 0));
-                    level_data.cells = cells;
-                }
-            }
-            if self.resizing_bounds.3 {
-                max_width = pointer_pos.x;
-                if max_width - 64.0 < min_x {
-                    max_width = min_x + 64.0;
-                }
-                if response.drag_released() {
-                    editor_data.cells_history.push(level_data.cells.clone());
-                    if editor_data.cells_history.len() > 512 {
-                        editor_data.cells_history.remove(0);
-                    }
-                    level_data.cells.resize(max_width as usize / 32, level_data.cells.get_height());
-                }
-            }
+                    if response.drag_released() {
+                        editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+                        if editor_data.cells_history.len() > 512 {
+                            editor_data.cells_history.remove(0);
+                        }
+                        let src_offset = min_y as i32 / 32;
+                        
+                        for spawner in level_data.spawners.iter_mut() {
+                            spawner.pos.1 -= (src_offset * 32) as f32;
+                        }
 
-            if response.drag_released() {
-                self.resizing_bounds = (false, false, false, false);
-            }
-        } else {
-            if egui::Rect::from_x_y_ranges(0.0..=max_width, max_height-grab_size..=max_height+grab_size).contains(*pointer_pos) {
-                ui.output().cursor_icon = egui::CursorIcon::ResizeVertical;
-                self.grabbing_resize = true;
-                if response.drag_started() {
-                    self.resizing_bounds = (true, false, false, false);
+                        let new_height = level_data.cells.get_height() as i32 - src_offset;
+                        let mut cells = Cells::new(level_data.cells.get_width(), new_height as usize);
+                        level_data.cells.paste(&mut cells, (0, src_offset), (level_data.cells.get_width() as i32 - 1, new_height + src_offset), (0, 0));
+                        level_data.cells = cells;
+                    }
                 }
-            } else if egui::Rect::from_x_y_ranges(0.0..=max_width, -grab_size..=grab_size).contains(*pointer_pos) {
-                ui.output().cursor_icon = egui::CursorIcon::ResizeVertical;
-                self.grabbing_resize = true;
-                if response.drag_started() {
-                    self.resizing_bounds = (false, true, false, false);
+                if self.resizing_bounds.2 {
+                    min_x = pointer_pos.x;
+                    if min_x + 64.0 > max_width {
+                        min_x = max_width - 64.0;
+                    }
+                    if response.drag_released() {
+                        editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+                        if editor_data.cells_history.len() > 512 {
+                            editor_data.cells_history.remove(0);
+                        }
+                        let src_offset = min_x as i32 / 32;
+
+                        for spawner in level_data.spawners.iter_mut() {
+                            spawner.pos.0 -= (src_offset * 32) as f32;
+                        }
+
+                        let new_width = level_data.cells.get_width() as i32 - src_offset;
+                        let mut cells = Cells::new(new_width as usize, level_data.cells.get_height());
+                        level_data.cells.paste(&mut cells, (src_offset, 0), (new_width + src_offset, level_data.cells.get_height() as i32 - 1), (0, 0));
+                        level_data.cells = cells;
+                    }
                 }
-            } else if egui::Rect::from_x_y_ranges(-grab_size..=grab_size, 0.0..=max_height).contains(*pointer_pos) {
-                ui.output().cursor_icon = egui::CursorIcon::ResizeHorizontal;
-                self.grabbing_resize = true;
-                if response.drag_started() {
-                    self.resizing_bounds = (false, false, true, false);
+                if self.resizing_bounds.3 {
+                    max_width = pointer_pos.x;
+                    if max_width - 64.0 < min_x {
+                        max_width = min_x + 64.0;
+                    }
+                    if response.drag_released() {
+                        editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+                        if editor_data.cells_history.len() > 512 {
+                            editor_data.cells_history.remove(0);
+                        }
+                        level_data.cells.resize(max_width as usize / 32, level_data.cells.get_height());
+                    }
                 }
-            } else if egui::Rect::from_x_y_ranges(max_width-grab_size..=max_width+grab_size, 0.0..=max_height).contains(*pointer_pos) {
-                ui.output().cursor_icon = egui::CursorIcon::ResizeHorizontal;
-                self.grabbing_resize = true;
-                if response.drag_started() {
-                    self.resizing_bounds = (false, false, false, true);
+    
+                if response.drag_released() {
+                    self.resizing_bounds = (false, false, false, false);
                 }
             } else {
-                self.grabbing_resize = false;
+                if egui::Rect::from_x_y_ranges(0.0..=max_width, max_height-grab_size..=max_height+grab_size).contains(*pointer_pos) {
+                    ui.output().cursor_icon = egui::CursorIcon::ResizeVertical;
+                    self.grabbing_resize = true;
+                    if response.drag_started() {
+                        self.resizing_bounds = (true, false, false, false);
+                    }
+                } else if egui::Rect::from_x_y_ranges(0.0..=max_width, -grab_size..=grab_size).contains(*pointer_pos) {
+                    ui.output().cursor_icon = egui::CursorIcon::ResizeVertical;
+                    self.grabbing_resize = true;
+                    if response.drag_started() {
+                        self.resizing_bounds = (false, true, false, false);
+                    }
+                } else if egui::Rect::from_x_y_ranges(-grab_size..=grab_size, 0.0..=max_height).contains(*pointer_pos) {
+                    ui.output().cursor_icon = egui::CursorIcon::ResizeHorizontal;
+                    self.grabbing_resize = true;
+                    if response.drag_started() {
+                        self.resizing_bounds = (false, false, true, false);
+                    }
+                } else if egui::Rect::from_x_y_ranges(max_width-grab_size..=max_width+grab_size, 0.0..=max_height).contains(*pointer_pos) {
+                    ui.output().cursor_icon = egui::CursorIcon::ResizeHorizontal;
+                    self.grabbing_resize = true;
+                    if response.drag_started() {
+                        self.resizing_bounds = (false, false, false, true);
+                    }
+                } else {
+                    self.grabbing_resize = false;
+                }
             }
         }
 
         if self.show_grid {
             let top_left = self.camera.get_top_left_world_space();
-            let start = cgmath::vec2((top_left.x / 32.0).floor() as i32, (top_left.y / 32.0).floor() as i32);
+            let start = cgmath::vec2((top_left.x / grid_size).floor() as i32, (top_left.y / grid_size).floor() as i32);
             let end = cgmath::vec2(
-                (self.camera.get_bottom_right_world_space().x / 32.0).ceil() as i32 + 1,
-                (self.camera.get_bottom_right_world_space().y / 32.0).ceil() as i32 + 1,
+                (self.camera.get_bottom_right_world_space().x / grid_size).ceil() as i32 + 1,
+                (self.camera.get_bottom_right_world_space().y / grid_size).ceil() as i32 + 1,
             );
 
-            let alpha = ((self.camera.zoom - 0.02) / (1.0 - 0.02)).clamp(0.0, 0.75);
+            let spawner_tool = matches!(editor_data.tool, Tool::Spawners);
+            let alpha = if spawner_tool {
+                ((self.camera.zoom - 0.02) / (5.0 - 0.02)).clamp(0.0, 0.25)
+            } else {
+                ((self.camera.zoom - 0.02) / (1.0 - 0.02)).clamp(0.0, 0.75)
+            };
 
-            for column in start.x..=end.x {
-                sprites.push(Sprite::new_pure_color(
-                    (column as f32 * 32.0, top_left.y, 0.0),
-                    (cam_size.y / (32.0 * 15.0), cam_size.y),
-                    (1.0, 1.0, 1.0, alpha)
-                ));
-            }
-
-            for row in start.y..=end.y {
-                sprites.push(Sprite::new_pure_color(
-                    (top_left.x, row as f32 * 32.0, 0.0),
-                    (cam_size.x, cam_size.y / (32.0 * 15.0)),
-                    (1.0, 1.0, 1.0, alpha)
-                ));
+            if grid_size > 1.0 {
+                for column in start.x..=end.x {
+                    sprites.push(Sprite::new_pure_color(
+                        (column as f32 * grid_size, top_left.y, 0.0),
+                        (cam_size.y / (32.0 * 15.0), cam_size.y),
+                        (1.0, 1.0, 1.0, alpha)
+                    ));
+                }
+    
+                for row in start.y..=end.y {
+                    sprites.push(Sprite::new_pure_color(
+                        (top_left.x, row as f32 * grid_size, 0.0),
+                        (cam_size.x, cam_size.y / (32.0 * 15.0)),
+                        (1.0, 1.0, 1.0, alpha)
+                    ));
+                }
             }
         }
 
@@ -711,17 +751,20 @@ impl WorldPanel {
             )).to_vec());
         }
 
-        sprites.append(&mut (Sprite::new_rect(
-            (min_x, min_y),
-            (max_width, max_height),
-            cam_size.y / (32.0 * 10.0),
-            (0.1, 0.3, 0.8, 0.7)
-        )).to_vec());
+        if !matches!(editor_data.tool, Tool::Spawners) {
+            sprites.append(&mut (Sprite::new_rect(
+                (min_x, min_y),
+                (max_width, max_height),
+                cam_size.y / (32.0 * 10.0),
+                (0.1, 0.3, 0.8, 0.7)
+            )).to_vec());
+        }
     }
-    fn update_level_spawners(&mut self, sprites: &mut Vec<Sprite>, _ui: &mut egui::Ui, level_data: &mut level_data::LevelData, rect: &egui::Rect, response: &egui::Response, editor_data: &mut EditorData, pointer_pos: &egui::Pos2) {
+    fn update_level_spawners(&mut self, sprites: &mut Vec<Sprite>, ui: &mut egui::Ui, level_data: &mut level_data::LevelData, rect: &egui::Rect, response: &egui::Response, editor_data: &mut EditorData, pointer_pos: &egui::Pos2) {
         // let top_left = self.camera.get_top_left_world_space();
         let cam_size = self.camera.get_proj_size_world_space();
         let mut delete_idx = None;
+        let mut hovered_spawners = Vec::new();
         for (idx, spawner) in level_data.spawners.iter_mut().enumerate() {
             draw_spawner(sprites, spawner,  &self.camera, editor_data, matches!(editor_data.tool, Tool::Spawners));
             let spawner_rect = get_spawner_size(spawner);
@@ -730,17 +773,7 @@ impl WorldPanel {
                 pointer_pos.y > spawner.pos.1 &&
                 pointer_pos.y < spawner.pos.1 + spawner_rect.1 &&
                 matches!(editor_data.tool, Tool::Spawners) {
-                if response.ctx.input().pointer.primary_clicked() {
-                    editor_data.selected_spawner = Some(idx);
-                }
-                if response.ctx.input().pointer.secondary_clicked() {
-                    editor_data.selected_spawner = None;
-                    delete_idx = Some(idx);
-                }
-                if response.dragged() {
-                    spawner.pos.0 += ((response.drag_delta().x * response.ctx.pixels_per_point()) / rect.width()) * cam_size.x;
-                    spawner.pos.1 += ((response.drag_delta().y * response.ctx.pixels_per_point()) / rect.height()) * cam_size.y;
-                }
+                hovered_spawners.push(idx);
             }
             if editor_data.selected_spawner == Some(idx) && matches!(editor_data.tool, Tool::Spawners) {
                 sprites.push(Sprite::new_pure_color(
@@ -750,8 +783,178 @@ impl WorldPanel {
                 ));
             }
         }
+        if !matches!(editor_data.tool, Tool::Spawners) {
+            self.close_context_menu = false;
+            return;
+        }
+        let duplicated_spawners = level_data.spawners.clone();
+        let mut populated = false;
+        hovered_spawners.sort_by(|idx_a, idx_b| {
+            let a = get_spawner_size(&level_data.spawners[*idx_a]);
+            let b = get_spawner_size(&level_data.spawners[*idx_b]);
+            let cmp = (a.0 + a.1).total_cmp(&(b.0 + b.1));
+            if cmp.is_eq() {
+                idx_b.cmp(idx_a)
+            } else {
+                cmp
+            }
+        });
+        if let Some(idx) = hovered_spawners.get(0) {
+            //let spawner = &mut level_data.spawners[*idx];
+            if response.clicked() {
+                editor_data.selected_spawner = Some(*idx);
+                self.right_clicked_spawner_idx = None;
+            }
+            if response.ctx.input().pointer.secondary_clicked() {
+                self.right_clicked_spawner_idx = Some(*idx);
+            }
+        } else if response.hovered() {
+            if response.clicked() {
+                editor_data.selected_spawner = None;
+                self.right_clicked_spawner_idx = None;
+            }
+            if response.double_clicked_by(egui::PointerButton::Primary) {
+                editor_data.cells_history.push((level_data.cells.clone(), duplicated_spawners.clone()));
+                let mut spawner = editor_data.spawner_template.clone();
+                spawner.dropped_item = None;
+                spawner.spawning_criteria = SpawningCriteria {
+                    spawn_delay_secs: 0.0,
+                    mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
+                    max_respawns: 0,
+                };
+                if editor_data.spawner_grid_size > 1.0 {
+                    spawner.pos.0 = (pointer_pos.x / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                    spawner.pos.1 = (pointer_pos.y / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                } else {
+                    spawner.pos.0 = pointer_pos.x;
+                    spawner.pos.1 = pointer_pos.y;
+                }
+                level_data.spawners.push(spawner);
+                editor_data.selected_spawner = Some(level_data.spawners.len() - 1);
+            }
+            if response.ctx.input().pointer.secondary_clicked() {
+                self.right_clicked_spawner_idx = None;
+            }
+        }
+        if let Some(idx) = editor_data.selected_spawner {
+            let spawner = &mut level_data.spawners[idx];
+            if response.hovered() {
+                if response.drag_started() {
+                    editor_data.cells_history.push((level_data.cells.clone(), duplicated_spawners.clone()));
+                }
+                if response.dragged_by(egui::PointerButton::Primary) {
+                    spawner.pos.0 += ((response.drag_delta().x * response.ctx.pixels_per_point()) / rect.width()) * cam_size.x;
+                    spawner.pos.1 += ((response.drag_delta().y * response.ctx.pixels_per_point()) / rect.height()) * cam_size.y;
+                }
+                if response.drag_released() && editor_data.spawner_grid_size > 1.0 {
+                    spawner.pos.0 = (spawner.pos.0 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                    spawner.pos.1 = (spawner.pos.1 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                }
+                if response.ctx.input().key_pressed(egui::Key::Delete) ||
+                    (response.ctx.input().key_pressed(egui::Key::D) && response.ctx.input().modifiers.alt) {
+                    delete_idx = Some(idx);
+                }
+            }
+            if response.ctx.input().key_pressed(egui::Key::C) && response.ctx.input().modifiers.ctrl {
+                editor_data.spawner_template = spawner.clone();
+                log::info!("Copied Spawner Data");
+            }
+            if response.ctx.input().key_pressed(egui::Key::V) && response.ctx.input().modifiers.shift {
+                editor_data.cells_history.push((level_data.cells.clone(), duplicated_spawners.clone()));
+                spawner.dropped_item = editor_data.spawner_template.dropped_item.clone();
+                spawner.spawning_criteria = editor_data.spawner_template.spawning_criteria.clone();
+                spawner.type_data = editor_data.spawner_template.type_data.clone();
+                log::info!("Pasted Spawner Data in Place");
+            }
+        }
+        if let Some(idx) = editor_data.selected_spawner {
+            let spawner = &level_data.spawners[idx];
+            let mut location = None;
+            if let WobjType::Teleport(teleport) = &spawner.type_data {
+                populated |= true;
+                location = Some(teleport.loc);
+            }
+            if let WobjType::TeleportArea1{ loc, .. } = &spawner.type_data {
+                populated |= true;
+                location = Some(*loc);
+            }
+            if let Some(loc) = location {
+                sprites.push(Sprite::new(
+                    (loc.0 - 16.0, loc.1 - 16.0, 0.0),
+                    (16.0, 16.0),
+                    (256.0, 1088.0, 16.0, 16.0)
+                ));
+                sprites.push(Sprite::new(
+                    (loc.0, loc.1 - 16.0, 0.0),
+                    (16.0, 16.0),
+                    (256.0 + 16.0, 1088.0, -16.0, 16.0)
+                ));
+                sprites.push(Sprite::new(
+                    (loc.0 - 16.0, loc.1, 0.0),
+                    (16.0, 16.0),
+                    (256.0, 1088.0 + 16.0, 16.0, -16.0)
+                ));
+                sprites.push(Sprite::new(
+                    (loc.0, loc.1, 0.0),
+                    (16.0, 16.0),
+                    (256.0 + 16.0, 1088.0 + 16.0, -16.0, -16.0)
+                ));
+            }
+        }
+        if (response.ctx.input().key_pressed(egui::Key::V) && response.ctx.input().modifiers.ctrl) ||
+            (ui.ctx().input().key_pressed(egui::Key::Space) && !editor_data.editing_text) {
+            editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+            let mut spawner = editor_data.spawner_template.clone();
+            if editor_data.spawner_grid_size > 1.0 {
+                spawner.pos.0 = (pointer_pos.x / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+                spawner.pos.1 = (pointer_pos.y / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
+            } else {
+                spawner.pos.0 = pointer_pos.x;
+                spawner.pos.1 = pointer_pos.y;
+            }
+            level_data.spawners.push(spawner);
+            editor_data.selected_spawner = Some(level_data.spawners.len() - 1);
+        }
+        populated |= self.right_clicked_spawner_idx != None;
+        self.hovered_on_context_menu = false;
+        if populated {
+            let response = response.clone().context_menu(|ui| {
+                if let Some(idx) = self.right_clicked_spawner_idx {
+                    if ui.button("Delete spawner").clicked() {
+                        editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
+                        editor_data.selected_spawner = None;
+                        self.right_clicked_spawner_idx = None;
+                        level_data.spawners.remove(idx);
+                        ui.close_menu();
+                    }
+                }
+                if let Some(idx) = editor_data.selected_spawner {
+                    let spawner = &mut level_data.spawners[idx];
+                    match &mut spawner.type_data {
+                        WobjType::Teleport(cnmo_parse::lparse::level_data::cnms_types::wobj_type::Teleport { loc, .. }) |
+                        WobjType::TeleportArea1 { loc, .. } => {
+                            if ui.button("Set teleport location").clicked() {
+                                editor_data.cells_history.push((level_data.cells.clone(), duplicated_spawners.clone()));
+                                loc.0 = pointer_pos.x;
+                                loc.1 = pointer_pos.y;
+                                ui.close_menu();
+                            }
+                        },
+                        _ => {},
+                    }
+                }
+                if self.close_context_menu {
+                    ui.close_menu();
+                    self.close_context_menu = false;
+                }
+            });
+            self.close_context_menu = response.lost_focus();
+            self.hovered_on_context_menu = response.hovered();
+        }
         if let Some(idx) = delete_idx {
+            editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
             level_data.spawners.remove(idx);
+            editor_data.selected_spawner = None;
         }
     }
 }
@@ -760,7 +963,7 @@ use cnmo_parse::Rect;
 fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawner) -> (f32, f32) {
     use cnmo_parse::lparse::level_data::cnms_types::{
         wobj_type::{
-            WobjType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, TtNodeType, PushZoneType, UpgradeTriggerType, KeyColor
+            WobjType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, PushZoneType, UpgradeTriggerType, KeyColor
         },
     };
     match spawner.type_data {
@@ -768,6 +971,73 @@ fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawne
         WobjType::Dragon { .. } | 
         WobjType::SuperDragon { .. } => (128.0, 128.0),
         WobjType::Bozo { .. } => (64.0, 128.0),
+        WobjType::TunesTrigger { size, .. } => {
+            match size {
+                TunesTriggerSize::Small => (32.0, 32.0),
+                TunesTriggerSize::Big => (64.0, 64.0),
+                TunesTriggerSize::VeryBig => (96.0, 96.0),
+            }
+        },
+        WobjType::BackgroundSwitcher { shape, .. } => {
+            match shape {
+                BackgroundSwitcherShape::Small => (32.0, 32.0),
+                BackgroundSwitcherShape::Horizontal => (128.0, 32.0),
+                BackgroundSwitcherShape::Vertical => (32.0, 96.0),
+            }
+        },
+        WobjType::WandRune { rune_type } => {
+            match rune_type {
+                RuneType::Ice => (46.0, 44.0),
+                RuneType::Air => (64.0, 32.0),
+                RuneType::Fire => (64.0, 64.0),
+                RuneType::Lightning => (64.0, 64.0),
+            }
+        },
+        WobjType::UpgradeTrigger { trigger_type } => {
+            match trigger_type {
+                UpgradeTriggerType::DeephausBoots => (32.0, 32.0),
+                UpgradeTriggerType::Wings => (36.0, 38.0),
+                UpgradeTriggerType::CrystalWings => (48.0, 48.0),
+                UpgradeTriggerType::None => (32.0, 32.0),
+                UpgradeTriggerType::Vortex => (32.0, 32.0),
+                UpgradeTriggerType::MaxPowerRune { .. } => (48.0, 48.0),
+            }
+        },
+        WobjType::Heavy { .. } => (64.0, 64.0),
+        WobjType::BozoPin { .. } => (48.0, 64.0),
+        WobjType::LavaMonster { .. } => (48.0, 48.0),
+        WobjType::TtMinion { small } => {
+            if small { (32.0, 32.0) } else { (32.0, 64.0) }
+        },
+        WobjType::SlimeWalker |
+        WobjType::LavaDragonHead { .. } => (64.0, 64.0),
+        WobjType::EaterBug { .. } => (32.0, 96.0),
+        WobjType::BozoLaserMinion { .. } => (32.0, 64.0),
+        WobjType::PushZone { push_zone_type, .. } => {
+            match push_zone_type {
+                PushZoneType::Horizontal => (128.0, 128.0),
+                PushZoneType::Vertical => (64.0, 64.0),
+                PushZoneType::HorizontalSmall => (32.0, 32.0),
+            }
+        },
+        WobjType::VerticalWindZone { .. } => (64.0, 64.0),
+        WobjType::Jumpthrough { big } => {
+            if big { (96.0, 32.0) } else { (32.0, 32.0) }
+        },
+        WobjType::RockGuy { rock_guy_type } => {
+            match rock_guy_type {
+                RockGuyType::Medium => (32.0, 64.0),
+                RockGuyType::Small1 => (22.0, 19.0),
+                RockGuyType::Small2 { .. } => (14.0, 14.0),
+            }
+        },
+        WobjType::HealthSetTrigger { .. } => (64.0, 96.0),
+        WobjType::Vortex { .. } => (96.0, 96.0),
+        WobjType::RockGuySmasher |
+        WobjType::TeleportTrigger1 { .. } => (32.0, 96.0),
+        WobjType::RockGuySlider |
+        WobjType::Wolf => (64.0, 32.0),
+        WobjType::Supervirus => (48.0, 96.0),
         _ => (32.0, 32.0),
     }
 }
@@ -783,7 +1053,7 @@ fn draw_spawner(sprites: &mut Vec<Sprite>, spawner: &cnmo_parse::lparse::level_d
     let mut draw_rect = |x: i32, y: i32, w: i32, h: i32| {
         let mut sprite = Sprite::new(
             (spawner.pos.0, spawner.pos.1, 0.0),
-            (w as f32, h as f32),
+            (w.abs() as f32, h as f32),
             (x as f32, y as f32, w as f32, h as f32),
         );
         sprite.tint[3] = if active { 1.0 } else { 0.6 };

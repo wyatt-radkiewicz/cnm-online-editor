@@ -17,7 +17,7 @@ pub mod item_type;
 pub mod wobj_type;
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, strum::Display, PartialEq)]
+#[derive(Debug, strum::Display, PartialEq, Clone, Copy)]
 pub enum SpawnerMode {
     MultiAndSingleplayer,
     SingleplayerOnly,
@@ -50,15 +50,15 @@ impl SpawnerMode {
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct SpawningCriteria {
     pub spawn_delay_secs: f32,
     pub mode: SpawnerMode,
-    pub max_spawns: u32,
+    pub max_respawns: u32,
 }
 
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Spawner {
     pub pos: Point,
     pub type_data: WobjType,
@@ -83,7 +83,7 @@ impl Spawner {
                     None if !ignore_warnings => return Err(Error::Corrupted(format!("Corrupt spawing mode on entity id {index}."))),
                     None => SpawnerMode::MultiAndSingleplayer,
                 },
-                max_spawns: max_spawns as u32,
+                max_respawns: max_spawns as u32,
             },
             dropped_item: ItemType::from_item_id(dropped_item),
         })
@@ -109,7 +109,7 @@ impl Spawner {
             self.pos,
             wobj_type_info.0,
             (self.spawning_criteria.spawn_delay_secs * FRAME_RATE as f32) as i32,
-            self.spawning_criteria.max_spawns as i32,
+            self.spawning_criteria.max_respawns as i32,
             wobj_type_info.1,
             wobj_type_info.2,
             if let Some(i) = self.dropped_item { i.get_item_id() } else { 0 } | self.spawning_criteria.mode.to_packed_dropped_item(),

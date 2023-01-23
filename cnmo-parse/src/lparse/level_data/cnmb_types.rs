@@ -186,7 +186,7 @@ impl Default for TileProperties {
             solid: false,
             transparency: 0,
             damage_type: DamageType::None, 
-            anim_speed: Duration(10),
+            anim_speed: Duration(1),
             frames: vec![(1, 0)],
             collision_data: CollisionType::Box(Rect { x: 0, y: 0, w: 32, h: 32 })
         }

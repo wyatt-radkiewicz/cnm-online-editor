@@ -9,8 +9,7 @@ pub struct GfxCommonResources {
 }
 
 impl GfxCommonResources {
-    pub fn insert_resource<P: AsRef<std::path::Path>>(cc: &eframe::CreationContext, gfx_path: P) -> (Vec<[u8; 3]>, (u32, u32), Vec<Vec<bool>>) {
-        let wgpu_render_state = cc.wgpu_render_state.as_ref().expect("Need a WGPU render state for app to function!");
+    pub fn insert_resource<P: AsRef<std::path::Path>>(wgpu_render_state: &egui_wgpu::RenderState, gfx_path: P) -> (Vec<[u8; 3]>, (u32, u32), Vec<Vec<bool>>) {
         let device = &wgpu_render_state.device;
         let queue = &wgpu_render_state.queue;
         let paint_callback_resources = &mut wgpu_render_state
@@ -76,7 +75,13 @@ impl GfxCommonResources {
             });
         }
 
-        let image = image::load_from_memory(&std::fs::read("gfx.bmp").unwrap()).unwrap();
+        let image = image::load_from_memory(match std::fs::read("gfx.bmp") {
+            Ok(ref buffer) => buffer.as_slice(),
+            Err(_) => {
+                log::error!("Canno't find a gfx file! Loading backup graphics");
+                include_bytes!("gfx_backup.bmp")
+            },
+        }).unwrap();
         let rgba = image.to_rgba8();
         let (width, height) = rgba.dimensions();
         let mut opaques = (0..width).map(|_| { (0..height).map(|_| { true }).collect::<Vec<bool>>() }).collect::<Vec<Vec<bool>>>();

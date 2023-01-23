@@ -1,4 +1,4 @@
-use cnmo_parse::lparse::level_data::cnmb_types::Cells;
+use cnmo_parse::lparse::level_data::{cnmb_types::Cells, cnms_types::{Spawner, wobj_type::WobjType}};
 
 #[derive(strum::Display)]
 pub enum Tool {
@@ -26,8 +26,14 @@ pub struct EditorData {
     pub gray_out_background: bool,
     pub selecting_background_color: bool,
     pub selecting_background_image: bool,
-    pub cells_history: Vec<Cells>,
+    pub cells_history: Vec<(Cells, Vec<Spawner>)>,
     pub selected_spawner: Option<usize>,
+    pub spawner_template: Spawner,
+    pub spawner_grid_size: f32,
+    pub editing_text: bool,
+    pub game_config_file: cnmo_parse::cnma::Cnma,
+    pub info_bar: String,
+    pub level_file_name: String,
 }
 
 impl EditorData {
@@ -51,6 +57,21 @@ impl EditorData {
             selecting_background_image: false,
             cells_history: vec![],
             selected_spawner: None,
+            spawner_template: Spawner {
+                pos: cnmo_parse::lparse::level_data::Point(0.0, 0.0),
+                type_data: WobjType::Slime { flying: false },
+                spawning_criteria: cnmo_parse::lparse::level_data::cnms_types::SpawningCriteria {
+                    spawn_delay_secs: 0.0,
+                    mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
+                    max_respawns: 0
+                },
+                dropped_item: None
+            },
+            spawner_grid_size: 8.0,
+            editing_text: false,
+            game_config_file: cnmo_parse::cnma::Cnma::from_file("audio.cnma").expect("Expected audio.cnma in current directory!"),
+            info_bar: "Welcome to the CNM Online Editor!".to_string(),
+            level_file_name: "newlvl".to_string(),
         }
     }
 

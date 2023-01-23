@@ -1,6 +1,7 @@
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, num_derive::FromPrimitive, num_derive::ToPrimitive, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, num_derive::FromPrimitive, num_derive::ToPrimitive, PartialEq, Eq, strum::EnumIter, Default, strum::Display)]
 pub enum ItemType {
+    #[default]
     Shotgun,
     Knife,
     Apple,

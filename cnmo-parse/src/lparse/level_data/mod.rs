@@ -172,7 +172,11 @@ impl LevelMetaData {
     }
 
     fn get_full_title(&self) -> String {
-        self.title.clone() + self.subtitle.as_ref().unwrap_or(&"".to_string()).as_str()
+        let subtitle = "\\".to_string() + self.subtitle.as_ref().unwrap_or(&"".to_string()).as_str();
+        self.title.clone() + match self.subtitle {
+            Some(_) => subtitle.as_str(),
+            None => "",
+        }
     }
 
     fn get_tile_property(&self) -> cnmb_types::TileProperties {

@@ -1,3 +1,9 @@
+#![windows_subsystem = "windows"]
+
+
+use notify::{Watcher, RecursiveMode};
+use std::{sync::mpsc::Receiver, str::FromStr};
+
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
 
@@ -13,12 +19,14 @@ mod editor_data;
 mod world_panel;
 mod tile_panel;
 mod bgpanel;
+mod game_config_panel;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum EditorMode {
     Level,
     Background,
     Tile,
+    GameConfig,
 }
 
 struct LevelEditorApp {
@@ -30,11 +38,17 @@ struct LevelEditorApp {
     world_panel: world_panel::WorldPanel,
     tile_panel: tile_panel::TilePanel,
     bg_panel: bgpanel::BgPanel,
+    game_config_panel: game_config_panel::GameConfigPanel,
+    render_state: eframe::egui_wgpu::RenderState,
+    file_receiver: Receiver<notify_debouncer_mini::DebounceEventResult>,
+    _debouncer: notify_debouncer_mini::Debouncer<notify::RecommendedWatcher>,
+    watch_timer: std::time::Duration,
 }
 
 impl LevelEditorApp {
     fn new(cc: &eframe::CreationContext, logs: logger::Logs) -> Self {
-        let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(cc, "gfx.bmp");
+        let render_state = cc.wgpu_render_state.as_ref().expect("Need a WGPU rendering context for editor....").clone();
+        let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&render_state, "gfx.bmp");
         instanced_sprites::InstancedSpritesResources::<tile_viewer::TileViewerSpriteInstances>::insert_resource(cc);
         instanced_sprites::InstancedSpritesResources::<tile_viewer::TileViewerDraggingSpriteInstances>::insert_resource(cc);
         instanced_sprites::InstancedSpritesResources::<world_panel::WorldPanelSpriteInstances>::insert_resource(cc);
@@ -42,6 +56,15 @@ impl LevelEditorApp {
         instanced_sprites::InstancedSpritesResources::<tile_panel::TilePanelCollisionDataSpriteInstances>::insert_resource(cc);
         instanced_sprites::InstancedSpritesResources::<tile_panel::TilePanelPreviewSpriteInstances>::insert_resource(cc);
         instanced_sprites::InstancedSpritesResources::<bgpanel::BgPanelSpriteInstances>::insert_resource(cc);
+        instanced_sprites::InstancedSpritesResources::<game_config_panel::GfxPreviewResource>::insert_resource(cc);
+        instanced_sprites::InstancedSpritesResources::<level_panel::LevelIconPreviewSpriteInstances>::insert_resource(cc);
+
+        let _config = notify::Config::default();
+        let (tx, file_receiver) = std::sync::mpsc::channel();
+        let mut debouncer =
+            notify_debouncer_mini::new_debouncer(std::time::Duration::from_secs(2), None, tx)
+            .expect("Need hot-realoading file watching for editor to boot");
+        debouncer.watcher().watch(&std::path::Path::new("."), RecursiveMode::Recursive).expect("Can't open working directory for hot-reloading");
 
         Self {
             level_data: level_data::LevelData::from_version(1).expect("Can't create empty level!"),
@@ -52,22 +75,55 @@ impl LevelEditorApp {
             world_panel: world_panel::WorldPanel::new(),
             tile_panel: tile_panel::TilePanel::new(),
             bg_panel: bgpanel::BgPanel::new(),
+            game_config_panel: game_config_panel::GameConfigPanel::new(),
+            render_state,
+            file_receiver,
+            _debouncer: debouncer,
+            watch_timer: std::time::Duration::from_secs(0),
         }
     }
 }
 
 impl eframe::App for LevelEditorApp {
     fn update(&mut self, ctx: &eframe::egui::Context, _frame: &mut eframe::Frame) {
+        self.watch_timer += self.editor_data.dt;
+        if self.watch_timer.as_secs() >= 1 {
+            self.watch_timer = std::time::Duration::from_secs(0);
+            match self.file_receiver.recv_timeout(std::time::Duration::from_nanos(1)) {
+                Ok(res) => {
+                    match res {
+                        Ok(events) => {
+                            for event in events {
+                                if event.path.file_name() == Some(std::ffi::OsString::from_str("gfx.bmp").unwrap().as_os_str()) &&
+                                    std::path::Path::new("./gfx.bmp").exists() {
+                                    log::info!("hot-reloading GFX.BMP");
+                                    let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&self.render_state, "gfx.bmp");
+                                    self.editor_data.palette = palette;
+                                    self.editor_data.gfx_size = dimensions;
+                                    self.editor_data.opaques = opaques;
+                                }
+                            }
+                        },
+                        Err(e) => log::error!("hot-reloading error: {:?}", e),
+                    }
+                },
+                Err(_) => {},
+            }
+        }
+
         ctx.request_repaint();
         self.editor_data.update_delta_time();
         egui::SidePanel::right("editor_options").resizable(true).max_width(500.0).show(ctx, |ui| {
-            level_panel::show_metadata_panel(&mut self.world_panel, &mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.bg_panel);
+            level_panel::show_metadata_panel(&mut self.world_panel, &mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.bg_panel, &mut self.game_config_panel);
         });
         egui::SidePanel::left("editor_properties").resizable(true).max_width(500.0).show(ctx, |ui| {
-            self.properties_panel.show_propeties_panel(&mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.world_panel);
+            self.properties_panel.show_propeties_panel(&mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.world_panel, &mut self.game_config_panel);
         });
         egui::TopBottomPanel::bottom("info_log").resizable(true).default_height(100.0).min_height(50.0).show(ctx, |ui| {
             logger::show_logs(&self.logs, ui);
+        });
+        egui::TopBottomPanel::top("info_bar").resizable(false).show(ctx, |ui| {
+            ui.label(self.editor_data.info_bar.as_str());
         });
         egui::CentralPanel::default().show(ctx, |ui| {
             match self.mode {
@@ -83,6 +139,9 @@ impl eframe::App for LevelEditorApp {
                 },
                 EditorMode::Tile => {
                     self.tile_panel.update(ui, &mut self.level_data, &mut self.editor_data);
+                },
+                EditorMode::GameConfig => {
+                    self.game_config_panel.update(ui, &mut self.editor_data);
                 },
             }
         });

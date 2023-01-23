@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     #[error("Can't open the file!")]
@@ -12,10 +14,16 @@ pub enum Error {
     Corrupted(String),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct ResourceId {
     pub id: u32,
     pub path: String,
+}
+
+impl Display for ResourceId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("Id: {}, Path: {}", self.id, self.path))
+    }
 }
 
 impl ResourceId {
@@ -36,7 +44,7 @@ impl ResourceId {
     }
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, PartialEq)]
 pub struct MaxPowerDef {
     pub id: u8,
     pub speed: f32,
@@ -47,7 +55,13 @@ pub struct MaxPowerDef {
     pub ability: Option<MaxPowerAbility>,
 }
 
-#[derive(Debug, Default, Clone)]
+impl Display for MaxPowerDef {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.ability.clone().unwrap_or_default().to_string().as_str())
+    }
+}
+
+#[derive(Debug, Default, Clone, strum::Display, strum::EnumIter, PartialEq)]
 pub enum MaxPowerAbility {
     #[default]
     DoubleJump,
@@ -56,7 +70,7 @@ pub enum MaxPowerAbility {
     MarioBounce,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, strum::Display, strum::EnumIter, PartialEq)]
 pub enum Mode {
     MusicIds(Vec<ResourceId>),
     SoundIds(Vec<ResourceId>),

@@ -2,11 +2,10 @@
   "version": {
     "version": 1,
     "num_teleports": 512,
-    "num_spawns": 128,
-    "num_spawn_modes": 3,
+    "num_spawns": 128,sdfsdf
     "teleport_name_size": 41,
     "max_tile_frames": 32,
-    "ending_text_lines": 48,
+    "ending_text_lines": 48,asdfasfasfd
     "ending_text_line_len": 32,
     "background_layers": 32,
     "title_ending_text_line": 47,
