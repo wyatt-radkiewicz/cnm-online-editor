@@ -19,3 +19,6 @@ num-traits = { version = "0.2", optional = true }
 num-derive = { version = "0.3", optional = true }
 serde = { version = "1.0.151", features = ["derive"], optional = true }
 base64 = { version = "0.20.0", optional = true }
+
+[package.metadata.docs.rs]
+all-features = true
