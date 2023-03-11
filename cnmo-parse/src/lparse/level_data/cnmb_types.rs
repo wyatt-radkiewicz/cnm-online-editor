@@ -356,9 +356,11 @@ pub(super) fn save_tile_properties_vec(
 
     for idx in 0..(tile_properties.len() + 1).max(version.preview_tile_index) + 1 {
         let tile = match idx {
-            idx if idx == 0 || (idx != version.preview_tile_index && idx >= tile_properties.len()) => &air_tile,
+            idx if idx == 0 || (idx != version.preview_tile_index && idx > tile_properties.len()) => &air_tile,
             idx if idx == version.preview_tile_index => metadata_tile,
-            _ => &tile_properties[idx - 1],
+            idx if idx < version.preview_tile_index => &tile_properties[idx - 1],
+            idx if idx > version.preview_tile_index => &tile_properties[idx - 2],
+            _ => &air_tile,
         };
         tile.save(
             &mut bp_flags,
