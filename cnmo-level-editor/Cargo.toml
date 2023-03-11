@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cnmo-parse = { path = "../cnmo-parse", features = ["level_data", "serde", "strum"] }
+cnmo-parse = { path = "../cnmo-parse", features = ["level_data", "serde"] }
 serde_json = "1.0.91"
 anyhow = "1.0.68"
 eframe = { version = "0.20.1", features = ["wgpu"] }

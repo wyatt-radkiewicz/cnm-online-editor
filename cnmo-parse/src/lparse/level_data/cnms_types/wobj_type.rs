@@ -12,82 +12,120 @@ use super::{
     item_type::ItemType,
 };
 
+/// Size of a tunes trigger object
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum TunesTriggerSize {
     #[default]
+    ///
     Small,
+    ///
     Big,
+    ///
     VeryBig,
 }
 
+/// Rune type
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum RuneType {
+    ///
     #[default]
     Fire,
+    ///
     Ice,
+    ///
     Air,
+    ///
     Lightning,
 }
 
+/// Talking Teady Boss Node Type
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum TtNodeType {
+    ///
     #[default]
     NormalTrigger,
+    ///
     ChaseTrigger,
+    /// Maximum of 128 waypoints in version 1 of level spec
     Waypoint(i32),
 }
 
+/// Push/Conveyor type
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum PushZoneType {
+    ///
     #[default]
     Horizontal,
+    ///
     Vertical,
+    ///
     HorizontalSmall,
 }
 
+/// Color of a locked key block
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum KeyColor {
+    ///
     #[default]
     Red,
+    ///
     Green,
+    ///
     Blue
 }
 
+///
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum RockGuyType {
+    ///
     #[default]
     Medium,
+    ///
     Small1,
+    ///
     Small2 {
+        ///
         face_left: bool
     },
 }
 
+///
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub enum UpgradeTriggerType {
+    ///
     Wings,
+    ///
     DeephausBoots,
+    ///
     #[default]
     CrystalWings,
+    ///
     Vortex,
+    ///
     MaxPowerRune {
+        /// Will override the player skin and give them a specific upgrade power type
         skin_power_override: Option<u8>,
     },
+    ///
     None,
 }
 
+/// Used in certain World Object (Wobj) types
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Default)]
 pub struct Teleport {
+    /// Name of the teleport, look in [`crate::lparse::level_data::VersionSpecs`] to see how long it can be
     pub name: String,
+    /// Negative numbers don't do anything special, its just they can be there in CNM Online
     pub cost: i32,
+    /// Where it will teleport you
     pub loc: Point,
 }
 
@@ -126,12 +164,16 @@ impl Teleport {
     }
 }
 
+///
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, Copy, strum::Display, Default, strum::EnumIter, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum BackgroundSwitcherShape {
+    ///
     #[default]
     Small,
+    ///
     Horizontal,
+    ///
     Vertical,
 }
 
@@ -141,187 +183,316 @@ impl Default for WobjType {
     }
 }
 
+/// Type of a CNM Online object (and what will spawn from a spawner)
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, strum::Display, strum::EnumIter)]
+#[derive(Debug, Clone)]
 pub enum WobjType {
+    ///
     Teleport(Teleport),
+    ///
     Slime {
+        ///
         flying: bool,
     },
+    ///
     TunesTrigger {
+        ///
         size: TunesTriggerSize,
+        ///
         music_id: u32,
     },
+    ///
     PlayerSpawn,
+    ///
     TextSpawner {
+        ///
         dialoge_box: bool,
+        ///
         text: String,
     },
+    ///
     MovingPlatform {
+        ///
         vertical: bool,
+        ///
         dist: f32,
+        ///
         speed: f32,
     },
+    ///
     BreakableWall {
+        ///
         skin_id: Option<u8>,
+        ///
         health: f32,
     },
+    ///
     BackgroundSwitcher {
+        ///
         shape: BackgroundSwitcherShape,
+        ///
         enabled_layers: std::ops::Range<u32>,
     },
+    ///
     DroppedItem {
+        ///
         item: ItemType,
     },
+    ///
     WandRune {
+        ///
         rune_type: RuneType,
     },
+    ///
     Heavy {
+        ///
         speed: f32,
+        ///
         face_left: bool,
     },
+    ///
     Dragon {
+        ///
         space_skin: bool,
     },
+    ///
     BozoPin {
+        ///
         flying_speed: f32,
     },
+    ///
     Bozo {
+        ///
         mark_ii: bool,
     },
+    ///
     SilverSlime,
+    ///
     LavaMonster {
+        ///
         face_left: bool,
     },
+    ///
     TtMinion {
+        ///
         small: bool,
     },
+    ///
     SlimeWalker,
+    ///
     MegaFish {
+        ///
         water_level: i32,
+        ///
         swimming_speed: f32,
     },
+    ///
     LavaDragonHead {
-        // Can only be 32 long
+        /// Can only be 32 long
         len: u32,
+        ///
         health: f32,
     },
+    ///
     TtNode {
+        ///
         node_type: TtNodeType,
     },
+    ///
     TtBoss {
+        ///
         speed: f32,
     },
+    ///
     EaterBug {
+        ///
         pop_up_speed: f32,
     },
+    ///
     SpiderWalker {
+        ///
         speed: f32,
     },
+    ///
     SpikeTrap,
+    ///
     RotatingFireColunmPiece {
-        // Pieces should be put together horizontally in the original editor,
-        // And this only specifies the x axis of the origin point of the rotating fire column
+        /// Pieces should be put together horizontally in the original editor,
+        /// And this only specifies the x axis of the origin point of the rotating fire column
         origin_x: i32,
+        ///
         degrees_per_second: f32,
     },
+    ///
     MovingFire {
+        ///
         vertical: bool,
+        ///
         dist: i32,
+        ///
         speed: f32,
     },
+    ///
     SuperDragon {
-        // Can only have up to 16 waypoint ids
+        /// Can only have up to 16 waypoint ids
         waypoint_id: u8,
     },
+    ///
     SuperDragonLandingZone {
-        // Can only have up to 16 waypoints
+        /// Can only have up to 16 waypoints
         waypoint_id: u8,
     },
+    ///
     BozoLaserMinion {
+        ///
         speed: f32,
     },
-    Checkpoint,
+    ///
+    Checkpoint {
+        ///
+        checkpoint_num: u8,
+    },
+    ///
     SpikeGuy,
+    ///
     BanditGuy {
+        ///
         speed: f32,
     },
+    ///
     PushZone {
+        ///
         push_zone_type: PushZoneType,
+        ///
         push_speed: f32,
     },
+    ///
     VerticalWindZone {
+        ///
         acceleration: f32,
     },
+    ///
     DisapearingPlatform {
+        ///
         time_on: f32,
+        ///
         time_off: f32,
+        ///
         starts_on: bool,
     },
+    ///
     KamakaziSlime,
+    ///
     SpringBoard {
+        ///
         jump_velocity: f32,
     },
+    ///
     Jumpthrough {
+        ///
         big: bool,
     },
+    ///
     BreakablePlatform {
+        ///
         time_till_fall: f32,
     },
+    ///
     LockedBlock {
+        ///
         color: KeyColor,
+        ///
         consume_key: bool,
     },
+    ///
     RockGuy {
+        ///
         rock_guy_type: RockGuyType,
     },
+    ///
     RockGuySlider,
+    ///
     RockGuySmasher,
+    ///
     HealthSetTrigger {
+        ///
         target_health: f32,
     },
+    ///
     Vortex {
+        ///
         attract_enemies: bool,
     },
+    ///
     CustomizeableMoveablePlatform {
+        ///
         bitmap_x32: (u32, u32),
+        ///
         target_relative: Point,
+        ///
         speed: f32,
+        ///
         start_paused: bool,
+        ///
         one_way: bool,
     },
+    ///
     GraphicsChangeTrigger {
+        ///
         gfx_file: String,
     },
+    ///
     BossBarInfo {
+        ///
         boss_name: String,
     },
+    ///
     BgSpeed {
+        ///
         vertical_axis: bool,
+        ///
         layer: u32,
+        ///
         speed: f32,
     },
+    ///
     BgTransparency {
+        ///
         layer: u32,
+        ///
         transparency: u8,
     },
+    ///
     TeleportTrigger1 {
+        ///
         link_id: u32,
+        ///
         delay_secs: f32,
     },
+    ///
     TeleportArea1 {
+        ///
         link_id: u32,
+        ///
         loc: Point,
     },
+    ///
     SfxPoint {
+        ///
         sound_id: u32,
     },
+    ///
     Wolf,
+    ///
     Supervirus,
+    ///
     Lua {
+        ///
         lua_wobj_type: u8,
     },
+    ///
     UpgradeTrigger {
+        ///
         trigger_type: UpgradeTriggerType,
     },
 }
@@ -490,7 +661,9 @@ impl WobjType {
                     _ => panic!("Unknown upgrade trigger type!"),
                 },
             }),
-            73 => Ok(Self::Checkpoint),
+            73 => Ok(Self::Checkpoint {
+                checkpoint_num: (custom_int - version.get_num_spawns() as i32 * 2).clamp(0, 255) as u8,
+            }),
             2 | 35 => Ok(Self::Slime { flying: wobj_type_id == 35 }),
             36 => Ok(Self::Heavy {
                 speed: custom_float.abs(),
@@ -732,10 +905,13 @@ impl WobjType {
                 };
                 (wobj_type_id, custom_int, 0.0)
             },
-            &Self::Checkpoint => {
-                checkpoints.push(spawner.pos.0);
-                checkpoints.push(spawner.pos.1);
-                (73, (checkpoints.len() as i32 / 2 - 1) + version.num_spawns as i32 * 2, 0.0)
+            &Self::Checkpoint { checkpoint_num } => {
+                if checkpoints.len() < checkpoint_num as usize * 2 + 2 {
+                    checkpoints.resize(checkpoint_num as usize * 2 + 2, f32::NAN);
+                }
+                checkpoints[checkpoint_num as usize * 2 + 0] = spawner.pos.0;
+                checkpoints[checkpoint_num as usize * 2 + 1] = spawner.pos.1;
+                (73, checkpoint_num as i32 + version.num_spawns as i32 * 2, 0.0)
             },
             &Self::Slime { flying } => (if flying { 35 } else { 2 }, 0, 0.0),
             &Self::Heavy { speed, face_left } => {

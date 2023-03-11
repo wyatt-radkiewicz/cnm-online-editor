@@ -2,13 +2,14 @@
 name = "cnmo-parse"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "GPL-2.0-or-later WITH Bison-exception-2.2"
+description = "Utility to easily parse CNM Online game files"
+repository = "https://github.com/wyatt-radkiewicz/cnm-online-editor"
+readme = "README.md"
 
 [features]
 level_data = ["dep:num-traits", "dep:num-derive"]
 serde = ["dep:serde", "dep:base64"]
-strum = ["dep:strum", "dep:strum_macros"]
 
 [dependencies]
 bytebuffer = "2.0.1"
@@ -17,5 +18,3 @@ num-traits = { version = "0.2", optional = true }
 num-derive = { version = "0.3", optional = true }
 serde = { version = "1.0.151", features = ["derive"], optional = true }
 base64 = { version = "0.20.0", optional = true }
-strum_macros = { version = "0.24", optional = true }
-strum = { version = "0.24", features = ["derive"], optional = true }

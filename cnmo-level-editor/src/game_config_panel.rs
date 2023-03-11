@@ -181,12 +181,12 @@ impl GameConfigPanel {
                     
                     if let Some(ability) = &mut def.ability {
                         egui::ComboBox::new("max_power_combo_box", "Max Power Ability")
-                            .selected_text(ability.to_string())
+                            .selected_text(get_ability_name(ability))
                             .show_ui(ui, |ui| {
-                            ui.selectable_value(ability, MaxPowerAbility::DoubleJump, "Double Jump");
-                            ui.selectable_value(ability, MaxPowerAbility::Flying, "Wings Flight");
-                            ui.selectable_value(ability, MaxPowerAbility::MarioBounce, "Bounce on Enemies");
-                            ui.selectable_value(ability, MaxPowerAbility::DropShield, "Temporary Sheild When Landing on Ground");
+                            ui.selectable_value(ability, MaxPowerAbility::DoubleJump, get_ability_name(&MaxPowerAbility::DoubleJump));
+                            ui.selectable_value(ability, MaxPowerAbility::Flying, get_ability_name(&MaxPowerAbility::Flying));
+                            ui.selectable_value(ability, MaxPowerAbility::MarioBounce, get_ability_name(&MaxPowerAbility::MarioBounce));
+                            ui.selectable_value(ability, MaxPowerAbility::DropShield, get_ability_name(&MaxPowerAbility::DropShield));
                         });
                         if ui.button("Don't use ability").clicked() {
                             def.ability = None;
@@ -208,5 +208,14 @@ impl GameConfigPanel {
                 },
             }
         });
+    }
+}
+
+fn get_ability_name(ability: &MaxPowerAbility) -> &str {
+    match ability {
+        &MaxPowerAbility::DoubleJump => "Double Jump",
+        &MaxPowerAbility::DropShield => "Drop Sheild",
+        &MaxPowerAbility::Flying => "Flying",
+        &MaxPowerAbility::MarioBounce => "Mario Enemy Bounce",
     }
 }

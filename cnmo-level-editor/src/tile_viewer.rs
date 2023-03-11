@@ -136,7 +136,7 @@ impl TileViewer {
 
                     // Complete the drag
                     let change_refrences = |old_id: u16, new_id: u16, cells: &mut Cells| {
-                        for cell in cells.cells.iter_mut() {
+                        for cell in cells.cells_mut().iter_mut() {
                             if cell.foreground.0 == Some(old_id) {
                                 cell.foreground.0 = Some(new_id);
                             } else {

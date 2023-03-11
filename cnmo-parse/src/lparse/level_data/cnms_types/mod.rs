@@ -13,17 +13,23 @@ use super::{
 use wobj_type::WobjType;
 use item_type::ItemType;
 
+/// Items from CNM Online
 pub mod item_type;
+/// World Object (Wobj) types from CNM Online.
 pub mod wobj_type;
 
+/// In what context a CNM World Object (Wobj) will spawn in.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, strum::Display, PartialEq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum SpawnerMode {
+    /// Will spawn in all contexts (multi and single player)
     MultiAndSingleplayer,
+    /// Will only spawn in singleplayer
     SingleplayerOnly,
+    /// Will only spawn in multiplayer
     MultiplayerOnly,
-    // This will show in both single and multiplayer and will spawn an wobj for every
-    // player in the server/game, this means the max spawns will be max_spawns*player_count
+    /// This will show in both single and multiplayer and will spawn an wobj for every
+    /// player in the server/game, this means the max spawns will be max_spawns*player_count
     PlayerCountBased,
 }
 
@@ -49,25 +55,34 @@ impl SpawnerMode {
     }
 }
 
+/// Criteria for how a World Object (Wobj) spawns.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone, Copy)]
 pub struct SpawningCriteria {
+    /// How many seconds between spawns
     pub spawn_delay_secs: f32,
+    /// In what context it will spawn in
     pub mode: SpawnerMode,
-    pub max_respawns: u32,
+    /// How many objects it will have spawned in at any given time
+    pub max_concurrent_spawns: u32,
 }
 
+/// A template for a object to spawn in cnm
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
 pub struct Spawner {
+    /// Where it will spawn
     pub pos: Point,
+    /// What object type (World object or Wobj)
     pub type_data: WobjType,
+    /// In what cirteria it will spawn in
     pub spawning_criteria: SpawningCriteria,
+    /// What item it will drop once it's destroyed
     pub dropped_item: Option<ItemType>,
 }
 
 impl Spawner {
-    pub fn from_lparse(cnms: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
+    pub(crate) fn from_lparse(cnms: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
         let position = &cnms.try_get_entry("SP_POS")?.try_get_f32()?[index * 2..index * 2 + 2];
         let duration = cnms.try_get_entry("SP_DURATION")?.try_get_i32()?[index];
         let max_spawns = cnms.try_get_entry("SP_MAX")?.try_get_i32()?[index];
@@ -83,7 +98,7 @@ impl Spawner {
                     None if !ignore_warnings => return Err(Error::Corrupted(format!("Corrupt spawing mode on entity id {index}."))),
                     None => SpawnerMode::MultiAndSingleplayer,
                 },
-                max_respawns: max_spawns as u32,
+                max_concurrent_spawns: max_spawns as u32,
             },
             dropped_item: ItemType::from_item_id(dropped_item),
         })
@@ -109,7 +124,7 @@ impl Spawner {
             self.pos,
             wobj_type_info.0,
             (self.spawning_criteria.spawn_delay_secs * FRAME_RATE as f32) as i32,
-            self.spawning_criteria.max_respawns as i32,
+            self.spawning_criteria.max_concurrent_spawns as i32,
             wobj_type_info.1,
             wobj_type_info.2,
             if let Some(i) = self.dropped_item { i.get_item_id() } else { 0 } | self.spawning_criteria.mode.to_packed_dropped_item(),
@@ -117,7 +132,7 @@ impl Spawner {
     }
 }
 
-pub fn get_ending_text_line(cnms: &LParse, version: &VersionSpecs, index: usize) -> Result<String, Error> {
+pub(crate) fn get_ending_text_line(cnms: &LParse, version: &VersionSpecs, index: usize) -> Result<String, Error> {
     let (start, end) = (index * version.ending_text_line_len, (index + 1) * version.ending_text_line_len);
     let buffer = cnms.try_get_entry("ENDINGTEXT")?.try_get_u8()?[start..end].iter().cloned().collect();
     match String::from_utf8(buffer) {

@@ -409,8 +409,6 @@ dependencies = [
  "num-derive",
  "num-traits",
  "serde",
- "strum",
- "strum_macros",
  "thiserror",
 ]
 

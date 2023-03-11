@@ -1,6 +1,4 @@
-use std::cmp::Ordering;
 use std::collections::VecDeque;
-use std::f32::consts::E;
 
 use cnmo_parse::lparse::level_data::cnmb_types::{TileProperties, Cells, TileId, BackgroundLayer};
 use cnmo_parse::lparse::level_data::cnms_types::SpawningCriteria;
@@ -61,7 +59,7 @@ impl WorldPanel {
         let (rect, response) =
             ui.allocate_exact_size(ui.available_size(), egui::Sense::hover().union(egui::Sense::click_and_drag()));
         if response.clicked() {
-            editor_data.editing_text = false;
+            editor_data.editing_text = None;
         }
         self.update_camera(ui, &rect, &response, editor_data);
         let pointer_pos = {
@@ -276,7 +274,7 @@ impl WorldPanel {
         }
     }
 
-    fn update_level_tiles(&mut self, sprites: &mut Vec<Sprite>, _ui: &mut egui::Ui, level_data: &mut level_data::LevelData, rect: &egui::Rect, response: &egui::Response, editor_data: &mut EditorData, pointer_pos: &egui::Pos2) {
+    fn update_level_tiles(&mut self, sprites: &mut Vec<Sprite>, _ui: &mut egui::Ui, level_data: &mut level_data::LevelData, _rect: &egui::Rect, response: &egui::Response, editor_data: &mut EditorData, pointer_pos: &egui::Pos2) {
         let top_left = self.camera.get_top_left_world_space();
         //let cam_size = self.camera.get_proj_size_world_space();
         let start = cgmath::vec2((top_left.x / 32.0).floor() as i32, (top_left.y / 32.0).floor() as i32);
@@ -436,8 +434,8 @@ impl WorldPanel {
                         }
                     };
 
-                    if inside && top.0 >= 0 && top.0 < level_data.cells.get_width() as i32 &&
-                        top.1 >= 0 && top.1 < level_data.cells.get_height() as i32 {
+                    if inside && top.0 >= 0 && top.0 < level_data.cells.width() as i32 &&
+                        top.1 >= 0 && top.1 < level_data.cells.height() as i32 {
                         // change this and add it!
                         let cell = level_data.cells.get_cell_mut(top.0, top.1);
                         //cell.foreground = set_tile;
@@ -529,12 +527,12 @@ impl WorldPanel {
                 }
             }
             
-            if let Some((ref viewer_selection)) = editor_data.viewer_selection.as_ref() {
-                let ox = self.brush_origin.0 + ((mx - self.brush_origin.0) as f32 / viewer_selection.get_width() as f32).floor() as i32 * viewer_selection.get_width() as i32;
-                let oy = self.brush_origin.1 + ((my - self.brush_origin.1) as f32 / viewer_selection.get_height() as f32).floor() as i32 * viewer_selection.get_height() as i32;
+            if let Some(ref viewer_selection) = editor_data.viewer_selection.as_ref() {
+                let ox = self.brush_origin.0 + ((mx - self.brush_origin.0) as f32 / viewer_selection.width() as f32).floor() as i32 * viewer_selection.width() as i32;
+                let oy = self.brush_origin.1 + ((my - self.brush_origin.1) as f32 / viewer_selection.height() as f32).floor() as i32 * viewer_selection.height() as i32;
 
-                for y in 0..viewer_selection.get_height() as i32 {
-                    for x in 0..viewer_selection.get_width() as i32 {
+                for y in 0..viewer_selection.height() as i32 {
+                    for x in 0..viewer_selection.width() as i32 {
                         let mut drawer = |props: &TileProperties| {
                             let idx = (editor_data.time_past.as_secs_f32() * (30.0 / props.anim_speed.0 as f32)) as usize % props.frames.len();
                             let mut sprite = Sprite::new(
@@ -593,10 +591,10 @@ impl WorldPanel {
         }
     }
 
-    fn show_grid(&mut self, sprites: &mut Vec<Sprite>, ui: &mut egui::Ui, level_data: &mut level_data::LevelData, editor_data: &mut EditorData, rect: &egui::Rect, response: &egui::Response, pointer_pos: &egui::Pos2) {
+    fn show_grid(&mut self, sprites: &mut Vec<Sprite>, ui: &mut egui::Ui, level_data: &mut level_data::LevelData, editor_data: &mut EditorData, _rect: &egui::Rect, response: &egui::Response, pointer_pos: &egui::Pos2) {
         let grid_size = if matches!(editor_data.tool, Tool::Spawners) { editor_data.spawner_grid_size } else { 32.0 };
-        let mut max_width = level_data.cells.get_width() as f32 * 32.0;
-        let mut max_height = level_data.cells.get_height() as f32 * 32.0;
+        let mut max_width = level_data.cells.width() as f32 * 32.0;
+        let mut max_height = level_data.cells.height() as f32 * 32.0;
         let (mut min_x, mut min_y) = (0.0, 0.0);
         let cam_size = self.camera.get_proj_size_world_space();
         let grab_size = cam_size.y / (32.0 * 4.0);
@@ -613,7 +611,7 @@ impl WorldPanel {
                         if editor_data.cells_history.len() > 512 {
                             editor_data.cells_history.remove(0);
                         }
-                        level_data.cells.resize(level_data.cells.get_width(), max_height as usize / 32);
+                        level_data.cells.resize(level_data.cells.width(), max_height as usize / 32);
                     }
                 }
                 if self.resizing_bounds.1 {
@@ -632,9 +630,9 @@ impl WorldPanel {
                             spawner.pos.1 -= (src_offset * 32) as f32;
                         }
 
-                        let new_height = level_data.cells.get_height() as i32 - src_offset;
-                        let mut cells = Cells::new(level_data.cells.get_width(), new_height as usize);
-                        level_data.cells.paste(&mut cells, (0, src_offset), (level_data.cells.get_width() as i32 - 1, new_height + src_offset), (0, 0));
+                        let new_height = level_data.cells.height() as i32 - src_offset;
+                        let mut cells = Cells::new(level_data.cells.width(), new_height as usize);
+                        level_data.cells.paste(&mut cells, (0, src_offset), (level_data.cells.width() as i32 - 1, new_height + src_offset), (0, 0));
                         level_data.cells = cells;
                     }
                 }
@@ -654,9 +652,9 @@ impl WorldPanel {
                             spawner.pos.0 -= (src_offset * 32) as f32;
                         }
 
-                        let new_width = level_data.cells.get_width() as i32 - src_offset;
-                        let mut cells = Cells::new(new_width as usize, level_data.cells.get_height());
-                        level_data.cells.paste(&mut cells, (src_offset, 0), (new_width + src_offset, level_data.cells.get_height() as i32 - 1), (0, 0));
+                        let new_width = level_data.cells.width() as i32 - src_offset;
+                        let mut cells = Cells::new(new_width as usize, level_data.cells.height());
+                        level_data.cells.paste(&mut cells, (src_offset, 0), (new_width + src_offset, level_data.cells.height() as i32 - 1), (0, 0));
                         level_data.cells = cells;
                     }
                 }
@@ -670,7 +668,7 @@ impl WorldPanel {
                         if editor_data.cells_history.len() > 512 {
                             editor_data.cells_history.remove(0);
                         }
-                        level_data.cells.resize(max_width as usize / 32, level_data.cells.get_height());
+                        level_data.cells.resize(max_width as usize / 32, level_data.cells.height());
                     }
                 }
     
@@ -820,7 +818,7 @@ impl WorldPanel {
                 spawner.spawning_criteria = SpawningCriteria {
                     spawn_delay_secs: 0.0,
                     mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
-                    max_respawns: 0,
+                    max_concurrent_spawns: 0,
                 };
                 if editor_data.spawner_grid_size > 1.0 {
                     spawner.pos.0 = (pointer_pos.x / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
@@ -902,7 +900,7 @@ impl WorldPanel {
             }
         }
         if (response.ctx.input().key_pressed(egui::Key::V) && response.ctx.input().modifiers.ctrl) ||
-            (ui.ctx().input().key_pressed(egui::Key::Space) && !editor_data.editing_text) {
+            (ui.ctx().input().key_pressed(egui::Key::Space) && editor_data.editing_text == None) {
             editor_data.cells_history.push((level_data.cells.clone(), level_data.spawners.clone()));
             let mut spawner = editor_data.spawner_template.clone();
             if editor_data.spawner_grid_size > 1.0 {
@@ -959,11 +957,10 @@ impl WorldPanel {
     }
 }
 
-use cnmo_parse::Rect;
 fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawner) -> (f32, f32) {
     use cnmo_parse::lparse::level_data::cnms_types::{
         wobj_type::{
-            WobjType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, PushZoneType, UpgradeTriggerType, KeyColor
+            BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, PushZoneType, UpgradeTriggerType
         },
     };
     match spawner.type_data {
@@ -1044,12 +1041,12 @@ fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawne
 fn draw_spawner(sprites: &mut Vec<Sprite>, spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawner, camera: &Camera, editor_data: &EditorData, active: bool) {
     use cnmo_parse::lparse::level_data::cnms_types::{
         wobj_type::{
-            WobjType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, TtNodeType, PushZoneType, UpgradeTriggerType, KeyColor
+            BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, TtNodeType, PushZoneType, UpgradeTriggerType, KeyColor
         },
         item_type::ItemType,
     };
 
-    let cam_size = camera.get_proj_size_world_space();
+    let _cam_size = camera.get_proj_size_world_space();
     let mut draw_rect = |x: i32, y: i32, w: i32, h: i32| {
         let mut sprite = Sprite::new(
             (spawner.pos.0, spawner.pos.1, 0.0),
@@ -1059,9 +1056,9 @@ fn draw_spawner(sprites: &mut Vec<Sprite>, spawner: &cnmo_parse::lparse::level_d
         sprite.tint[3] = if active { 1.0 } else { 0.6 };
         sprites.push(sprite);
     };
-    let mut draw_moving = |sprites: &mut Vec<Sprite>, dist: f32, speed: f32, vertical: bool| {
+    let draw_moving = |sprites: &mut Vec<Sprite>, dist: f32, speed: f32, vertical: bool| {
         let dist = dist.max(f32::EPSILON);
-        let unclamped_pos = (editor_data.time_past.as_secs_f32() * (speed * 30.0));
+        let unclamped_pos = editor_data.time_past.as_secs_f32() * (speed * 30.0);
         let pos = if (unclamped_pos / dist) as i32 % 2 == 0 {
             unclamped_pos.rem_euclid(dist)
         } else {
@@ -1305,7 +1302,7 @@ fn draw_spawner(sprites: &mut Vec<Sprite>, spawner: &cnmo_parse::lparse::level_d
         WobjType::SuperDragon { .. } => draw_rect(384, 1664, 128, 128),
         WobjType::SuperDragonLandingZone { .. } => draw_rect(384, 2080, 32, 32),
         WobjType::BozoLaserMinion { .. } => draw_rect(384, 2528, 32, 64),
-        WobjType::Checkpoint => draw_rect(384, 2592, 32, 32),
+        WobjType::Checkpoint { .. } => draw_rect(384, 2592, 32, 32),
         WobjType::SpikeGuy => draw_rect(384, 2208, 32, 32),
         WobjType::BanditGuy { .. } => draw_rect(416, 2208, 32, 32),
         WobjType::PushZone { push_zone_type, .. } => {

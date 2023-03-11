@@ -1,10 +1,8 @@
 use eframe::egui;
 use cnmo_parse::Rect;
 use cnmo_parse::lparse::level_data::{
-    self,
     LevelData,
     cnmb_types::{
-        BackgroundLayer,
         BackgroundImage,
     },
 };

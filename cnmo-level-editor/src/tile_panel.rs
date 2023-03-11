@@ -126,18 +126,18 @@ impl TilePanel {
                 ui.end_row();
                 ui.label("Damage type: ");
                 egui::ComboBox::new("damage_type_combo_box", "")
-                    .selected_text(format!("{}", tile.damage_type))
+                    .selected_text(get_damage_type_name(&tile.damage_type))
                     .show_ui(ui, |ui| {
-                    if ui.selectable_label(matches!(tile.damage_type, DamageType::None), DamageType::None.to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::None), get_damage_type_name(&DamageType::None)).clicked() {
                         tile.damage_type = DamageType::None;
                     }
-                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Lava(_)), DamageType::Lava(0).to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Lava(_)), get_damage_type_name(&DamageType::Lava(0))).clicked() {
                         tile.damage_type = DamageType::Lava(1);
                     }
-                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Spikes(_)), DamageType::Spikes(0).to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Spikes(_)), get_damage_type_name(&DamageType::Spikes(0))).clicked() {
                         tile.damage_type = DamageType::Spikes(1);
                     }
-                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Quicksand(_)), DamageType::Quicksand(0).to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Quicksand(_)), get_damage_type_name(&DamageType::Quicksand(0))).clicked() {
                         tile.damage_type = DamageType::Quicksand(1);
                     }
                 });
@@ -231,12 +231,12 @@ impl TilePanel {
             ui.horizontal(|ui| {
                 ui.label("Collision type: ");
                 egui::ComboBox::new("collision_data_combo_box", "")
-                    .selected_text(format!("{}", tile.collision_data))
+                    .selected_text(get_collision_type_name(&tile.collision_data))
                     .show_ui(ui, |ui| {
-                    if ui.selectable_label(matches!(tile.collision_data, CollisionType::Box(_)), CollisionType::Box(cnmo_parse::Rect { x: 0, y: 0, w: 0, h: 0 }).to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.collision_data, CollisionType::Box(_)), "Box").clicked() {
                         tile.collision_data = CollisionType::Box(cnmo_parse::Rect { x: 0, y: 0, w: 32, h: 32 });
                     }
-                    if ui.selectable_label(matches!(tile.collision_data, CollisionType::Heightmap(_)), CollisionType::Heightmap([0u8; 32]).to_string()).clicked() {
+                    if ui.selectable_label(matches!(tile.collision_data, CollisionType::Heightmap(_)), "Heightmap").clicked() {
                         tile.collision_data = CollisionType::Heightmap([32u8; 32]);
                     }
                 });
@@ -330,7 +330,7 @@ impl TilePanel {
             if ui.button("Delete this tile").clicked() {
                 // First delete this tile from the level cells
                 let tile_id = editor_data.selected_tiles[0] as u16;
-                for cell in level_data.cells.cells.iter_mut() {
+                for cell in level_data.cells.cells_mut().iter_mut() {
                     if cell.foreground.0 == Some(tile_id) {
                         cell.foreground.0 = None;
                     }
@@ -356,5 +356,21 @@ impl TilePanel {
                 editor_data.reset_selected_tiles();
             }
         });
+    }
+}
+
+fn get_damage_type_name(dmg_type: &DamageType) -> &str {
+    match dmg_type {
+        DamageType::None => "None",
+        DamageType::Lava(..) => "Lava",
+        DamageType::Quicksand(..) => "Quicksand",
+        DamageType::Spikes(..) => "Spikes",
+    }
+}
+
+fn get_collision_type_name(collision_type: &CollisionType) -> &str {
+    match collision_type {
+        CollisionType::Box(..) => "Box",
+        CollisionType::Heightmap(..) => "Heightmap",
     }
 }

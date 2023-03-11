@@ -1,4 +1,5 @@
 use cnmo_parse::lparse::level_data::{cnmb_types::Cells, cnms_types::{Spawner, wobj_type::WobjType}};
+use eframe::egui;
 
 #[derive(strum::Display)]
 pub enum Tool {
@@ -30,7 +31,7 @@ pub struct EditorData {
     pub selected_spawner: Option<usize>,
     pub spawner_template: Spawner,
     pub spawner_grid_size: f32,
-    pub editing_text: bool,
+    pub editing_text: Option<egui::Id>,
     pub game_config_file: cnmo_parse::cnma::Cnma,
     pub info_bar: String,
     pub level_file_name: String,
@@ -63,12 +64,12 @@ impl EditorData {
                 spawning_criteria: cnmo_parse::lparse::level_data::cnms_types::SpawningCriteria {
                     spawn_delay_secs: 0.0,
                     mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
-                    max_respawns: 0
+                    max_concurrent_spawns: 0,
                 },
                 dropped_item: None
             },
             spawner_grid_size: 8.0,
-            editing_text: false,
+            editing_text: None,
             game_config_file: cnmo_parse::cnma::Cnma::from_file("audio.cnma").expect("Expected audio.cnma in current directory!"),
             info_bar: "Welcome to the CNM Online Editor!".to_string(),
             level_file_name: "newlvl".to_string(),

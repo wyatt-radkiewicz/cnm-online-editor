@@ -1,7 +1,7 @@
 #![windows_subsystem = "windows"]
 
 
-use notify::{Watcher, RecursiveMode};
+use notify::RecursiveMode;
 use std::{sync::mpsc::Receiver, str::FromStr};
 
 use eframe::egui;

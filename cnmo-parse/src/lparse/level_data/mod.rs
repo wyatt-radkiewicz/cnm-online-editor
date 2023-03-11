@@ -5,18 +5,28 @@ use crate::lparse::{
 
 use self::cnmb_types::{BackgroundLayer, TileProperties};
 
+/// Types of the CNMB file.
+/// This includes tile properties, the world tiles, and backgrounds.
 pub mod cnmb_types;
+/// Types of the CNMS file.
+/// This includes world objects, strings from the world, world title, etc.
 pub mod cnms_types;
+/// Consts used in CNM Online that are also used here (like tile size).
 pub mod consts;
 
+/// Duration of something in ticks. (There are 30 ticks per second in CNM
+/// Online, so a Duration of 30 is 1 second). Negative values have uses in
+/// very specific and special cases in CNM Online. Mostly is 0 or above though.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Duration(pub i32);
 
+/// Defines a point for CNM types.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct Point(pub f32, pub f32);
 
+/// Version specs of the level data (seperate from the lparse file version)
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
 pub struct VersionSpecs {
@@ -34,6 +44,8 @@ pub struct VersionSpecs {
 }
 
 impl VersionSpecs {
+    /// Creates it from a specific level file version
+    /// Only current level format in CNM Online is ID 1.
     pub fn from_version(version: u32) -> Result<Self, Error> {
         match version {
             1 => Ok(Self {
@@ -53,75 +65,102 @@ impl VersionSpecs {
         }
     }
 
+    /// Version ID
     pub fn get_version(&self) -> u32 {
         self.version
     }
 
+    /// Maximum number of teleports supported
     pub fn get_num_teleports(&self) -> usize {
         self.num_teleports
     }
     
+    /// Maximum number of spawns per mode (there are 2 modes used, 1 unused)
+    /// Those modes being, player spawns, checkpoints, and an unused mode.
     pub fn get_num_spawns(&self) -> usize {
         self.num_spawns
     }
 
+    /// Number of spawner modes.
     pub fn get_num_spawn_modes(&self) -> usize {
         self.num_spawn_modes
     }
 
+    /// Maximum size of a teleport name in bytes. All names in CNM Online are
+    /// ascii.
     pub fn get_teleport_name_size(&self) -> usize {
         self.teleport_name_size
     }
 
+    /// Maximum amount of frames an animated tile can have in CNM Online
     pub fn get_max_tile_frames(&self) -> usize {
         self.max_tile_frames
     }
 
+    /// Number of text lines saved in CNMS files.
     pub fn get_ending_text_lines(&self) -> usize {
         self.ending_text_lines
     }
 
+    /// The length of each CNMS text line in bytes.
     pub fn get_ending_text_line_len(&self) -> usize {
         self.ending_text_line_len
     }
 
+    /// The maximum amount of background layers this version supports.
     pub fn get_background_layers(&self) -> usize {
         self.background_layers
     }
     
+    /// What text line the title is on in this version
     pub fn get_title_ending_text_line(&self) -> usize {
         self.title_ending_text_line
     }
 
+    /// What tile index controls the preview for a level in this version
     pub fn get_preview_tile_index(&self) -> usize {
         self.preview_tile_index
     }
 }
 
+/// Difficulty rating for a level
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, PartialEq, Eq, num_derive::FromPrimitive, num_derive::ToPrimitive)]
 pub enum DifficultyRating {
+    ///
     Tutorial,
+    ///
     ReallyEasy,
+    ///
     Easy,
+    ///
     Normal,
+    ///
     KindaHard,
+    ///
     Hard,
+    ///
     Ultra,
+    ///
     Extreme,
+    ///
     Dealth,
+    ///
     UltraDeath,
 }
 
 impl DifficultyRating {
+    /// Creates a difficuly rating from an ID
     pub fn from_difficulty_id(id: u8) -> Option<Self> {
         num_traits::FromPrimitive::from_u8(id)
     }
 
+    /// Gets the assiciated difficulty ID from this difficulty rating
     pub fn get_difficulty_id(&self) -> u8 {
         num_traits::ToPrimitive::to_u8(self).unwrap_or(3)
     }
 
+    /// To a string with spaces
     pub fn to_string_pretty(&self) -> String {
         match self {
             &Self::Tutorial => "Tutorial".to_string(),
@@ -138,16 +177,25 @@ impl DifficultyRating {
     }
 }
 
+/// Metadata for this level.
+/// 
+/// Controls stuff for how its shown on the level select menu.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
 pub struct LevelMetaData {
+    /// Title of the level
     pub title: String,
+    /// Subtitle appears after the normal title with a space and appears
+    /// under the title when the level start card appears
     pub subtitle: Option<String>,
+    /// The location of the preview in tile coordinates on GFX.BMP
     pub preview_loc: (u32, u32),
+    /// The difficulty rating of the level
     pub difficulty_rating: DifficultyRating,
 }
 
 impl LevelMetaData {
+    /// Creates Level MetaData from an LParse file
     pub fn from_lparse(cnmb: &LParse, cnms: &LParse, version: &VersionSpecs, ignore_warnings: bool) -> Result<Self, Error> {
         let title_full = cnms_types::get_ending_text_line(cnms, version, version.title_ending_text_line)?;
         let title = title_full.split('\\').next().unwrap_or("").to_string();
@@ -171,7 +219,8 @@ impl LevelMetaData {
         })
     }
 
-    fn get_full_title(&self) -> String {
+    /// Returns the full formated level title
+    pub fn get_full_title(&self) -> String {
         let subtitle = "\\".to_string() + self.subtitle.as_ref().unwrap_or(&"".to_string()).as_str();
         self.title.clone() + match self.subtitle {
             Some(_) => subtitle.as_str(),
@@ -191,18 +240,29 @@ impl LevelMetaData {
     }
 }
 
+/// The overarching level data structure. Holds everything pertaining to a level in CNM Online.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
 pub struct LevelData {
+    /// Version specifications
     pub version: VersionSpecs,
+    /// A list of all the objects in the level
     pub spawners: Vec<cnms_types::Spawner>,
+    /// A grid of cells (tiles, blocks, whatever you want to call them) in the level.
     pub cells: cnmb_types::Cells,
+    /// An array of tile properties. A tile ID corresponds to a entry in this array.
     pub tile_properties: Vec<cnmb_types::TileProperties>,
+    /// Level select metadata
     pub metadata: LevelMetaData,
+    /// An array of background layers. Ones futher in the array draw over ones in
+    /// front (smaller indices).
     pub background_layers: Vec<BackgroundLayer>,
 }
 
 impl LevelData {
+    /// Create a blank level from a level version.
+    /// 
+    /// Only version supported is version ID 1.
     pub fn from_version(version: u32) -> Result<Self, Error> {
         let version = VersionSpecs::from_version(version)?;
         let background_layers = (0..version.background_layers).map(|_| cnmb_types::BackgroundLayer::default()).collect();
@@ -222,6 +282,15 @@ impl LevelData {
         })
     }
 
+    /// Load a level from the .cnmb and .cnms lparse files
+    /// 
+    /// Ignore warnings loads levels with illogical configurations of elements, like for example
+    /// a cell with a ID that goes beyond the tile properties array, but sometimes this has to be used
+    /// because old CNM levels sometimes have garbage data that will trigger the warnings anyway. If
+    /// a warning does get triggered anyway, it will return it as an error.
+    /// 
+    /// Hasn't been tested but levels created with the API under normal circumstances shouldn't
+    /// trigger any warnings.
     pub fn from_lparse(cnmb: &LParse, cnms: &LParse, ignore_warnings: bool) -> Result<Self, Error> {
         if cnmb.version.version != cnms.version.version {
             return Err(Error::MismatchedVersions(cnmb.version.version, cnms.version.version));
@@ -244,6 +313,7 @@ impl LevelData {
         })
     }
 
+    /// Saves to a the 2 files. Creates them if they're not there, or overwrites them if they are.
     pub fn save(&self, cnmb: &mut LParse, cnms: &mut LParse) {
         cnms_types::save_spawner_vec(cnms, &self.version, self.metadata.get_full_title(), &self.spawners);
         cnmb_types::save_background_vec(cnmb, &self.version, &self.background_layers);

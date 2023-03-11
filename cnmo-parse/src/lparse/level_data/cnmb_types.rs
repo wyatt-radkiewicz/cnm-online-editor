@@ -13,10 +13,15 @@ use super::{
     consts::*,
 };
 
+/// Background image represents the 2 types of background layers in CNM Online.
+/// - Color: Clears the screen with the color pallete ID
+/// - Bitmap: Represents an source rect from GFX.BMP
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, PartialEq, strum::Display, Copy, Clone)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum BackgroundImage {
+    /// Clears the screen
     Color(u8),
+    /// Uses an image from GFX.BMP
     Bitmap(Rect),
 }
 
@@ -26,24 +31,36 @@ impl Default for BackgroundImage {
     }
 }
 
+/// A background layer in CNM Online
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Clone)]
 pub struct BackgroundLayer {
+    /// Where the original image is (offset)
     pub origin: Point,
+    /// Higher values equal less movement (looks like they are further away)
+    /// a scroll value of 0 designates that there should be no scrolling.
     pub scroll_speed: Point,
+    /// How fast the background scrolls in pixels per frame
     pub speed: Point,
+    /// How far apart each repeating image should be in pixels.
     pub spacing: (i32, i32),
+    /// The image style of the background
     pub image: BackgroundImage,
 
+    /// Transparency of the background layer.
     pub transparency: u8,
+    /// Should it repeat upwards
     pub repeat_up: bool,
+    /// repeat downwards
     pub repeat_down: bool,
+    /// Repeat both left and right
     pub repeat_horizontally: bool,
+    /// Is the background drawn over all other game elements besides the HUD?
     pub in_foreground: bool,
 }
 
 impl BackgroundLayer {
-    pub fn from_lparse(cnmb: &LParse, _version: &VersionSpecs, index: usize) -> Result<Self, Error> {
+    pub(crate) fn from_lparse(cnmb: &LParse, _version: &VersionSpecs, index: usize) -> Result<Self, Error> {
         let background_origin = &cnmb.try_get_entry("BG_ORIGIN")?.try_get_f32()?[index * 2..index * 2 + 2];
         let background_scroll = &cnmb.try_get_entry("BG_SCROLL")?.try_get_f32()?[index * 2..index * 2 + 2];
         let background_spacing = &cnmb.try_get_entry("BG_SPACING")?.try_get_i32()?[index * 2..index * 2 + 2];
@@ -74,7 +91,7 @@ impl BackgroundLayer {
         })
     }
 
-    pub fn save(
+    pub(crate) fn save(
         &self,
         bg_origin: &mut Vec<f32>,
         bg_scroll: &mut Vec<f32>,
@@ -153,30 +170,46 @@ pub(super) fn save_background_vec(cnmb: &mut LParse, version: &VersionSpecs, bac
     cnmb.entries.insert("BG_TRANS".to_string(), EntryData::U8(bg_trans));
 }
 
+/// How a tile will damage the player
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, strum::Display)]
+#[derive(Debug, Clone)]
 pub enum DamageType {
+    /// It won't damage the player
     None,
+    /// It will damage the player and act as a liquid
     Lava(i32),
+    /// It will damage the player (no special effects)
     Spikes(i32),
+    /// It will damage the player and act as quicksand
     Quicksand(i32),
 }
 
+/// What collision type does the tile have?
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug, Clone, strum::Display)]
+#[derive(Debug, Clone)]
 pub enum CollisionType {
+    /// A normal box
     Box(Rect),
+    /// A hightmap that has 0 at the bottom of the cell, and 32 at the top (i think).
     Heightmap([u8; TILE_SIZE]),
 }
 
+/// All properties of a tile.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
 pub struct TileProperties {
+    /// Is it solid
     pub solid: bool,
+    /// Transparency level
     pub transparency: u8,
+    /// Damage type
     pub damage_type: DamageType,
+    /// How many frames until the tile changes its frame?
     pub anim_speed: Duration,
+    /// Tile locations in GFX.BMP of repsective frames (be careful of how many frames
+    /// you can have, you need to look at [`crate::lparse::level_data::VersionSpecs`])
     pub frames: Vec<(i32, i32)>,
+    /// How the block is shaped
     pub collision_data: CollisionType,
 }
 
@@ -194,7 +227,7 @@ impl Default for TileProperties {
 }
 
 impl TileProperties {
-    pub fn from_lparse(cnmb: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
+    pub(crate) fn from_lparse(cnmb: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
         let block_flags = cnmb.try_get_entry("BP_FLAGS")?.try_get_u32()?;
         let block_transparency = cnmb.try_get_entry("BP_TRANS")?.try_get_i32()?;
         let block_damage_type = cnmb.try_get_entry("BP_DMG_TYPE")?.try_get_i32()?;
@@ -357,6 +390,9 @@ pub(super) fn save_tile_properties_vec(
 
 }
 
+/// Represents a tile in CNM Online
+/// It is either air, or a refrence to the tile properties
+/// array in [`crate::lparse::level_data::LevelData`]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Default, Copy, Clone)]
 pub struct TileId(pub Option<u16>);
@@ -373,6 +409,7 @@ impl PartialEq for TileId {
 impl Eq for TileId {}
 
 impl TileId {
+    /// Gets a safe [`TileId`]  from a raw CNM tile ID
     pub fn from_raw_id(raw: u16, version: &VersionSpecs) -> Self {
         if raw == 0 {
             Self(None)
@@ -385,6 +422,7 @@ impl TileId {
         }
     }
 
+    /// Returns the unsafe CNM raw tile ID
     pub fn get_raw_id(&self, version: &VersionSpecs) -> u16 {
         if let Some(id) = self.0 {
             if id as usize > version.preview_tile_index {
@@ -398,11 +436,16 @@ impl TileId {
     }
 }
 
+/// A cell on the cnm world grid.
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Copy, Clone)]
 pub struct Cell {
+    /// Shown infront of cnm objects
     pub foreground: TileId,
+    /// Shown behind cnm objects
     pub background: TileId,
+    /// The light level of objects and both tiles on this grid point
+    /// LIGHT_NORMAL should is no lighting effects
     pub light: u8,
 }
 
@@ -416,9 +459,10 @@ impl Default for Cell {
     }
 }
 
+/// The grid of cells of a cnm world
 #[derive(Debug, Clone)]
 pub struct Cells {
-    pub cells: Vec<Cell>,
+    cells: Vec<Cell>,
     width: usize,
     height: usize,
 }
@@ -497,6 +541,7 @@ impl<'de> serde::de::Visitor<'de> for CellsVisitor {
 }
 
 impl Cells {
+    /// Creates an empty grid of cells with the specified width and height
     pub fn new(width: usize, height: usize) -> Self {
         let cells = (0..width*height).map(|_| Cell::default()).collect();
 
@@ -507,7 +552,7 @@ impl Cells {
         }
     }
 
-    pub fn from_lparse(cnmb: &LParse, num_tile_properties: usize) -> Result<Self, Error> {
+    pub(crate) fn from_lparse(cnmb: &LParse, num_tile_properties: usize) -> Result<Self, Error> {
         let block_header = cnmb.try_get_entry("BLOCKS_HEADER")?.try_get_i32()?;
         let width = block_header[0] as usize;
         let height = block_header[1] as usize;
@@ -565,24 +610,41 @@ impl Cells {
         cnmb.entries.insert("BLK_LIGHT".to_string(), EntryData::U16(blk_light));
     }
 
+    /// Returns a slice of the worlds cells
+    pub fn cells(&self) -> &[Cell] {
+        &self.cells
+    }
+
+    /// Returns a mutable slice of the world's cells
+    pub fn cells_mut(&mut self) -> &mut [Cell] {
+        &mut self.cells
+    }
+
+    /// Returns a cell ref from the world. The x and y positions are clamped
+    /// to the world's borders.
     pub fn get_cell(&self, x: i32, y: i32) -> &Cell {
         let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
         &self.cells[index as usize]
     }
 
+    /// Returns a mut cell ref from the world. The x and y positions are clamped
+    /// to the world's borders.
     pub fn get_cell_mut(&mut self, x: i32, y: i32) -> &mut Cell {
         let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
         &mut self.cells[index as usize]
     }
 
-    pub fn get_width(&self) -> usize {
+    /// Width of the world in cells
+    pub fn width(&self) -> usize {
         self.width
     }
 
-    pub fn get_height(&self) -> usize {
+    /// Height of the world in cells
+    pub fn height(&self) -> usize {
         self.height
     }
 
+    /// Resizes the world and keeps the old cells
     pub fn resize(&mut self, new_width: usize, new_height: usize) {
         if new_width == self.width && new_height == self.height {
             return;
@@ -593,6 +655,7 @@ impl Cells {
         *self = new_cells;
     }
 
+    /// Pastes this cells grid into <other>.
     pub fn paste(&self, other: &mut Self, src_min: (i32, i32), src_max: (i32, i32), dst: (i32, i32)) {
         for y in src_min.1..=src_max.1 {
             for x in src_min.0..=src_max.0 {

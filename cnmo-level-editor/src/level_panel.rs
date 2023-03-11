@@ -1,5 +1,3 @@
-use std::f32::consts::E;
-
 use cnmo_parse::lparse::level_data::cnmb_types::BackgroundImage;
 use cnmo_parse::lparse::level_data::cnms_types::wobj_type::WobjType;
 use cnmo_parse::lparse::level_data::cnms_types::{SpawnerMode, Spawner};
@@ -22,8 +20,11 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
         ui.heading("File");
     });
     let text_response = ui.text_edit_singleline(&mut editor_data.level_file_name);
-    editor_data.editing_text &= !text_response.lost_focus();
-    editor_data.editing_text |= text_response.has_focus();
+    if text_response.gained_focus() {
+        editor_data.editing_text = Some(text_response.id);
+    } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+        editor_data.editing_text = None;
+    }
     text_response.on_hover_text("The level filename (without the extension)");
     if ui.button("New Level").clicked() {
         *level_data = level_data::LevelData::from_version(1).expect("Can't create version 1 level type?");
@@ -173,15 +174,22 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
     egui::Grid::new("level_metadata").num_columns(2).show(ui, |ui| {
         ui.label("Level Title: ");
         let text_response = ui.text_edit_singleline(&mut level_data.metadata.title);
-        editor_data.editing_text &= !text_response.lost_focus();
-        editor_data.editing_text |= text_response.has_focus();
+        if text_response.gained_focus() {
+            editor_data.editing_text = Some(text_response.id);
+        } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+            editor_data.editing_text = None;
+        }
         ui.end_row();
         {
             let mut level_name = level_data.metadata.subtitle.as_ref().unwrap_or(&"".to_string()).clone();
             ui.label("Level Subtitle: ");
             let text_response = ui.text_edit_singleline(&mut level_name);
-            editor_data.editing_text &= !text_response.lost_focus();
-            editor_data.editing_text |= text_response.has_focus();
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+                editor_data.editing_text = None;
+            }
+
             if text_response.changed() {
                 level_data.metadata.subtitle = Some(level_name);
             }
@@ -250,25 +258,25 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
         if ui.ctx().input().key_pressed(egui::Key::T) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Tile;
             editor_data.reset_selected_tiles();
-            editor_data.editing_text = false;
+            editor_data.editing_text = None;
         }
         if ui.ctx().input().key_pressed(egui::Key::B) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Background;
             world_panel.editing_background = true;
             editor_data.reset_selected_tiles();
-            editor_data.editing_text = false;
+            editor_data.editing_text = None;
         }
         if ui.ctx().input().key_pressed(egui::Key::L) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::Level;
             world_panel.editing_background = false;
             editor_data.reset_selected_tiles();
-            editor_data.editing_text = false;
+            editor_data.editing_text = None;
         }
         if ui.ctx().input().key_pressed(egui::Key::G) && ui.ctx().input().modifiers.ctrl {
             *editor_mode = super::EditorMode::GameConfig;
             world_panel.editing_background = false;
             editor_data.reset_selected_tiles();
-            editor_data.editing_text = false;
+            editor_data.editing_text = None;
         }
     });
     ui.separator();
@@ -311,23 +319,23 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
             show_background_list(ui, world_panel);
             ui.label("Tools");
             if ui.selectable_label(matches!(editor_data.tool, Tool::Brush), "Brush (B)").clicked() ||
-                (ui.ctx().input().key_pressed(egui::Key::B) && !editor_data.editing_text) {
+                (ui.ctx().input().key_pressed(egui::Key::B) && editor_data.editing_text == None) {
                 editor_data.tool = Tool::Brush;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Eraser), "Eraser (E)").clicked() ||
-                (ui.ctx().input().key_pressed(egui::Key::E) && !editor_data.editing_text) {
+                (ui.ctx().input().key_pressed(egui::Key::E) && editor_data.editing_text == None) {
                 editor_data.tool = Tool::Eraser;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Fill), "Fill (F)").clicked() ||
-                (ui.ctx().input().key_pressed(egui::Key::F) && !editor_data.editing_text) {
+                (ui.ctx().input().key_pressed(egui::Key::F) && editor_data.editing_text == None) {
                 editor_data.tool = Tool::Fill;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::TilePicker), "Tile Picker (R)").clicked() ||
-                (ui.ctx().input().key_pressed(egui::Key::R) && !editor_data.editing_text) {
+                (ui.ctx().input().key_pressed(egui::Key::R) && editor_data.editing_text == None) {
                 editor_data.tool = Tool::TilePicker;
             }
             if ui.selectable_label(matches!(editor_data.tool, Tool::Spawners), "Spawners (S)").clicked() ||
-                (ui.ctx().input().key_pressed(egui::Key::S) && !editor_data.editing_text) {
+                (ui.ctx().input().key_pressed(egui::Key::S) && editor_data.editing_text == None) {
                 editor_data.tool = Tool::Spawners;
             }
         },
@@ -426,7 +434,7 @@ impl PropertiesPanel {
                 ui.label("Move here");
             } else {
                 let response = 
-                    ui.selectable_label(panel.selected_mode.unwrap_or(editor_data.game_config_file.modes.len()) == idx, mode.to_string());
+                    ui.selectable_label(panel.selected_mode.unwrap_or(editor_data.game_config_file.modes.len()) == idx, get_cnma_mode_name(mode));
                 if response.clicked() {
                     panel.selected_mode = Some(idx);
                 }
@@ -445,7 +453,7 @@ impl PropertiesPanel {
                     .interactable(false)
                     .fixed_pos(ui.ctx().pointer_interact_pos().unwrap_or_default())
                     .show(ui.ctx(), |ui| {
-                    ui.label(editor_data.game_config_file.modes[src].to_string());
+                    ui.label(get_cnma_mode_name(&editor_data.game_config_file.modes[src]));
                 });
             }
         }
@@ -465,13 +473,18 @@ impl PropertiesPanel {
         egui::ComboBox::new("game_config_mode_add_combo_box", "")
             .selected_text("Add A New Config Section")
             .show_ui(ui, |ui| {
-            use strum::IntoEnumIterator;
-            for mode in cnmo_parse::cnma::Mode::iter() {
-                if ui.button(mode.to_string()).clicked() {
+            let mut show_button = |mode: cnmo_parse::cnma::Mode| {
+                if ui.button(get_cnma_mode_name(&mode)).clicked() {
                     panel.selected_mode = Some(editor_data.game_config_file.modes.len());
                     editor_data.game_config_file.modes.push(mode);
                 }
-            }
+            };
+            show_button(cnmo_parse::cnma::Mode::SoundIds(vec![]));
+            show_button(cnmo_parse::cnma::Mode::MusicIds(vec![]));
+            show_button(cnmo_parse::cnma::Mode::LevelSelectOrder(vec![]));
+            show_button(cnmo_parse::cnma::Mode::MaxPowerDef(Default::default()));
+            show_button(cnmo_parse::cnma::Mode::LuaAutorunCode(String::new()));
+            show_button(cnmo_parse::cnma::Mode::MusicVolumeOverride);
         });
     }
     
@@ -511,12 +524,12 @@ impl PropertiesPanel {
                 egui::Grid::new("spawner_properties_grid").num_columns(2).striped(true).show(ui, |ui| {
                     ui.label("Spawning Mode: ");
                     egui::ComboBox::new("spawning_mode_combobox", "")
-                        .selected_text(spawner.spawning_criteria.mode.to_string())
+                        .selected_text(get_spawner_mode_name(&spawner.spawning_criteria.mode))
                         .show_ui(ui, |ui| {
-                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiAndSingleplayer, SpawnerMode::MultiAndSingleplayer.to_string());
-                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiplayerOnly, SpawnerMode::MultiplayerOnly.to_string());
-                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::SingleplayerOnly, SpawnerMode::SingleplayerOnly.to_string());
-                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::PlayerCountBased, SpawnerMode::PlayerCountBased.to_string()).on_hover_text_at_pointer(
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiAndSingleplayer, get_spawner_mode_name(&SpawnerMode::MultiAndSingleplayer));
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::MultiplayerOnly, get_spawner_mode_name(&SpawnerMode::MultiplayerOnly));
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::SingleplayerOnly, get_spawner_mode_name(&SpawnerMode::SingleplayerOnly));
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::PlayerCountBased, get_spawner_mode_name(&SpawnerMode::PlayerCountBased)).on_hover_text_at_pointer(
                             "This will show in both single and multiplayer and will spawn an wobj for every\n
                             player in the server/game, this means the max spawns will be max_spawns*player_count"
                         );
@@ -526,7 +539,7 @@ impl PropertiesPanel {
                     ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.spawn_delay_secs)).on_hover_text_at_pointer("Delay in seconds");
                     ui.end_row();
                     ui.label("Number of maximum respawns: ");
-                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.max_respawns));
+                    ui.add(egui::DragValue::new(&mut spawner.spawning_criteria.max_concurrent_spawns));
                     ui.end_row();
                     ui.label("Drops item: ");
                     let dropped_item_response = ui.selectable_label(spawner.dropped_item != None, "Drops item");
@@ -552,12 +565,36 @@ impl PropertiesPanel {
             });
             ui.separator();
             egui::ScrollArea::vertical().auto_shrink([true, true]).show(ui, |ui| {
-                use strum::IntoEnumIterator;
                 use std::mem::discriminant;
 
                 egui::Grid::new("spawner_list_grid").striped(true).show(ui, |ui| {
-                    for spawner_type in WobjType::iter() {
-                        if ui.selectable_label(discriminant(&editor_data.spawner_template.type_data.clone()) == discriminant(&spawner_type), spawner_type.to_string()).clicked() {
+                    for spawner_type in WobjIter::new() {
+                        if discriminant(&WobjType::BanditGuy { speed: Default::default() }) == discriminant(&spawner_type) {
+                            ui.end_row();
+                            ui.label("Enemies");
+                            ui.end_row();
+                            ui.end_row();
+                        }
+                        if discriminant(&WobjType::BreakablePlatform { time_till_fall: Default::default() }) == discriminant(&spawner_type) {
+                            ui.end_row();
+                            ui.label("Environmental");
+                            ui.end_row();
+                            ui.end_row();
+                        }
+                        if discriminant(&WobjType::BackgroundSwitcher { shape: Default::default(), enabled_layers: Default::default() }) == discriminant(&spawner_type) {
+                            ui.end_row();
+                            ui.label("Triggers");
+                            ui.end_row();
+                            ui.end_row();
+                        }
+                        if discriminant(&WobjType::DroppedItem { item: Default::default() }) == discriminant(&spawner_type) {
+                            ui.end_row();
+                            ui.label("Collectables");
+                            ui.end_row();
+                            ui.end_row();
+                        }
+                        
+                        if ui.selectable_label(discriminant(&editor_data.spawner_template.type_data.clone()) == discriminant(&spawner_type), get_wobj_type_name(&spawner_type)).clicked() {
                             editor_data.spawner_template.type_data = spawner_type;
                         }
                         ui.end_row();
@@ -670,7 +707,10 @@ impl PropertiesPanel {
             ui.end_row();
             ui.label("Image/Color: ");
             egui::ComboBox::new("background_image_chooser", "")
-                .selected_text(layer.image.to_string())
+                .selected_text(match layer.image {
+                    BackgroundImage::Color(_) => "Whole Color",
+                    BackgroundImage::Bitmap(_) => "Image",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(&mut layer.image, BackgroundImage::Color(0), "Whole Color");
                 ui.selectable_value(&mut layer.image, BackgroundImage::Bitmap(cnmo_parse::Rect { x: 0, y: 0, w: 0, h: 0 }), "Image");
@@ -734,12 +774,11 @@ impl PropertiesPanel {
 
 fn show_item_combobox(item: &mut ItemType, ui: &mut egui::Ui) {
     egui::ComboBox::new("item_combo_box", "")
-        .selected_text(item.to_string())
+        .selected_text(get_item_type_name(item))
         .show_ui(ui, |ui| {
-        use strum::IntoEnumIterator;
 
-        for item_type in ItemType::iter() {
-            ui.selectable_value(item, item_type, item_type.to_string());
+        for item_type in ItemIter::new() {
+            ui.selectable_value(item, item_type, get_item_type_name(&item_type));
         }
     });
 }
@@ -750,14 +789,20 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
             TtNodeType, BackgroundSwitcherShape, TunesTriggerSize, RuneType, RockGuyType, PushZoneType, UpgradeTriggerType, KeyColor
         },
     };
-    let mut editing_text = false;
-    let mut lost_text_focus = true;
     match &mut spawner.type_data {
+        &mut WobjType::Checkpoint { ref mut checkpoint_num } => {
+            ui.label("Checkpoint ID: ").on_hover_text("What order the checkpoints go in");
+            ui.add(egui::DragValue::new(checkpoint_num).clamp_range(0..=255));
+            ui.end_row();
+        },
         &mut WobjType::Teleport(ref mut teleport) => {
             ui.label("Name: ");
             let text_response = ui.text_edit_singleline(&mut teleport.name);
-            lost_text_focus |= text_response.lost_focus();
-            editing_text |= text_response.has_focus();
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+                editor_data.editing_text = None;
+            }
             ui.end_row();
             ui.label("Cost: ");
             ui.add(egui::DragValue::new(&mut teleport.cost));
@@ -790,6 +835,9 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
             }
         },
         &mut WobjType::TeleportArea1{ ref mut link_id, ref mut loc } => {
+            ui.label("Link ID: ");
+            ui.add(egui::DragValue::new(link_id).clamp_range(0..=65535));
+            ui.end_row();
             ui.label("Location X: ");
             ui.add(egui::DragValue::new(&mut loc.0));
             ui.end_row();
@@ -820,7 +868,11 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::TunesTrigger { ref mut size, ref mut music_id } => {
             ui.label("Trigger Size: ");
             egui::ComboBox::new("trigger_size_combo_box", "")
-                .selected_text(size.to_string())
+                .selected_text(match size {
+                    TunesTriggerSize::Small => "1x1",
+                    TunesTriggerSize::Big => "2x2",
+                    TunesTriggerSize::VeryBig => "3x3",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(size, TunesTriggerSize::Small, "1x1");
                 ui.selectable_value(size, TunesTriggerSize::Big, "2x2");
@@ -839,7 +891,12 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
             ui.end_row();
             ui.label("Lines");
             ui.end_row();
-            ui.text_edit_multiline(text);
+            let text_response = ui.text_edit_multiline(text);
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+                editor_data.editing_text = None;
+            }
         },
         &mut WobjType::BackgroundSwitcher { ref mut shape, ref mut enabled_layers } => {
             ui.label("Enabled Layers");
@@ -852,7 +909,11 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
             ui.end_row();
             ui.label("Shape: ");
             egui::ComboBox::new("bgswitcher_shape", "")
-                .selected_text(shape.to_string())
+                .selected_text(match shape {
+                    BackgroundSwitcherShape::Horizontal => "Horizontal",
+                    BackgroundSwitcherShape::Small => "Small",
+                    BackgroundSwitcherShape::Vertical => "Vertical",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(shape, BackgroundSwitcherShape::Small, "Small");
                 ui.selectable_value(shape, BackgroundSwitcherShape::Horizontal, "Horizontal");
@@ -868,18 +929,21 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::DroppedItem { ref mut item } => {
             ui.label("Item: ");
             egui::ComboBox::new("item_type", "")
-                .selected_text(item.to_string())
+                .selected_text(get_item_type_name(item))
                 .show_ui(ui, |ui| {
-                use strum::IntoEnumIterator;
-                for item_type in ItemType::iter() {
-                    ui.selectable_value(item, item_type, item_type.to_string());
+                for item_type in ItemIter::new() {
+                    ui.selectable_value(item, item_type, get_item_type_name(&item_type));
                 }
             });
         },
         &mut WobjType::TtNode { ref mut node_type } => {
             ui.label("Node Type: ");
             egui::ComboBox::new("ttnode_type", "")
-                .selected_text(node_type.to_string())
+                .selected_text(match node_type {
+                    TtNodeType::ChaseTrigger => "Dead Brother",
+                    TtNodeType::NormalTrigger => "Golden Brother",
+                    TtNodeType::Waypoint(_) => "Waypoint",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(node_type, TtNodeType::ChaseTrigger, "Dead Brother");
                 ui.selectable_value(node_type, TtNodeType::NormalTrigger, "Golden Brother");
@@ -888,7 +952,7 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
             ui.end_row();
             if let TtNodeType::Waypoint(id) = node_type {
                 ui.label("Waypoint ID: ");
-                ui.add(egui::DragValue::new(id).clamp_range(0..=63));
+                ui.add(egui::DragValue::new(id).clamp_range(0..=127));
                 ui.end_row();
             }
         },
@@ -916,11 +980,15 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::PushZone { ref mut push_zone_type, ref mut push_speed } => {
             ui.label("Zone Type: ");
             egui::ComboBox::new("push_zone_type", "")
-                .selected_text(push_zone_type.to_string())
+                .selected_text(match push_zone_type {
+                    PushZoneType::Horizontal => "Horizontal",
+                    PushZoneType::Vertical => "Vertical",
+                    PushZoneType::HorizontalSmall => "Small",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(push_zone_type, PushZoneType::Horizontal, "Horizontal");
                 ui.selectable_value(push_zone_type, PushZoneType::Vertical, "Vertical");
-                ui.selectable_value(push_zone_type, PushZoneType::HorizontalSmall, "HorizontalSmall");
+                ui.selectable_value(push_zone_type, PushZoneType::HorizontalSmall, "Small");
             });
             ui.end_row();
             ui.label("Speed: ");
@@ -951,12 +1019,22 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         },
         &mut WobjType::GraphicsChangeTrigger { ref mut gfx_file } => {
             ui.label("Graphics File: ");
-            ui.text_edit_singleline(gfx_file);
+            let text_response = ui.text_edit_singleline(gfx_file);
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+                editor_data.editing_text = None;
+            }
             ui.end_row();
         },
         &mut WobjType::BossBarInfo { ref mut boss_name } => {
             ui.label("Boss Name: ");
-            ui.text_edit_singleline(boss_name);
+            let text_response = ui.text_edit_singleline(boss_name);
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus() && editor_data.editing_text == Some(text_response.id) {
+                editor_data.editing_text = None;
+            }
             ui.end_row();
         },
         &mut WobjType::BgSpeed { ref mut vertical_axis, ref mut layer, ref mut speed } => {
@@ -1076,7 +1154,11 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::LockedBlock { ref mut color, ref mut consume_key } => {
             ui.label("Color: ");
             egui::ComboBox::new("color_combo_box", "")
-                .selected_text(color.to_string())
+                .selected_text(match color {
+                    KeyColor::Red => "Red",
+                    KeyColor::Green => "Green",
+                    KeyColor::Blue => "Blue",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(color, KeyColor::Red, "Red");
                 ui.selectable_value(color, KeyColor::Green, "Green");
@@ -1099,7 +1181,12 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::WandRune { ref mut rune_type } => {
             ui.label("Rune Type: ");
             egui::ComboBox::new("rune_type_combo_box", "")
-                .selected_text(rune_type.to_string())
+                .selected_text(match rune_type {
+                    RuneType::Air => "Air",
+                    RuneType::Fire => "Fire",
+                    RuneType::Ice => "Ice",
+                    RuneType::Lightning => "Lightning",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(rune_type, RuneType::Air, "Air");
                 ui.selectable_value(rune_type, RuneType::Fire, "Fire");
@@ -1111,7 +1198,14 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::UpgradeTrigger { ref mut trigger_type } => {
             ui.label("Upgrade Type: ");
             egui::ComboBox::new("upgrade_type_combo_box", "")
-                .selected_text(trigger_type.to_string())
+                .selected_text(match trigger_type {
+                    UpgradeTriggerType::Wings => "Wings",
+                    UpgradeTriggerType::CrystalWings => "Crystal Wings",
+                    UpgradeTriggerType::DeephausBoots => "Deephaus Boots",
+                    UpgradeTriggerType::Vortex => "Vortex",
+                    UpgradeTriggerType::None => "Remove Upgrades",
+                    UpgradeTriggerType::MaxPowerRune{ .. } => "Max Power Rune",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(trigger_type, UpgradeTriggerType::Wings, "Wings");
                 ui.selectable_value(trigger_type, UpgradeTriggerType::CrystalWings, "Crystal Wings");
@@ -1227,7 +1321,11 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         &mut WobjType::RockGuy { ref mut rock_guy_type } => {
             ui.label("Size: ");
             egui::ComboBox::new("rock_guy_type_combo_box", "")
-                .selected_text(rock_guy_type.to_string())
+                .selected_text(match rock_guy_type {
+                    RockGuyType::Medium => "Meduim",
+                    RockGuyType::Small1 => "Small",
+                    RockGuyType::Small2 { .. } => "Very Small",
+                })
                 .show_ui(ui, |ui| {
                 ui.selectable_value(rock_guy_type, RockGuyType::Medium, "Meduim");
                 ui.selectable_value(rock_guy_type, RockGuyType::Small1, "Small");
@@ -1249,7 +1347,291 @@ fn show_spawner_properties(spawner: &mut Spawner, ui: &mut egui::Ui, editor_data
         },
         _ => {},
     }
+}
 
-    editor_data.editing_text &= !lost_text_focus;
-    editor_data.editing_text |= editing_text;
+fn get_cnma_mode_name(mode: &cnmo_parse::cnma::Mode) -> &str {
+    use cnmo_parse::cnma::Mode;
+    match mode {
+        &Mode::SoundIds(_) => "Sound IDS",
+        &Mode::MusicIds(_) => "Music IDS",
+        &Mode::LevelSelectOrder(_) => "Level Order",
+        &Mode::LuaAutorunCode(_) => "LUA Code",
+        &Mode::MaxPowerDef(_) => "Max Power Abilities",
+        &Mode::MusicVolumeOverride => "Deprecated (Music Volume Override)",
+    }
+}
+
+fn get_spawner_mode_name(mode: &SpawnerMode) -> &str {
+    match mode {
+        &SpawnerMode::MultiAndSingleplayer => "Multi and Singleplayer",
+        &SpawnerMode::MultiplayerOnly => "Multiplayer Only",
+        &SpawnerMode::SingleplayerOnly => "Singleplayer Only",
+        &SpawnerMode::PlayerCountBased => "Player Count Based",
+    }
+}
+
+struct ItemIter {
+    index: u8,
+}
+
+impl ItemIter {
+    fn new() -> Self {
+        Self {
+            index: 0,
+        }
+    }
+}
+
+impl Iterator for ItemIter {
+    type Item = ItemType;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        use ItemType::*;
+
+        let index = self.index;
+        self.index += 1;
+        match index {
+            0 => Some(Shotgun),
+            1 => Some(Knife),
+            2 => Some(Apple),
+            3 => Some(Cake),
+            4 => Some(StrengthPotion),
+            5 => Some(SpeedPotion),
+            6 => Some(JumpPotion),
+            7 => Some(Sword),
+            8 => Some(HealthPotion),
+            9 => Some(Sniper),
+            10 => Some(Money50),
+            11 => Some(Money100),
+            12 => Some(Money500),
+            13 => Some(Cheeseburger),
+            14 => Some(GoldenAxe),
+            15 => Some(UnboundWand),
+            16 => Some(FireWand),
+            17 => Some(IceWand),
+            18 => Some(AirWand),
+            19 => Some(LightningWand),
+            20 => Some(GoldenShotgun),
+            21 => Some(LaserRifle),
+            22 => Some(RocketLauncher),
+            23 => Some(FirePotion),
+            24 => Some(Minigun),
+            25 => Some(MegaPotion),
+            26 => Some(UltraMegaPotion),
+            27 => Some(Awp),
+            28 => Some(Flamethrower),
+            29 => Some(PoisionusStrengthPotion),
+            30 => Some(PoisionusSpeedPotion),
+            31 => Some(PoisionusJumpPotion),
+            32 => Some(Beastchurger),
+            33 => Some(UltraSword),
+            34 => Some(HeavyHammer),
+            35 => Some(FissionGun),
+            36 => Some(KeyRed),
+            37 => Some(KeyGreen),
+            38 => Some(KeyBlue),
+            _ => None,
+        }
+    }
+}
+
+fn get_item_type_name(item_type: &ItemType) -> &str {
+    use ItemType::*;
+    
+    match item_type {
+        &Shotgun => "Shotgun",
+        &Knife => "Knife",
+        &Apple => "Apple",
+        &Cake => "Cake",
+        &StrengthPotion => "Strength Potion",
+        &SpeedPotion => "Speed Potion",
+        &JumpPotion => "Jump Potion",
+        &Sword => "Sword",
+        &HealthPotion => "Health Potion",
+        &Sniper => "Sniper",
+        &Money50 => "50 Money",
+        &Money100 => "100 Money",
+        &Money500 => "500 Money",
+        &Cheeseburger => "Cheeseburger",
+        &GoldenAxe => "Golden Axe",
+        &UnboundWand => "Unbound Wand",
+        &FireWand => "Fire Wand",
+        &IceWand => "Ice Wand",
+        &AirWand => "Air Wand",
+        &LightningWand => "Lightning Wand",
+        &GoldenShotgun => "Golden Shotgun",
+        &LaserRifle => "Laser Rifle",
+        &RocketLauncher => "Rocket Launcher",
+        &FirePotion => "Fire Potion",
+        &Minigun => "Minigun",
+        &MegaPotion => "Mega Potion",
+        &UltraMegaPotion => "Ultra Mega Potion",
+        &Awp => "Awp",
+        &Flamethrower => "Flamethrower",
+        &PoisionusStrengthPotion => "Bad Strength Potion",
+        &PoisionusSpeedPotion => "Bad Speed Potion",
+        &PoisionusJumpPotion => "Bad Jump Potion",
+        &Beastchurger => "Beastchurger",
+        &UltraSword => "Ultra Sword",
+        &HeavyHammer => "Heavy Hammer",
+        &FissionGun => "Fission Gun",
+        &KeyRed => "Key Red",
+        &KeyGreen => "Key Green",
+        &KeyBlue => "Key Blue",
+    }
+}
+
+struct WobjIter {
+    index: u8,
+}
+
+impl WobjIter {
+    fn new() -> Self {
+        Self {
+            index: 0,
+        }
+    }
+}
+
+impl Iterator for WobjIter {
+    type Item = WobjType;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        use WobjType::*;
+
+        let index = self.index;
+        self.index += 1;
+        match index {
+            // Enemies
+            00 => Some(BanditGuy { speed: Default::default() }),
+            01 => Some(Bozo { mark_ii: Default::default() }),
+            02 => Some(BozoLaserMinion { speed: Default::default() }),
+            03 => Some(BozoPin { flying_speed: Default::default() }),
+            04 => Some(Dragon { space_skin: Default::default() }),
+            05 => Some(Heavy { speed: Default::default(), face_left: Default::default() }),
+            06 => Some(EaterBug { pop_up_speed: Default::default() }),
+            07 => Some(KamakaziSlime),
+            08 => Some(LavaDragonHead { len: Default::default(), health: Default::default() }),
+            09 => Some(LavaMonster { face_left: Default::default() }),
+            10 => Some(Lua { lua_wobj_type: Default::default() }),
+            11 => Some(MegaFish { water_level: Default::default(), swimming_speed: Default::default() }),
+            12 => Some(RockGuy { rock_guy_type: Default::default() }),
+            13 => Some(RockGuySlider),
+            14 => Some(RockGuySmasher),
+            15 => Some(SilverSlime),
+            16 => Some(Slime { flying: false }),
+            17 => Some(SlimeWalker),
+            18 => Some(SpiderWalker { speed: Default::default() }),
+            19 => Some(SpikeGuy),
+            20 => Some(SuperDragon { waypoint_id: Default::default() }),
+            21 => Some(Supervirus),
+            22 => Some(TtBoss { speed: Default::default() }),
+            23 => Some(TtMinion { small: Default::default() }),
+            24 => Some(Wolf),
+
+            // Environmental
+            25 => Some(BreakablePlatform { time_till_fall: Default::default() }),
+            26 => Some(BreakableWall { skin_id: Default::default(), health: Default::default() }),
+            27 => Some(CustomizeableMoveablePlatform { bitmap_x32: Default::default(), target_relative: Default::default(), speed: Default::default(), start_paused: Default::default(), one_way: Default::default() }),
+            28 => Some(DisapearingPlatform { time_on: Default::default(), time_off: Default::default(), starts_on: Default::default() }),
+            29 => Some(Jumpthrough { big: Default::default() }),
+            30 => Some(LockedBlock { color: Default::default(), consume_key: Default::default() }),
+            31 => Some(MovingFire { vertical: Default::default(), dist: Default::default(), speed: Default::default() }),
+            32 => Some(MovingPlatform { vertical: Default::default(), dist: Default::default(), speed: Default::default() }),
+            33 => Some(PushZone { push_zone_type: Default::default(), push_speed: Default::default() }),
+            34 => Some(RotatingFireColunmPiece { origin_x: Default::default(), degrees_per_second: Default::default() }),
+            35 => Some(SpikeTrap),
+            36 => Some(SpringBoard { jump_velocity: Default::default() }),
+            37 => Some(SuperDragonLandingZone { waypoint_id: Default::default() }),
+            38 => Some(VerticalWindZone { acceleration: Default::default() }),
+            39 => Some(Vortex { attract_enemies: Default::default() }),
+
+            // Triggers
+            40 => Some(BackgroundSwitcher { shape: Default::default(), enabled_layers: Default::default() }),
+            41 => Some(BgSpeed { vertical_axis: Default::default(), layer: Default::default(), speed: Default::default() }),
+            42 => Some(BgTransparency { layer: Default::default(), transparency: Default::default() }),
+            43 => Some(BossBarInfo { boss_name: Default::default() }),
+            44 => Some(Checkpoint { checkpoint_num: Default::default() }),
+            45 => Some(GraphicsChangeTrigger { gfx_file: Default::default() }),
+            46 => Some(HealthSetTrigger { target_health: Default::default() }),
+            47 => Some(PlayerSpawn),
+            48 => Some(SfxPoint { sound_id: Default::default() }),
+            49 => Some(Teleport(Default::default())),
+            50 => Some(TeleportArea1 { link_id: Default::default(), loc: Default::default() }),
+            51 => Some(TeleportTrigger1 { link_id: Default::default(), delay_secs: Default::default() }),
+            52 => Some(TextSpawner { dialoge_box: Default::default(), text: Default::default() }),
+            53 => Some(TtNode { node_type: Default::default() }),
+            54 => Some(TunesTrigger { size: Default::default(), music_id: Default::default() }),
+
+            // Collectables
+            55 => Some(DroppedItem { item: Default::default() }),
+            56 => Some(UpgradeTrigger { trigger_type: Default::default() }),
+            57 => Some(WandRune { rune_type: Default::default() }),
+            _ => None,
+        }
+    }
+}
+
+fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
+    use WobjType::*;
+    match &wobj_type {
+        &Teleport(_) => "Teleport",
+        &Slime{ .. } => "Slime",
+        &TunesTrigger{ .. } => "Tunes Trigger",
+        &PlayerSpawn => "Player Spawn",
+        &TextSpawner{ .. } => "Text Spawner",
+        &MovingPlatform{ .. } => "Moving Platform",
+        &BreakableWall{ .. } => "Breakable Wall",
+        &BackgroundSwitcher{ .. } => "Background Switcher",
+        &DroppedItem{ .. } => "Dropped Item",
+        &WandRune{ .. } => "Wand Rune",
+        &Heavy{ .. } => "Heavy",
+        &Dragon{ .. } => "Dragon",
+        &BozoPin{ .. } => "Bozopin",
+        &Bozo{ .. } => "Bozo",
+        &SilverSlime => "Silver Slime",
+        &LavaMonster{ .. } => "Lava Monster",
+        &TtMinion{ .. } => "Tt Minion",
+        &SlimeWalker => "Slime Walker",
+        &MegaFish{ .. } => "Mega Fish",
+        &LavaDragonHead{ .. } => "Lava Dragon Head",
+        &TtNode{ .. } => "Tt Node",
+        &TtBoss{ .. } => "Tt Boss",
+        &EaterBug{ .. } => "Eater Bug",
+        &SpiderWalker{ .. } => "Spider Walker",
+        &SpikeTrap => "Spike Trap",
+        &RotatingFireColunmPiece{ .. } => "Rotating Fire Colunm Piece",
+        &MovingFire{ .. } => "Moving Fire",
+        &SuperDragon{ .. } => "Super Dragon",
+        &SuperDragonLandingZone{ .. } => "Super Dragon Landing Zone",
+        &BozoLaserMinion{ .. } => "Bozo Laser Minion",
+        &Checkpoint{ .. } => "Checkpoint",
+        &SpikeGuy => "Spike Guy",
+        &BanditGuy{ .. } => "Bandit Guy",
+        &PushZone{ .. } => "Push Zone",
+        &VerticalWindZone{ .. } => "Vertical Wind Zone",
+        &DisapearingPlatform{ .. } => "Disapearing Platform",
+        &KamakaziSlime => "Kamakazi Slime",
+        &SpringBoard{ .. } => "Spring Board",
+        &Jumpthrough{ .. } => "Jumpthrough",
+        &BreakablePlatform{ .. } => "Breakable Platform",
+        &LockedBlock{ .. } => "Locked Block",
+        &RockGuy{ .. } => "Rock Guy",
+        &RockGuySlider => "Rock Guy Slider",
+        &RockGuySmasher => "Rock Guy Smasher",
+        &HealthSetTrigger{ .. } => "Health Set Trigger",
+        &Vortex{ .. } => "Vortex",
+        &CustomizeableMoveablePlatform{ .. } => "Customizeable Moveable Platform",
+        &GraphicsChangeTrigger{ .. } => "Graphics Change Trigger",
+        &BossBarInfo{ .. } => "Boss Bar Info",
+        &BgSpeed{ .. } => "Bg Speed",
+        &BgTransparency{ .. } => "Bg Transparency",
+        &TeleportTrigger1{ .. } => "Teleport Trigger",
+        &TeleportArea1{ .. } => "Teleport Area",
+        &SfxPoint{ .. } => "Sfx Point",
+        &Wolf => "Wolf",
+        &Supervirus => "Supervirus",
+        &Lua{ .. } => "Lua",
+        &UpgradeTrigger{ .. } => "Upgrade",
+    }
 }

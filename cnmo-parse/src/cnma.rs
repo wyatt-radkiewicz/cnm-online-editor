@@ -1,22 +1,36 @@
 use std::fmt::Display;
 
+/// Errors when dealing with CNMA files
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
+    /// [`from_file`](crate::cnma::Cnma::from_file) and [`save`](crate::cnma::Cnma::save) can return this
     #[error("Can't open the file!")]
-    CantOpenFile { source: std::io::Error },
+    CantOpenFile {
+        /// The actuall [`std::io::Error`] from reading/writing to the file.
+        source: std::io::Error
+    },
+    /// The file is not a CNM config file.
     #[error("The file isn't a CNM Audio Definition file.")]
     NotCnmaFile,
+    /// There was a corrupted entry at the line specified
     #[error("Cnma file has a corrupt entry at line {0}!")]
     CorruptedEntry(usize),
+    /// There was an mode field but it had no mode name
     #[error("Cnma file has an entry without a mode!")]
     NoMode,
+    /// The file is corrupted because of the string inside of the tuple variant
     #[error("Cnma file is corrupted because of {0}!")]
     Corrupted(String),
 }
 
+/// Used in the SoundID and the MusicID modes to specify what file a sound
+/// is related to and its related ID.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ResourceId {
+    /// The ID for CNM Online. If 2 are the same, the last is used and a memory leak occurs.
     pub id: u32,
+    /// The path to the file in question. It is relative based on the exe's directory and
+    /// doesn't need a "./" at the start.
     pub path: String,
 }
 
@@ -44,48 +58,75 @@ impl ResourceId {
     }
 }
 
+/// A power defintion for a particular skin id, or any id.
+/// These are activated when hitting the MaxPower trigger in game
+/// and modify your player stats.
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct MaxPowerDef {
+    /// The skin id for this power definition
     pub id: u8,
+    /// The speed multiplier
     pub speed: f32,
+    /// Jump multiplier
     pub jump: f32,
+    /// Gravity multiplier
     pub gravity: f32,
+    /// How many hp points are removed per second while the power is active
     pub hpcost: f32,
+    /// The strength multiplier
     pub strength: f32,
+    /// An optional double jump ability.
     pub ability: Option<MaxPowerAbility>,
 }
 
-impl Display for MaxPowerDef {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.ability.clone().unwrap_or_default().to_string().as_str())
-    }
-}
-
-#[derive(Debug, Default, Clone, strum::Display, strum::EnumIter, PartialEq)]
+/// A ability activated on a double jump.
+#[derive(Debug, Default, Clone, PartialEq)]
 pub enum MaxPowerAbility {
+    /// Basic double jump
     #[default]
     DoubleJump,
+    /// Basic flying ability akin to the normal wings power up
     Flying,
+    /// Activates a sheild once you hit the ground for a short moment
+    /// of time
     DropShield,
+    /// Allows you to bounce on enemies but not hurt them.
     MarioBounce,
 }
 
-#[derive(Debug, Clone, strum::Display, strum::EnumIter, PartialEq)]
+/// What section/mode contents there are
+#[derive(Debug, Clone, PartialEq)]
 pub enum Mode {
+    /// Music Resource Ids
     MusicIds(Vec<ResourceId>),
+    /// Sound Resource Ids
     SoundIds(Vec<ResourceId>),
+    /// A deprecated CNM Online section
     MusicVolumeOverride,
+    /// The order of levels on the level select menu, same order
+    /// as the strings in the vector here.
     LevelSelectOrder(Vec<String>),
+    /// A power defintion for a particular skin
     MaxPowerDef(MaxPowerDef),
+    /// Code run at the beginning of the game, certain function names
+    /// will run as hooks for object code, etc.
     LuaAutorunCode(String),
 }
 
+/// CNMA file. Holds generic configuration of the game and resource
+/// locations.
+/// - Sound and music ids and file paths
+/// - Lua scripting code
+/// - Custom upgrade/powers
+/// - The order of the level select menu
 #[derive(Debug)]
 pub struct Cnma {
+    /// Vector of the sections of the file.
     pub modes: Vec<Mode>,
 }
 
 impl Cnma {
+    /// Load a Cnma config from a file
     pub fn from_file<P: AsRef<std::path::Path>>(path: P) -> Result<Self, Error> {
         let s = match std::fs::read_to_string(path) {
             Ok(s) => s,
@@ -94,6 +135,7 @@ impl Cnma {
         Self::from_string(s.as_str())
     }
 
+    /// Load a Cnma config from a string
     pub fn from_string(s: &str) -> Result<Self, Error> {
         let mut cnma = Cnma { modes: Vec::new() };
         let mut current_mode: Option<Mode> = None;
@@ -192,6 +234,8 @@ impl Cnma {
         Ok(cnma)
     }
 
+    /// Saves the cnma file to the path specified, creates the file if it doesn't
+    /// exist and overwrites it if it does.
     pub fn save<P: AsRef<std::path::Path>>(&self, path: P) -> Result<(), Error> {
         let mut contents = "".to_string();
         

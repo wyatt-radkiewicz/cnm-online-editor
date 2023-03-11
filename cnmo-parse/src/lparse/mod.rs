@@ -1,36 +1,52 @@
 use std::collections::HashMap;
 
+/// Level data structure (needs the "level_data" feature enabled)
 #[cfg(feature = "level_data")]
 pub mod level_data;
 
 use super::Rect;
 
+/// Error when loading/saving lparse files
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
+    /// Couldn't open the file for reading and writing
     #[error("Can't open the file!")]
-    CantOpenFile { source: std::io::Error },
+    CantOpenFile {
+        /// The actuall [`std::io::Error`] that came from reading and writing
+        source: std::io::Error
+    },
+    /// The file being opened is not an CNM Lparse file.
     #[error("The file isn't a CNM LParse file.")]
     NotLParseFile,
+    /// The version specifed can not be loaded by the parser
     #[error("Unknown LParse version ({0}).")]
     UnknownVersion(u32),
+    /// The lparse file is corrupted due to ...
     #[error("LParse file corrupted possibly for reason {0}.")]
     Corrupted(String),
+    /// Entry ID {1} (name: {0}) is corrupted
     #[error("Entry {0} (id {1}) is corrupted.")]
     EntryCorrupted(String, usize),
-    #[error("Entry {0} (id {1}) has a unknown type id of {0}!")]
+    /// Entry ID {1} (name: {0}) has an unknown type id of {2}
+    #[error("Entry {0} (id {1}) has a unknown type id of {2}!")]
     UnknownEntryType(String, usize, u32),
+    /// The CNM LParse struct has too many entries
     #[error("Can't save file! Version number {0} only allows up to {1} entries, but you're trying to save {2} entries!")]
     EntryOverflow(u32, usize, usize),
+    /// When loading a level file, the 2 files .cnmb and .cnms have mismatching version ids.
     #[error("The CNMB file's version id {0} is mismatched with the CNMS file's version id {1}.")]
     MismatchedVersions(u32, u32),
+    /// When looking for an entry, it couldn't find it
     #[error("Can't find the entry {0}!")]
     CannotFindEntry(String),
+    /// When getting a entry you expected data type X but got data type Y
     #[error("Unexpected entry data type! Expected type {0} but got type {1} instead!")]
     UnexpectedEntryType(u32, u32),
 }
 
 macro_rules! generate_entry_data_func {
     ($func_name:ident, $variant:ident, $return:ident) => {
+        /// Returns a refrence to a slice of the type specified or and error of UnexpectedEntryType if it's not the same as the type.
         pub fn $func_name(&self) -> Result<&[$return], Error> {
             match self {
                 &Self::$variant(ref vec) => Ok(vec),
@@ -42,6 +58,7 @@ macro_rules! generate_entry_data_func {
 
 macro_rules! generate_entry_data_func_mut {
     ($func_name:ident, $variant:ident, $return:ident) => {
+        /// Returns a refrence to a mut slice of the type specified or and error of UnexpectedEntryType if it's not the same as the type.
         pub fn $func_name(&mut self) -> Result<&mut Vec<$return>, Error> {
             match self {
                 &mut Self::$variant(ref mut vec) => Ok(vec),
@@ -51,15 +68,24 @@ macro_rules! generate_entry_data_func_mut {
     };
 }
 
+/// A CNM LParse entry
 #[derive(Debug)]
 pub enum EntryData {
+    /// Null
     Null,
+    /// Dummy, different null means unused, dummy is used but has no data field
     Dummy,
+    /// Array of i32s
     I32(Vec<i32>),
+    /// Array of u32s
     U32(Vec<u32>),
+    /// Array of u8s
     U8(Vec<u8>),
+    /// Array of u16s
     U16(Vec<u16>),
+    /// Array of f32s
     F32(Vec<f32>),
+    /// Array of Rects
     Rect(Vec<Rect>),
 }
 
@@ -131,7 +157,8 @@ impl EntryData {
         }
     }
 
-    fn get_entry_len(&self) -> usize {
+    /// Gets the length of the entry
+    pub fn get_entry_len(&self) -> usize {
         match &self {
             &Self::Null | &Self::Dummy => 0,
             &Self::I32(vec) => vec.len(),
@@ -182,6 +209,12 @@ impl EntryData {
     generate_entry_data_func_mut!(try_get_rect_mut, Rect, Rect);
 }
 
+/// Specs about the lparse struct version.
+/// 
+/// Gives info on:
+/// - How long an entry name can be
+/// - How many entries there can be max
+/// - More
 #[derive(Debug)]
 pub struct VersionSpecs {
     version: u32,
@@ -192,6 +225,9 @@ pub struct VersionSpecs {
 }
 
 impl VersionSpecs {
+    /// Create version specs from a specific version
+    /// 
+    /// Currently only verison id 1 is supported
     pub fn from_version(version: u32) -> Result<Self, Error> {
         match version {
             1 => Ok(Self {
@@ -205,34 +241,42 @@ impl VersionSpecs {
         }
     }
 
+    /// Version ID
     pub fn get_version_id(&self) -> u32 {
         self.version
     }
 
+    /// Maximum number of entries this version supports
     pub fn get_num_entries(&self) -> usize {
         self.num_entries
     }
 
+    /// The size of entry names in this version
     pub fn get_entry_name_size(&self) -> usize {
         self.entry_name_size
     }
 
+    /// The size of the lparse header in bytes
     pub fn get_header_size(&self) -> usize {
         self.header_size
     }
 
+    /// The size of an entry header (meta data and the entry name)
     pub fn get_entry_header_size(&self) -> usize {
         self.entry_header_size
     }
 }
 
+/// A LParse file in memory
 #[derive(Debug)]
 pub struct LParse {
     version: VersionSpecs,
+    /// The entries present in the lparse file
     pub entries: HashMap<String, EntryData>,
 }
 
 impl LParse {
+    /// Create an lparse file from the version id 
     pub fn new(version: u32) -> Result<Self, Error> {
         Ok(Self {
             version: VersionSpecs::from_version(version)?,
@@ -240,10 +284,12 @@ impl LParse {
         })
     }
 
+    /// Get version specs
     pub fn get_version(&self) -> &VersionSpecs {
         &self.version
     }
 
+    /// Try to get an entry
     pub fn try_get_entry(&self, name: &str) -> Result<&EntryData, Error> {
         match self.entries.get(name) {
             Some(entry_data) => Ok(entry_data),
@@ -251,6 +297,7 @@ impl LParse {
         }
     }
 
+    /// Load an lparse file from the path
     pub fn from_file<P: AsRef<std::path::Path>>(path: P) -> Result<Self, Error> {
         let buffer = match std::fs::read(path) {
             Ok(f) => f,
@@ -260,6 +307,7 @@ impl LParse {
         Self::from_memory(buffer)
     }
 
+    /// Load an lparse file from memory
     pub fn from_memory(buffer: Vec<u8>) -> Result<Self, Error> {
         let mut buffer = bytebuffer::ByteBuffer::from_vec(buffer);
         buffer.set_endian(bytebuffer::Endian::LittleEndian);
@@ -323,6 +371,7 @@ impl LParse {
         Ok(Self { version, entries })
     }
 
+    /// Save to a file path. Creates it if it isn't there and overwrites it if it is.
     pub fn save_to_file<P: AsRef<std::path::Path>>(&self, path: P) -> Result<(), Error> {
         if self.entries.len() > self.version.num_entries {
             return Err(Error::EntryOverflow(self.version.version, self.version.num_entries, self.entries.len()))
