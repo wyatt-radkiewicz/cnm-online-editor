@@ -354,7 +354,7 @@ pub(super) fn save_tile_properties_vec(
         ..Default::default()
     };
 
-    for idx in 0..tile_properties.len().max(version.preview_tile_index) + 1 {
+    for idx in 0..(tile_properties.len() + 1).max(version.preview_tile_index) + 1 {
         let tile = match idx {
             idx if idx == 0 || (idx != version.preview_tile_index && idx >= tile_properties.len()) => &air_tile,
             idx if idx == version.preview_tile_index => metadata_tile,
