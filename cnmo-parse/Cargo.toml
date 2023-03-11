@@ -1,11 +1,12 @@
 [package]
 name = "cnmo-parse"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "GPL-2.0-or-later WITH Bison-exception-2.2"
 description = "Utility to easily parse CNM Online game files"
 repository = "https://github.com/wyatt-radkiewicz/cnm-online-editor"
 readme = "README.md"
+documentation = "https://docs.rs/cnmo-parse"
 
 [features]
 level_data = ["dep:num-traits", "dep:num-derive"]

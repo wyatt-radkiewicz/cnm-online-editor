@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-/// Level data structure (needs the "level_data" feature enabled)
-#[cfg(feature = "level_data")]
+/// Enable the "Level Data" feature to parse level data
+#[cfg(any(feature = "level_data", doc))]
 pub mod level_data;
 
 use super::Rect;

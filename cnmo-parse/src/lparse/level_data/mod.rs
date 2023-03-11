@@ -241,7 +241,7 @@ impl LevelMetaData {
 }
 
 /// The overarching level data structure. Holds everything pertaining to a level in CNM Online.
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(any(feature = "level_data", doc), derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
 pub struct LevelData {
     /// Version specifications
