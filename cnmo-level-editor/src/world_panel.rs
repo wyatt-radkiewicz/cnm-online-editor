@@ -188,8 +188,8 @@ impl WorldPanel {
                 if self.editing_background && editor_data.current_background == idx {
                     if response.dragged_by(egui::PointerButton::Primary) {
                         let delta = response.drag_delta();
-                        layer.origin.0 += ((delta.x * response.ctx.pixels_per_point()) / main_rect.width()) * cam_size.x / scale;
-                        layer.origin.1 += ((delta.y * response.ctx.pixels_per_point()) / main_rect.height()) * cam_size.y / scale;
+                        layer.origin.0 += (delta.x / main_rect.width()) * cam_size.x / scale;
+                        layer.origin.1 += (delta.y / main_rect.height()) * cam_size.y / scale;
                     }
                     if response.drag_released() {
                         layer.origin.0 = (layer.origin.0 / 4.0).round() * 4.0;
@@ -841,8 +841,8 @@ impl WorldPanel {
                     editor_data.cells_history.push((level_data.cells.clone(), duplicated_spawners.clone()));
                 }
                 if response.dragged_by(egui::PointerButton::Primary) {
-                    spawner.pos.0 += ((response.drag_delta().x * response.ctx.pixels_per_point()) / rect.width()) * cam_size.x;
-                    spawner.pos.1 += ((response.drag_delta().y * response.ctx.pixels_per_point()) / rect.height()) * cam_size.y;
+                    spawner.pos.0 += (response.drag_delta().x / rect.width()) * cam_size.x;
+                    spawner.pos.1 += (response.drag_delta().y / rect.height()) * cam_size.y;
                 }
                 if response.drag_released() && editor_data.spawner_grid_size > 1.0 {
                     spawner.pos.0 = (spawner.pos.0 / editor_data.spawner_grid_size).round() * editor_data.spawner_grid_size;
