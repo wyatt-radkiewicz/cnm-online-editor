@@ -4,6 +4,7 @@ use cnmo_parse::lparse::level_data::cnms_types::{SpawnerMode, Spawner};
 use cnmo_parse::lparse::level_data::cnms_types::item_type::ItemType;
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
+use std::env;
 
 use crate::game_config_panel::GameConfigPanel;
 use crate::tile_viewer;
@@ -160,11 +161,17 @@ pub fn show_metadata_panel(world_panel: &mut crate::world_panel::WorldPanel, edi
     ui.label("");
     if ui.button("Play Test!").clicked() {
         compile();
-        log::info!("running: {:?}", std::env::current_dir().expect("Need permission on current dir").join("CNMONLIN.exe"));
-        match std::process::Command::new(std::env::current_dir().expect("Need permission on current dir").join("CNMONLIN.exe"))
-            .spawn() {
-            Ok(_) => log::info!("Starting playtest session"),
-            Err(_) => log::info!("Couldn't start CNMONLN.exe"),
+        let target_exes = match env::consts::OS {
+            "windows" => vec!["cnmonline.exe", "build/cnmonline.exe", "build/CNMONLIN.exe", "CNMONLIN.exe", "CNMONLN.exe"],
+            _ => vec!["cnmonline", "build/cnmonline"],
+        };
+        for path in target_exes {
+            log::info!("running: {:?}", std::env::current_dir().expect("Need permission on current dir").join(path));
+            match std::process::Command::new(std::env::current_dir().expect("Need permission on current dir").join(path))
+                .spawn() {
+                Ok(_) => log::info!("Starting playtest session"),
+                Err(_) => log::info!("Couldn't start {}", path),
+            }
         }
     }
     ui.separator();
