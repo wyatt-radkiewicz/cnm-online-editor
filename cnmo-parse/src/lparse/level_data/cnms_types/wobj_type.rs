@@ -486,6 +486,8 @@ pub enum WobjType {
         ///
         trigger_type: UpgradeTriggerType,
     },
+    ///
+    FinishTrigger,
 }
 
 impl WobjType {
@@ -787,6 +789,7 @@ impl WobjType {
             101 => Ok(Self::RockGuySmasher),
             122 => Ok(Self::Wolf),
             123 => Ok(Self::Supervirus),
+            141 => Ok(Self::FinishTrigger),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1079,6 +1082,7 @@ impl WobjType {
             &Self::Wolf => (122, 0, 0.0),
             &Self::Lua { lua_wobj_type } => (lua_wobj_type as i32 + 124, 0, 0.0),
             &Self::Supervirus => (123, 0, 0.0),
+            &Self::FinishTrigger => (141, 0, 0.0),
         }
     }
 }

@@ -1799,6 +1799,7 @@ fn draw_spawner(
             Sprite::create_string(spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
         }
         WobjType::PlayerSpawn => draw_rect(384, 1216, 32, 32),
+        WobjType::FinishTrigger => draw_rect(352, 2992, 32, 32),
         WobjType::CustomizeableMoveablePlatform {
             bitmap_x32,
             target_relative,

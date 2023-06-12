@@ -2052,15 +2052,16 @@ impl Iterator for WobjIter {
                 size: Default::default(),
                 music_id: Default::default(),
             }),
+            55 => Some(FinishTrigger),
 
             // Collectables
-            55 => Some(DroppedItem {
+            56 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            56 => Some(UpgradeTrigger {
+            57 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            57 => Some(WandRune {
+            58 => Some(WandRune {
                 rune_type: Default::default(),
             }),
             _ => None,
@@ -2129,5 +2130,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &Supervirus => "Supervirus",
         &Lua { .. } => "Lua",
         &UpgradeTrigger { .. } => "Upgrade",
+        &FinishTrigger => "Finish Trigger",
     }
 }
