@@ -938,7 +938,11 @@ impl WobjType {
                 vertical,
                 dist,
                 speed,
-            } => (if vertical { 82 } else { 10 }, (dist / speed) as i32, speed),
+            } => (
+                if vertical { 82 } else { 10 },
+                (dist / speed).abs() as i32,
+                speed,
+            ),
             &Self::DisapearingPlatform {
                 time_on,
                 time_off,
