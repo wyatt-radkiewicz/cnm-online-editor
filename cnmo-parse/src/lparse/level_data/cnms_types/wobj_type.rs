@@ -1,16 +1,8 @@
 use std::fmt::Display;
 
-use crate::lparse::{
-    Error,
-    LParse,
-};
+use crate::lparse::{Error, LParse};
 
-use super::{
-    super::Point,
-    super::VersionSpecs,
-    super::consts::*,
-    item_type::ItemType,
-};
+use super::{super::consts::*, super::Point, super::VersionSpecs, item_type::ItemType};
 
 /// Size of a tunes trigger object
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -76,7 +68,7 @@ pub enum KeyColor {
     ///
     Green,
     ///
-    Blue
+    Blue,
 }
 
 ///
@@ -91,7 +83,7 @@ pub enum RockGuyType {
     ///
     Small2 {
         ///
-        face_left: bool
+        face_left: bool,
     },
 }
 
@@ -140,25 +132,24 @@ impl Teleport {
         let start = index * version.teleport_name_size;
         let end = start + version.teleport_name_size;
         let name = match String::from_utf8(
-        cnms.try_get_entry("TI_NAME")?
-            .try_get_u8()?[start..end]
-            .iter()
-            .cloned()
-            .collect()
+            cnms.try_get_entry("TI_NAME")?.try_get_u8()?[start..end]
+                .iter()
+                .cloned()
+                .collect(),
         ) {
             Ok(s) => s.trim_end_matches('\0').to_string(),
-            Err(_) => return Err(Error::Corrupted(format!("Corrupted teleport entry name. Teleport ID: {index}"))),
+            Err(_) => {
+                return Err(Error::Corrupted(format!(
+                    "Corrupted teleport entry name. Teleport ID: {index}"
+                )))
+            }
         };
 
-        let loc = &cnms
-            .try_get_entry("TI_POS")?
-            .try_get_f32()?[index * 2..index * 2 + 2];
+        let loc = &cnms.try_get_entry("TI_POS")?.try_get_f32()?[index * 2..index * 2 + 2];
 
         Ok(Teleport {
             name,
-            cost: cnms
-                .try_get_entry("TI_COST")?
-                .try_get_i32()?[index],
+            cost: cnms.try_get_entry("TI_COST")?.try_get_i32()?[index],
             loc: Point(loc[0], loc[1]),
         })
     }
@@ -498,32 +489,56 @@ pub enum WobjType {
 }
 
 impl WobjType {
-    pub(super) fn from_lparse(cnms: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
+    pub(super) fn from_lparse(
+        cnms: &LParse,
+        version: &VersionSpecs,
+        index: usize,
+        ignore_warnings: bool,
+    ) -> Result<Self, Error> {
         let wobj_type_id = cnms.try_get_entry("SP_TYPE")?.try_get_i32()?[index];
         let custom_int = cnms.try_get_entry("SP_CI")?.try_get_i32()?[index];
         let custom_float = cnms.try_get_entry("SP_CF")?.try_get_f32()?[index];
 
         match wobj_type_id {
-            1 => Ok(Self::Teleport(Teleport::from_lparse(cnms, version, custom_int as usize)?)),
+            1 => Ok(Self::Teleport(Teleport::from_lparse(
+                cnms,
+                version,
+                custom_int as usize,
+            )?)),
             120 => {
                 let loc = Teleport::from_lparse(cnms, version, custom_int as usize)?.loc;
-                Ok(Self::TeleportArea1 { link_id: custom_float as u32, loc })
-            },
-            6 => Ok(Self::TunesTrigger { size: TunesTriggerSize::Small, music_id: custom_int as u32 }),
-            7 => Ok(Self::TunesTrigger { size: TunesTriggerSize::Big, music_id: custom_int as u32 }),
-            89 => Ok(Self::TunesTrigger { size: TunesTriggerSize::VeryBig, music_id: custom_int as u32 }),
+                Ok(Self::TeleportArea1 {
+                    link_id: custom_float as u32,
+                    loc,
+                })
+            }
+            6 => Ok(Self::TunesTrigger {
+                size: TunesTriggerSize::Small,
+                music_id: custom_int as u32,
+            }),
+            7 => Ok(Self::TunesTrigger {
+                size: TunesTriggerSize::Big,
+                music_id: custom_int as u32,
+            }),
+            89 => Ok(Self::TunesTrigger {
+                size: TunesTriggerSize::VeryBig,
+                music_id: custom_int as u32,
+            }),
             8 => Ok(Self::PlayerSpawn),
-            9 | 108 => { // Ending Text/Dialoge Box
+            9 | 108 => {
+                // Ending Text/Dialoge Box
                 let mut text = "".to_string();
                 for i in custom_int as usize..custom_float as usize {
-                    text += (super::get_ending_text_line(cnms, version, i).unwrap_or_default() + "\n").as_str();
+                    text += (super::get_ending_text_line(cnms, version, i).unwrap_or_default()
+                        + "\n")
+                        .as_str();
                 }
 
                 Ok(Self::TextSpawner {
                     dialoge_box: wobj_type_id == 108,
-                    text
+                    text,
                 })
-            },
+            }
             12 | 87 | 88 => Ok(Self::BackgroundSwitcher {
                 shape: match wobj_type_id {
                     12 => BackgroundSwitcherShape::Small,
@@ -536,20 +551,28 @@ impl WobjType {
             16 => Ok(Self::DroppedItem {
                 item: match ItemType::from_item_id(custom_int as u32) {
                     Some(item) => item,
-                    None if !ignore_warnings => return Err(Error::Corrupted(format!("Corrupt item ID {custom_int}!"))),
+                    None if !ignore_warnings => {
+                        return Err(Error::Corrupted(format!("Corrupt item ID {custom_int}!")))
+                    }
                     None => ItemType::Apple,
                 },
             }),
-            14 => Ok(Self::DroppedItem { item: ItemType::Knife }),
-            15 => Ok(Self::DroppedItem { item: ItemType::Apple }),
-            4 => Ok(Self::DroppedItem { item: ItemType::Shotgun }),
+            14 => Ok(Self::DroppedItem {
+                item: ItemType::Knife,
+            }),
+            15 => Ok(Self::DroppedItem {
+                item: ItemType::Apple,
+            }),
+            4 => Ok(Self::DroppedItem {
+                item: ItemType::Shotgun,
+            }),
             51 | 52 | 53 => Ok(Self::TtNode {
                 node_type: match wobj_type_id {
                     51 => TtNodeType::ChaseTrigger,
                     52 => TtNodeType::NormalTrigger,
                     53 => TtNodeType::Waypoint(custom_int),
                     _ => panic!("Unknown TT Node type!"),
-                }
+                },
             }),
             60 => Ok(Self::RotatingFireColunmPiece {
                 origin_x: custom_int,
@@ -569,12 +592,24 @@ impl WobjType {
                 },
                 push_speed: custom_float,
             }),
-            79 => Ok(Self::VerticalWindZone { acceleration: custom_float }),
-            64 => Ok(Self::SuperDragonLandingZone { waypoint_id: custom_int as u8, }),
-            90 | 91 => Ok(Self::Jumpthrough { big: wobj_type_id == 91 }),
-            104 => Ok(Self::HealthSetTrigger { target_health: custom_float }),
-            109 => Ok(Self::GraphicsChangeTrigger { gfx_file: super::get_ending_text_line(cnms, version, custom_int as usize)? }),
-            115 => Ok(Self::BossBarInfo { boss_name: super::get_ending_text_line(cnms, version, custom_int as usize)? }),
+            79 => Ok(Self::VerticalWindZone {
+                acceleration: custom_float,
+            }),
+            64 => Ok(Self::SuperDragonLandingZone {
+                waypoint_id: custom_int as u8,
+            }),
+            90 | 91 => Ok(Self::Jumpthrough {
+                big: wobj_type_id == 91,
+            }),
+            104 => Ok(Self::HealthSetTrigger {
+                target_health: custom_float,
+            }),
+            109 => Ok(Self::GraphicsChangeTrigger {
+                gfx_file: super::get_ending_text_line(cnms, version, custom_int as usize)?,
+            }),
+            115 => Ok(Self::BossBarInfo {
+                boss_name: super::get_ending_text_line(cnms, version, custom_int as usize)?,
+            }),
             116 | 117 => Ok(Self::BgSpeed {
                 vertical_axis: wobj_type_id == 117,
                 layer: custom_int as u32,
@@ -588,7 +623,9 @@ impl WobjType {
                 link_id: custom_int as u32,
                 delay_secs: custom_float,
             }),
-            121 => Ok(Self::SfxPoint { sound_id: custom_int as u32 }),
+            121 => Ok(Self::SfxPoint {
+                sound_id: custom_int as u32,
+            }),
             11 | 93 => Ok(Self::BreakableWall {
                 skin_id: if wobj_type_id == 11 {
                     None
@@ -607,24 +644,34 @@ impl WobjType {
                 time_off: custom_float / FRAME_RATE as f32,
                 starts_on: custom_int >= 0,
             }),
-            86 => Ok(Self::SpringBoard { jump_velocity: custom_float }),
-            92 => Ok(Self::BreakablePlatform { time_till_fall: custom_int as f32 / FRAME_RATE as f32 }),
-            107 => { // Customizable moving platform
+            86 => Ok(Self::SpringBoard {
+                jump_velocity: custom_float,
+            }),
+            92 => Ok(Self::BreakablePlatform {
+                time_till_fall: custom_int as f32 / FRAME_RATE as f32,
+            }),
+            107 => {
+                // Customizable moving platform
                 let masked = custom_int as u32 >> 16 & 0xff;
-                let vel_x = ((masked >> 2 & 0x3f) as i32 - 32) as f32 + 0.25 * (masked & 0x3) as f32;
+                let fpart_x = 0.25 * (masked & 0x3) as f32;
+                let mut vel_x = ((masked >> 2 & 0x3f) as i32 - 32) as f32;
+                vel_x += if vel_x < 0.0 { -fpart_x } else { fpart_x };
                 let masked = custom_int as u32 >> 24 & 0xff;
-                let vel_y = ((masked >> 2 & 0x3f) as i32 - 32) as f32 + 0.25 * (masked & 0x3) as f32;
+                let fpart_y = 0.25 * (masked & 0x3) as f32;
+                let mut vel_y = ((masked >> 2 & 0x3f) as i32 - 32) as f32;
+                vel_y += if vel_y < 0.0 { -fpart_y } else { fpart_y };
                 let bitmap_x = custom_int & 0xf;
                 let bitmap_y = custom_int >> 4 & 0xfff;
+                let time = custom_float.floor().abs();
 
                 Ok(Self::CustomizeableMoveablePlatform {
                     bitmap_x32: (bitmap_x as u32, bitmap_y as u32),
-                    target_relative: Point(vel_x * custom_float, vel_y * custom_float),
-                    speed: (vel_x.powi(2) + vel_y.powi(2)).sqrt(),
+                    target_relative: Point(vel_x * time, vel_y * time),
+                    speed: vel_x.max(vel_y),
                     start_paused: custom_float < 0.0,
-                    one_way: custom_float.fract().abs() > f32::EPSILON,
+                    one_way: custom_float.fract().abs() > 0.1,
                 })
-            },
+            }
             94 | 95 | 96 => Ok(Self::LockedBlock {
                 color: match wobj_type_id {
                     94 => KeyColor::Red,
@@ -634,7 +681,9 @@ impl WobjType {
                 },
                 consume_key: custom_int != 0,
             }),
-            105 => Ok(Self::Vortex { attract_enemies: custom_int != 0 }),
+            105 => Ok(Self::Vortex {
+                attract_enemies: custom_int != 0,
+            }),
             19 | 20 | 21 | 22 | 23 => Ok(Self::WandRune {
                 rune_type: match wobj_type_id {
                     19 => RuneType::Ice,
@@ -651,7 +700,7 @@ impl WobjType {
                             Some(custom_int as u8 - 1u8)
                         } else {
                             None
-                        }
+                        },
                     },
                     32 => UpgradeTriggerType::DeephausBoots,
                     33 => UpgradeTriggerType::Wings,
@@ -662,19 +711,32 @@ impl WobjType {
                 },
             }),
             73 => Ok(Self::Checkpoint {
-                checkpoint_num: (custom_int - version.get_num_spawns() as i32 * 2).clamp(0, 255) as u8,
+                checkpoint_num: (custom_int - version.get_num_spawns() as i32 * 2).clamp(0, 255)
+                    as u8,
             }),
-            2 | 35 => Ok(Self::Slime { flying: wobj_type_id == 35 }),
+            2 | 35 => Ok(Self::Slime {
+                flying: wobj_type_id == 35,
+            }),
             36 => Ok(Self::Heavy {
                 speed: custom_float.abs(),
                 face_left: custom_float < 0.0,
             }),
-            38 => Ok(Self::Dragon { space_skin: custom_int != 0 }),
-            40 => Ok(Self::BozoPin { flying_speed: custom_float }),
-            41 | 72 => Ok(Self::Bozo { mark_ii: wobj_type_id == 72 }),
+            38 => Ok(Self::Dragon {
+                space_skin: custom_int != 0,
+            }),
+            40 => Ok(Self::BozoPin {
+                flying_speed: custom_float,
+            }),
+            41 | 72 => Ok(Self::Bozo {
+                mark_ii: wobj_type_id == 72,
+            }),
             42 => Ok(Self::SilverSlime),
-            43 => Ok(Self::LavaMonster { face_left: custom_int != 0 }),
-            44 | 45 => Ok(Self::TtMinion { small: custom_int == 44 }),
+            43 => Ok(Self::LavaMonster {
+                face_left: custom_int != 0,
+            }),
+            44 | 45 => Ok(Self::TtMinion {
+                small: custom_int == 44,
+            }),
             46 => Ok(Self::SlimeWalker),
             47 => Ok(Self::MegaFish {
                 water_level: custom_int,
@@ -682,26 +744,42 @@ impl WobjType {
             }),
             48 => Ok(Self::LavaDragonHead {
                 len: if custom_int > 32 && !ignore_warnings {
-                    return Err(Error::Corrupted("Lava dragon boss has too much segments!".to_string()))
+                    return Err(Error::Corrupted(
+                        "Lava dragon boss has too much segments!".to_string(),
+                    ));
                 } else {
                     custom_int as u32
                 },
                 health: custom_float,
             }),
-            54 => Ok(Self::TtBoss { speed: custom_float }),
-            55 => Ok(Self::EaterBug { pop_up_speed: custom_float }),
-            57 => Ok(Self::SpiderWalker { speed: custom_float }),
+            54 => Ok(Self::TtBoss {
+                speed: custom_float,
+            }),
+            55 => Ok(Self::EaterBug {
+                pop_up_speed: custom_float,
+            }),
+            57 => Ok(Self::SpiderWalker {
+                speed: custom_float,
+            }),
             59 => Ok(Self::SpikeTrap),
-            63 => Ok(Self::SuperDragon { waypoint_id: custom_int as u8 }),
-            69 => Ok(Self::BozoLaserMinion { speed: custom_float }),
+            63 => Ok(Self::SuperDragon {
+                waypoint_id: custom_int as u8,
+            }),
+            69 => Ok(Self::BozoLaserMinion {
+                speed: custom_float,
+            }),
             74 => Ok(Self::SpikeGuy),
-            76 => Ok(Self::BanditGuy { speed: custom_float }),
+            76 => Ok(Self::BanditGuy {
+                speed: custom_float,
+            }),
             84 => Ok(Self::KamakaziSlime),
             97 | 98 | 99 => Ok(Self::RockGuy {
                 rock_guy_type: match wobj_type_id {
                     97 => RockGuyType::Medium,
                     98 => RockGuyType::Small1,
-                    99 => RockGuyType::Small2 { face_left: custom_int != 0 },
+                    99 => RockGuyType::Small2 {
+                        face_left: custom_int != 0,
+                    },
                     _ => panic!("Unknown rock guy type!"),
                 },
             }),
@@ -709,8 +787,12 @@ impl WobjType {
             101 => Ok(Self::RockGuySmasher),
             122 => Ok(Self::Wolf),
             123 => Ok(Self::Supervirus),
-            _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua { lua_wobj_type: (wobj_type_id - 124) as u8 }),
-            _ if !ignore_warnings => Err(Error::Corrupted(format!("Unknown wobj type {wobj_type_id}"))),
+            _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
+                lua_wobj_type: (wobj_type_id - 124) as u8,
+            }),
+            _ if !ignore_warnings => Err(Error::Corrupted(format!(
+                "Unknown wobj type {wobj_type_id}"
+            ))),
             _ => Ok(WobjType::Slime { flying: false }),
         }
     }
@@ -728,11 +810,15 @@ impl WobjType {
             &Self::Teleport(ref teleport) => {
                 teleports.push(teleport.clone());
                 (1, teleports.len() as i32 - 1, 0.0)
-            },
-            &Self::TeleportArea1{ link_id, loc } => {
-                teleports.push(Teleport { name: "_TELEAREA".to_string(), cost: 0, loc });
+            }
+            &Self::TeleportArea1 { link_id, loc } => {
+                teleports.push(Teleport {
+                    name: "_TELEAREA".to_string(),
+                    cost: 0,
+                    loc,
+                });
                 (120, teleports.len() as i32 - 1, link_id as f32)
-            },
+            }
             &Self::TunesTrigger { size, music_id } => {
                 let wobj_type_id = match size {
                     TunesTriggerSize::Small => 6,
@@ -740,13 +826,16 @@ impl WobjType {
                     TunesTriggerSize::VeryBig => 89,
                 };
                 (wobj_type_id, music_id as i32, 0.0)
-            },
+            }
             &Self::PlayerSpawn => {
                 spawns.push(spawner.pos.0);
                 spawns.push(spawner.pos.1);
                 (8, spawns.len() as i32 / 2 - 1, 0.0)
-            },
-            &Self::TextSpawner { dialoge_box, ref text } => {
+            }
+            &Self::TextSpawner {
+                dialoge_box,
+                ref text,
+            } => {
                 let wobj_type_id = if dialoge_box { 108 } else { 9 };
                 let start = ending_text.len() as i32;
                 for line in text.lines() {
@@ -758,18 +847,23 @@ impl WobjType {
                 let end = ending_text.len() as i32 - 1;
 
                 (wobj_type_id, start, end as f32)
-            },
-            &Self::BackgroundSwitcher { shape, ref enabled_layers } => {
+            }
+            &Self::BackgroundSwitcher {
+                shape,
+                ref enabled_layers,
+            } => {
                 let wobj_type_id = match shape {
                     BackgroundSwitcherShape::Small => 12,
                     BackgroundSwitcherShape::Horizontal => 87,
                     BackgroundSwitcherShape::Vertical => 88,
                 };
-                (wobj_type_id, enabled_layers.start as i32, enabled_layers.end as f32)
-            },
-            &Self::DroppedItem { item } => {
-                (16, item.get_item_id() as i32, 0.0)
-            },
+                (
+                    wobj_type_id,
+                    enabled_layers.start as i32,
+                    enabled_layers.end as f32,
+                )
+            }
+            &Self::DroppedItem { item } => (16, item.get_item_id() as i32, 0.0),
             &Self::TtNode { node_type } => {
                 let (wobj_type_id, custom_int) = match node_type {
                     TtNodeType::ChaseTrigger => (51, 0),
@@ -777,97 +871,123 @@ impl WobjType {
                     TtNodeType::Waypoint(waypoint_id) => (53, waypoint_id),
                 };
                 (wobj_type_id, custom_int, 0.0)
-            },
-            &Self::RotatingFireColunmPiece { origin_x, degrees_per_second } => {
-                (60, origin_x, degrees_per_second / FRAME_RATE as f32)
-            },
-            &Self::MovingFire { vertical, dist, speed } => {
+            }
+            &Self::RotatingFireColunmPiece {
+                origin_x,
+                degrees_per_second,
+            } => (60, origin_x, degrees_per_second / FRAME_RATE as f32),
+            &Self::MovingFire {
+                vertical,
+                dist,
+                speed,
+            } => {
                 let wobj_type_id = if vertical { 61 } else { 62 };
                 (wobj_type_id, dist, speed)
-            },
-            &Self::PushZone { push_zone_type, push_speed } => {
+            }
+            &Self::PushZone {
+                push_zone_type,
+                push_speed,
+            } => {
                 let wobj_type_id = match push_zone_type {
                     PushZoneType::Horizontal => 77,
                     PushZoneType::Vertical => 78,
                     PushZoneType::HorizontalSmall => 80,
                 };
                 (wobj_type_id, 0, push_speed)
-            },
-            &Self::VerticalWindZone { acceleration } => {
-                (79, 0, acceleration)
-            },
-            &Self::SuperDragonLandingZone { waypoint_id } => {
-                (64, waypoint_id as i32, 0.0)
-            },
-            &Self::Jumpthrough { big } => {
-                (if big { 91 } else { 90 }, 0, 0.0)
-            },
-            &Self::HealthSetTrigger { target_health } => {
-                (104, 0, target_health)
-            },
+            }
+            &Self::VerticalWindZone { acceleration } => (79, 0, acceleration),
+            &Self::SuperDragonLandingZone { waypoint_id } => (64, waypoint_id as i32, 0.0),
+            &Self::Jumpthrough { big } => (if big { 91 } else { 90 }, 0, 0.0),
+            &Self::HealthSetTrigger { target_health } => (104, 0, target_health),
             &Self::GraphicsChangeTrigger { ref gfx_file } => {
                 if ending_text.len() == version.title_ending_text_line {
                     ending_text.push("".to_string());
                 }
                 ending_text.push(gfx_file.clone());
                 (109, ending_text.len() as i32 - 1, 0.0)
-            },
+            }
             &Self::BossBarInfo { ref boss_name } => {
                 if ending_text.len() == version.title_ending_text_line {
                     ending_text.push("".to_string());
                 }
                 ending_text.push(boss_name.clone());
                 (115, ending_text.len() as i32 - 1, 0.0)
-            },
-            &Self::BgSpeed { vertical_axis, layer, speed } => {
-                (if vertical_axis { 117 } else { 116 }, layer as i32, speed)
-            },
-            &Self::BgTransparency { layer, transparency } => {
-                (118, layer as i32, transparency as f32)
-            },
-            &Self::TeleportTrigger1 { link_id, delay_secs } => {
-                (119, link_id as i32, delay_secs)
-            },
-            &Self::SfxPoint { sound_id } => {
-                (121, sound_id as i32, 0.0)
-            },
+            }
+            &Self::BgSpeed {
+                vertical_axis,
+                layer,
+                speed,
+            } => (if vertical_axis { 117 } else { 116 }, layer as i32, speed),
+            &Self::BgTransparency {
+                layer,
+                transparency,
+            } => (118, layer as i32, transparency as f32),
+            &Self::TeleportTrigger1 {
+                link_id,
+                delay_secs,
+            } => (119, link_id as i32, delay_secs),
+            &Self::SfxPoint { sound_id } => (121, sound_id as i32, 0.0),
             &Self::BreakableWall { skin_id, health } => {
                 let (wobj_type_id, custom_int) = match skin_id {
                     Some(skin_id) => (93, skin_id as i32),
                     None => (11, 0),
                 };
                 (wobj_type_id, custom_int, health)
-            },
-            &Self::MovingPlatform { vertical, dist, speed } => {
-                (if vertical { 82 } else { 10 }, (dist / speed) as i32, speed)
-            },
-            &Self::DisapearingPlatform { time_on, time_off, starts_on } => {
-                (83, (time_on * FRAME_RATE as f32) as i32 * if starts_on { -1 } else { 1 }, time_off * FRAME_RATE as f32)
-            },
-            &Self::SpringBoard { jump_velocity } => {
-                (86, 0, jump_velocity)
-            },
+            }
+            &Self::MovingPlatform {
+                vertical,
+                dist,
+                speed,
+            } => (if vertical { 82 } else { 10 }, (dist / speed) as i32, speed),
+            &Self::DisapearingPlatform {
+                time_on,
+                time_off,
+                starts_on,
+            } => (
+                83,
+                (time_on * FRAME_RATE as f32) as i32 * if starts_on { -1 } else { 1 },
+                time_off * FRAME_RATE as f32,
+            ),
+            &Self::SpringBoard { jump_velocity } => (86, 0, jump_velocity),
             &Self::BreakablePlatform { time_till_fall } => {
                 (92, (time_till_fall * FRAME_RATE as f32) as i32, 0.0)
-            },
-            &Self::CustomizeableMoveablePlatform { bitmap_x32, target_relative, speed, start_paused, one_way } => {
-                let frames_in_dir = (target_relative.0.powi(2) + target_relative.1.powi(2)).sqrt() / speed;
-                let (vel_x, vel_y) = (target_relative.0 / frames_in_dir, target_relative.1 / frames_in_dir);
+            }
+            &Self::CustomizeableMoveablePlatform {
+                bitmap_x32,
+                target_relative,
+                speed,
+                start_paused,
+                one_way,
+            } => {
+                let mut frames_in_dir = target_relative.0.max(target_relative.1) / speed;
+                if frames_in_dir == 0.0 {
+                    frames_in_dir = 1.0;
+                }
+                let (vel_x, vel_y) = (
+                    target_relative.0 / frames_in_dir,
+                    target_relative.1 / frames_in_dir,
+                );
 
                 let (ix, iy, fx, fy) = (
-                    (vel_x.round() as i32 + 32).min(63) as u32,
-                    (vel_y.round() as i32 + 32).min(63) as u32,
+                    ((vel_x.round() as i32 + 32) as u32).min(63),
+                    ((vel_y.round() as i32 + 32) as u32).min(63),
                     (vel_x.fract().abs() * 4.0) as u32,
                     (vel_y.fract().abs() * 4.0) as u32,
                 );
-                let bits = (bitmap_x32.0 & 0xf) | ((bitmap_x32.1 & 0xfff) << 4) | ix << 18 | fx << 16 | iy << 26 | fy << 24;
+                let bits = (bitmap_x32.0 & 0xf)
+                    | ((bitmap_x32.1 & 0xfff) << 4)
+                    | ix << 18
+                    | fx << 16
+                    | iy << 26
+                    | fy << 24;
 
                 (
                     107,
                     i32::from_le_bytes(bits.to_le_bytes()),
-                    frames_in_dir * if start_paused { -1.0 } else { 1.0 } + if one_way { 0.5 } else { 0.0 },
+                    frames_in_dir.round() * if start_paused { -1.0 } else { 1.0 }
+                        + if one_way { 0.5 } else { 0.0 },
                 )
-            },
+            }
             &Self::LockedBlock { color, consume_key } => {
                 let wobj_type_id = match color {
                     KeyColor::Red => 94,
@@ -875,10 +995,8 @@ impl WobjType {
                     KeyColor::Blue => 96,
                 };
                 (wobj_type_id, consume_key as i32, 0.0)
-            },
-            &Self::Vortex { attract_enemies } => {
-                (105, attract_enemies as i32, 0.0)
-            },
+            }
+            &Self::Vortex { attract_enemies } => (105, attract_enemies as i32, 0.0),
             &Self::WandRune { rune_type } => {
                 let wobj_type_id = match rune_type {
                     RuneType::Ice => 19,
@@ -887,16 +1005,18 @@ impl WobjType {
                     RuneType::Lightning => 22,
                 };
                 (wobj_type_id, 0, 0.0)
-            },
+            }
             &Self::UpgradeTrigger { trigger_type } => {
                 let (wobj_type_id, custom_int) = match trigger_type {
-                    UpgradeTriggerType::MaxPowerRune { skin_power_override } => {
+                    UpgradeTriggerType::MaxPowerRune {
+                        skin_power_override,
+                    } => {
                         if let Some(skin_id) = skin_power_override {
                             (114, skin_id as i32 - 1)
                         } else {
                             (114, 0)
                         }
-                    },
+                    }
                     UpgradeTriggerType::DeephausBoots => (32, 0),
                     UpgradeTriggerType::Wings => (33, 0),
                     UpgradeTriggerType::CrystalWings => (34, 0),
@@ -904,19 +1024,23 @@ impl WobjType {
                     UpgradeTriggerType::None => (140, 0),
                 };
                 (wobj_type_id, custom_int, 0.0)
-            },
+            }
             &Self::Checkpoint { checkpoint_num } => {
                 if checkpoints.len() < checkpoint_num as usize * 2 + 2 {
                     checkpoints.resize(checkpoint_num as usize * 2 + 2, f32::NAN);
                 }
                 checkpoints[checkpoint_num as usize * 2 + 0] = spawner.pos.0;
                 checkpoints[checkpoint_num as usize * 2 + 1] = spawner.pos.1;
-                (73, checkpoint_num as i32 + version.num_spawns as i32 * 2, 0.0)
-            },
+                (
+                    73,
+                    checkpoint_num as i32 + version.num_spawns as i32 * 2,
+                    0.0,
+                )
+            }
             &Self::Slime { flying } => (if flying { 35 } else { 2 }, 0, 0.0),
             &Self::Heavy { speed, face_left } => {
                 (36, 0, speed * if face_left { -1.0 } else { 1.0 })
-            },
+            }
             &Self::Dragon { space_skin } => (38, space_skin as i32, 0.0),
             &Self::BozoPin { flying_speed } => (40, 0, flying_speed),
             &Self::Bozo { mark_ii } => (if mark_ii { 72 } else { 41 }, 0, 0.0),
@@ -924,7 +1048,10 @@ impl WobjType {
             &Self::LavaMonster { face_left } => (43, face_left as i32, 0.0),
             &Self::TtMinion { small } => (if small { 44 } else { 45 }, 0, 0.0),
             &Self::SlimeWalker => (46, 0, 0.0),
-            &Self::MegaFish { water_level, swimming_speed } => (47, water_level, swimming_speed),
+            &Self::MegaFish {
+                water_level,
+                swimming_speed,
+            } => (47, water_level, swimming_speed),
             &Self::LavaDragonHead { len, health } => (48, len as i32, health),
             &Self::TtBoss { speed } => (54, 0, speed),
             &Self::EaterBug { pop_up_speed } => (55, 0, pop_up_speed),
@@ -942,13 +1069,11 @@ impl WobjType {
                     RockGuyType::Small2 { face_left } => (99, face_left as i32),
                 };
                 (wobj_type_id, custom_int, 0.0)
-            },
+            }
             &Self::RockGuySlider => (100, 0, 0.0),
             &Self::RockGuySmasher => (101, 0, 0.0),
             &Self::Wolf => (122, 0, 0.0),
-            &Self::Lua { lua_wobj_type } => {
-                (lua_wobj_type as i32 + 124, 0, 0.0)
-            },
+            &Self::Lua { lua_wobj_type } => (lua_wobj_type as i32 + 124, 0, 0.0),
             &Self::Supervirus => (123, 0, 0.0),
         }
     }
