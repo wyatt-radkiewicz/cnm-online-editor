@@ -1185,7 +1185,9 @@ impl WorldPanel {
                     delete_idx = Some(idx);
                 }
             }
-            if response.ctx.input().key_pressed(egui::Key::C) && response.ctx.input().modifiers.ctrl
+            if response.ctx.input().key_pressed(egui::Key::C)
+                && response.ctx.input().modifiers.ctrl
+                && editor_data.editing_text == None
             {
                 editor_data.spawner_template = spawner.clone();
                 log::info!("Copied Spawner Data");
@@ -1193,6 +1195,7 @@ impl WorldPanel {
             if response.ctx.input().key_pressed(egui::Key::V)
                 && response.ctx.input().modifiers.shift
                 && response.hovered()
+                && editor_data.editing_text == None
             {
                 editor_data
                     .cells_history
