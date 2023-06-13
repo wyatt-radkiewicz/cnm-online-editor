@@ -20,6 +20,7 @@ pub struct TilePanel {
     top_left: Option<(i32, i32)>,
     bottom_right: Option<(i32, i32)>,
     picking_origin: Option<(i32, i32)>,
+    scroll_offset: f32,
 }
 
 impl TilePanel {
@@ -29,6 +30,7 @@ impl TilePanel {
             top_left: None,
             bottom_right: None,
             picking_origin: None,
+            scroll_offset: 0.0,
         }
     }
 
@@ -43,18 +45,22 @@ impl TilePanel {
             let size = editor_data.gfx_size;
             if let Some(frame_idx) = self.picking_image {
                 let (rect, response) = ui.allocate_exact_size(
-                    egui::vec2(size.0 as f32 * 2.0, size.1 as f32 * 2.0),
-                    egui::Sense::click_and_drag()
+                    ui.available_size(),
+                    egui::Sense::hover().union(egui::Sense::click_and_drag()),
                 );
                 let mut camera = Camera::new();
-                camera.set_projection(size.0 as f32, size.1 as f32, None, true);
+                let cw = size.0 as f32;
+                let ch = (rect.height() / rect.width()) * size.0 as f32;
+                self.scroll_offset -= response.ctx.input().scroll_delta.y;
+                self.scroll_offset = self.scroll_offset.clamp(0.0, size.1 as f32 - ch);
+                camera.set_projection(cw, ch, None, true);
                 let mut sprites = vec![Sprite::new(
                     (0.0, 0.0, 0.0),
                     (size.0 as f32, size.1 as f32),
-                    (0.0, 0.0, size.0 as f32, size.1 as f32))];
+                    (0.0, self.scroll_offset, size.0 as f32, size.1 as f32))];
                 if let (Some(top_left), Some(bottom_right)) = (self.top_left, self.bottom_right) {
                     sprites.push(Sprite::new_pure_color(
-                        (top_left.0 as f32 * 32.0, top_left.1 as f32 * 32.0, 0.0),
+                        (top_left.0 as f32 * 32.0, top_left.1 as f32 * 32.0 - self.scroll_offset, 0.0),
                         ((bottom_right.0 - top_left.0 + 1) as f32 * 32.0, (bottom_right.1 - top_left.1 + 1) as f32 * 32.0),
                         (1.0, 1.0, 0.0, 0.2),
                     ));
@@ -66,7 +72,8 @@ impl TilePanel {
                 if response.drag_started() {
                     if let Some(mut pos) = response.interact_pointer_pos() {
                         pos -= egui::vec2(rect.min.x, rect.min.y);
-                        pos = egui::pos2(pos.x / 2.0, pos.y / 2.0);
+                        pos = egui::pos2(pos.x / rect.width() * cw, pos.y / rect.height() * ch);
+                        pos += egui::vec2(0.0, self.scroll_offset);
                         self.picking_origin = Some((pos.x as i32 / 32, pos.y as i32 / 32));
                     }
                 }
@@ -74,7 +81,8 @@ impl TilePanel {
                     if let Some(mut pos) = response.interact_pointer_pos() {
                         ui.output().cursor_icon = egui::CursorIcon::Grabbing;
                         pos -= egui::vec2(rect.min.x, rect.min.y);
-                        pos = egui::pos2(pos.x / 2.0, pos.y / 2.0);
+                        pos = egui::pos2(pos.x / rect.width() * cw, pos.y / rect.height() * ch);
+                        pos += egui::vec2(0.0, self.scroll_offset);
                         let pos2 = (pos.x as i32 / 32, pos.y as i32 / 32);
                         if let Some(origin) = self.picking_origin {
                             self.top_left = Some((origin.0.min(pos2.0), origin.1.min(pos2.1)));
