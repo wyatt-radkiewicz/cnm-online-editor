@@ -1728,6 +1728,12 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(lua_wobj_type).clamp_range(0..=15));
             ui.end_row();
         }
+        &mut WobjType::GravityTrigger { ref mut gravity } => {
+            ui.label("Gravity")
+                .on_hover_text("0.5 is the default gravity");
+            ui.add(egui::DragValue::new(gravity));
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -2053,15 +2059,18 @@ impl Iterator for WobjIter {
                 music_id: Default::default(),
             }),
             55 => Some(FinishTrigger),
+            56 => Some(GravityTrigger {
+                gravity: Default::default(),
+            }),
 
             // Collectables
-            56 => Some(DroppedItem {
+            57 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            57 => Some(UpgradeTrigger {
+            58 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            58 => Some(WandRune {
+            59 => Some(WandRune {
                 rune_type: Default::default(),
             }),
             _ => None,
@@ -2131,5 +2140,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &Lua { .. } => "Lua",
         &UpgradeTrigger { .. } => "Upgrade",
         &FinishTrigger => "Finish Trigger",
+        &GravityTrigger { .. } => "Gravity Trigger",
     }
 }

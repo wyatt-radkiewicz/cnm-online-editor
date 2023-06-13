@@ -1,7 +1,11 @@
-use cnmo_parse::cnma::{Mode, ResourceId, MaxPowerAbility};
+use cnmo_parse::cnma::{MaxPowerAbility, Mode, ResourceId};
 use eframe::egui;
 
-use crate::{editor_data::EditorData, camera::Camera, instanced_sprites::{Sprite, InstancedSprites}};
+use crate::{
+    camera::Camera,
+    editor_data::EditorData,
+    instanced_sprites::{InstancedSprites, Sprite},
+};
 
 crate::create_instance_resource!(GfxPreviewResource);
 
@@ -63,151 +67,186 @@ impl GameConfigPanel {
         }
 
         editor_data.info_bar = "Game config editor".to_string();
-        egui::ScrollArea::vertical().auto_shrink([false, false]).show(ui, |ui| {
-            if self.selected_mode == None {
-                ui.label("Click A section to edit its contents!");
-                return;
-            }
-    
-            let mode_idx = self.selected_mode.unwrap();
-            if ui.button("Delete Mode").clicked() {
-                editor_data.game_config_file.modes.remove(mode_idx);
-                self.selected_mode = None;
-                self.drag = 0;
-                self.drag_source = None;
-                return;
-            }
-    
-            match &mut editor_data.game_config_file.modes[mode_idx] {
-                Mode::MusicIds(resources) |
-                Mode::SoundIds(resources) => {
-                    let mut delete_idx = None;
-                    for (idx, resource) in resources.iter_mut().enumerate() {
-                        ui.horizontal(|ui| {
-                            ui.add(egui::DragValue::new(&mut resource.id).clamp_range(0..=63)).on_hover_text("The resource ID");
-                            ui.text_edit_singleline(&mut resource.path);
-                            if ui.button("Remove").clicked() {
-                                delete_idx = Some(idx);
-                            }
-                        });
-                    }
-                    if let Some(idx) = delete_idx {
-                        resources.remove(idx);
-                    }
-                    if ui.button("Add").clicked() {
-                        resources.push(ResourceId { id: resources.len() as u32, path: "".to_string() });
-                    }
-                },
-                Mode::MusicVolumeOverride => {
-                    ui.label("This section is unused.");
-                },
-                Mode::LevelSelectOrder(levels) => {
-                    let mut delete_idx = None;
-                    for (idx, level) in levels.iter().enumerate() {
-                        if self.drag == idx && Some(self.drag) != self.drag_source && self.drag_source != None {
-                            ui.label("Move here");
-                        }
-                        ui.horizontal(|ui| {
-                            let response = ui.label(level);
-                            if ui.button("Remove").clicked() {
-                                delete_idx = Some(idx);
-                            }
-                            if ui.rect_contains_pointer(response.rect) {
-                                if response.ctx.input().pointer.primary_clicked() {
-                                    self.drag_source = Some(idx);
+        egui::ScrollArea::vertical()
+            .auto_shrink([false, false])
+            .show(ui, |ui| {
+                if self.selected_mode == None {
+                    ui.label("Click A section to edit its contents!");
+                    return;
+                }
+
+                let mode_idx = self.selected_mode.unwrap();
+                if ui.button("Delete Mode").clicked() {
+                    editor_data.game_config_file.modes.remove(mode_idx);
+                    self.selected_mode = None;
+                    self.drag = 0;
+                    self.drag_source = None;
+                    return;
+                }
+
+                match &mut editor_data.game_config_file.modes[mode_idx] {
+                    Mode::MusicIds(resources) | Mode::SoundIds(resources) => {
+                        let mut delete_idx = None;
+                        for (idx, resource) in resources.iter_mut().enumerate() {
+                            ui.horizontal(|ui| {
+                                ui.add(egui::DragValue::new(&mut resource.id).clamp_range(0..=63))
+                                    .on_hover_text("The resource ID");
+                                ui.text_edit_singleline(&mut resource.path);
+                                if ui.button("Remove").clicked() {
+                                    delete_idx = Some(idx);
                                 }
-                                self.drag = idx;
-                            }
-                        });
-                    }
-            
-                    if let Some(idx) = delete_idx {
-                        levels.remove(idx);
-                        self.drag = 0;
-                        self.drag_source = None;
-                    }
-                    if let Some(src) = self.drag_source {
-                        if self.drag != src {
-                            egui::Area::new("level_order_dragging")
-                                .interactable(false)
-                                .fixed_pos(ui.ctx().pointer_interact_pos().unwrap_or_default())
-                                .show(ui.ctx(), |ui| {
-                                ui.label(levels[src].to_string());
+                            });
+                        }
+                        if let Some(idx) = delete_idx {
+                            resources.remove(idx);
+                        }
+                        if ui.button("Add").clicked() {
+                            resources.push(ResourceId {
+                                id: resources.len() as u32,
+                                path: "".to_string(),
                             });
                         }
                     }
-                    if ui.ctx().input().pointer.any_released() {
+                    Mode::MusicVolumeOverride => {
+                        ui.label("This section is unused.");
+                    }
+                    Mode::LevelSelectOrder(ref mut levels) => {
+                        let mut delete_idx = None;
+                        for (idx, level) in levels.iter_mut().enumerate() {
+                            if self.drag == idx
+                                && Some(self.drag) != self.drag_source
+                                && self.drag_source != None
+                            {
+                                ui.label("Move here");
+                            }
+                            ui.horizontal(|ui| {
+                                let response = ui.label(level.0.to_string());
+                                ui.add(egui::DragValue::new(&mut level.1));
+                                if ui.button("Remove").clicked() {
+                                    delete_idx = Some(idx);
+                                }
+                                if ui.rect_contains_pointer(response.rect) {
+                                    if response.ctx.input().pointer.primary_clicked() {
+                                        self.drag_source = Some(idx);
+                                    }
+                                    self.drag = idx;
+                                }
+                            });
+                        }
+
+                        if let Some(idx) = delete_idx {
+                            levels.remove(idx);
+                            self.drag = 0;
+                            self.drag_source = None;
+                        }
                         if let Some(src) = self.drag_source {
-                            let temp = levels.remove(src);
-                            if self.drag <= src {
-                                levels.insert(self.drag, temp);
-                            } else {
-                                levels.insert(self.drag - 1, temp);
+                            if self.drag != src {
+                                egui::Area::new("level_order_dragging")
+                                    .interactable(false)
+                                    .fixed_pos(ui.ctx().pointer_interact_pos().unwrap_or_default())
+                                    .show(ui.ctx(), |ui| {
+                                        ui.label(levels[src].0.to_string());
+                                    });
                             }
                         }
-                        self.drag = 0;
-                        self.drag_source = None;
+                        if ui.ctx().input().pointer.any_released() {
+                            if let Some(src) = self.drag_source {
+                                let temp = levels.remove(src);
+                                if self.drag <= src {
+                                    levels.insert(self.drag, temp);
+                                } else {
+                                    levels.insert(self.drag - 1, temp);
+                                }
+                            }
+                            self.drag = 0;
+                            self.drag_source = None;
+                        }
+                        if ui.text_edit_singleline(&mut self.new_level).lost_focus() {
+                            levels.push((self.new_level.clone(), 0));
+                            self.new_level.clear();
+                        }
                     }
-                    if ui.text_edit_singleline(&mut self.new_level).lost_focus() {
-                        levels.push(self.new_level.clone());
-                        self.new_level.clear();
-                    }
-                },
-                Mode::MaxPowerDef(def) => {
-                    ui.horizontal(|ui| {
-                        ui.label("Skin ID: ");
-                        ui.add(egui::DragValue::new(&mut def.id).clamp_range(0..=16)).on_hover_text("The skin ID this power is for");
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Speed multiplier: ");
-                        ui.add(egui::DragValue::new(&mut def.speed).clamp_range(0..=99)).on_hover_text("Speed multiplier");
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Jump multiplier: ");
-                        ui.add(egui::DragValue::new(&mut def.jump).clamp_range(0..=99)).on_hover_text("Jump multiplier");
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Strength multiplier: ");
-                        ui.add(egui::DragValue::new(&mut def.strength).clamp_range(0..=999_999)).on_hover_text("Strength multiplier");
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Gravity multiplier: ");
-                        ui.add(egui::DragValue::new(&mut def.gravity).clamp_range(0..=99)).on_hover_text("The gravity you have with this skin");
-                    });
-                    ui.horizontal(|ui| {
-                        ui.label("Hp Drain (per second): ");
-                        ui.add(egui::DragValue::new(&mut def.hpcost).clamp_range(0..=999_999)).on_hover_text("How much HP you lose per second using this ability");
-                    });
-                    
-                    if let Some(ability) = &mut def.ability {
-                        egui::ComboBox::new("max_power_combo_box", "Max Power Ability")
-                            .selected_text(get_ability_name(ability))
-                            .show_ui(ui, |ui| {
-                            ui.selectable_value(ability, MaxPowerAbility::DoubleJump, get_ability_name(&MaxPowerAbility::DoubleJump));
-                            ui.selectable_value(ability, MaxPowerAbility::Flying, get_ability_name(&MaxPowerAbility::Flying));
-                            ui.selectable_value(ability, MaxPowerAbility::MarioBounce, get_ability_name(&MaxPowerAbility::MarioBounce));
-                            ui.selectable_value(ability, MaxPowerAbility::DropShield, get_ability_name(&MaxPowerAbility::DropShield));
+                    Mode::MaxPowerDef(def) => {
+                        ui.horizontal(|ui| {
+                            ui.label("Skin ID: ");
+                            ui.add(egui::DragValue::new(&mut def.id).clamp_range(0..=16))
+                                .on_hover_text("The skin ID this power is for");
                         });
-                        if ui.button("Don't use ability").clicked() {
-                            def.ability = None;
-                        }
-                    } else {
-                        if ui.button("Use ability").clicked() {
-                            def.ability = Some(MaxPowerAbility::DoubleJump);
+                        ui.horizontal(|ui| {
+                            ui.label("Speed multiplier: ");
+                            ui.add(egui::DragValue::new(&mut def.speed).clamp_range(0..=99))
+                                .on_hover_text("Speed multiplier");
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label("Jump multiplier: ");
+                            ui.add(egui::DragValue::new(&mut def.jump).clamp_range(0..=99))
+                                .on_hover_text("Jump multiplier");
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label("Strength multiplier: ");
+                            ui.add(
+                                egui::DragValue::new(&mut def.strength).clamp_range(0..=999_999),
+                            )
+                            .on_hover_text("Strength multiplier");
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label("Gravity multiplier: ");
+                            ui.add(egui::DragValue::new(&mut def.gravity).clamp_range(0..=99))
+                                .on_hover_text("The gravity you have with this skin");
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label("Hp Drain (per second): ");
+                            ui.add(egui::DragValue::new(&mut def.hpcost).clamp_range(0..=999_999))
+                                .on_hover_text(
+                                    "How much HP you lose per second using this ability",
+                                );
+                        });
+
+                        if let Some(ability) = &mut def.ability {
+                            egui::ComboBox::new("max_power_combo_box", "Max Power Ability")
+                                .selected_text(get_ability_name(ability))
+                                .show_ui(ui, |ui| {
+                                    ui.selectable_value(
+                                        ability,
+                                        MaxPowerAbility::DoubleJump,
+                                        get_ability_name(&MaxPowerAbility::DoubleJump),
+                                    );
+                                    ui.selectable_value(
+                                        ability,
+                                        MaxPowerAbility::Flying,
+                                        get_ability_name(&MaxPowerAbility::Flying),
+                                    );
+                                    ui.selectable_value(
+                                        ability,
+                                        MaxPowerAbility::MarioBounce,
+                                        get_ability_name(&MaxPowerAbility::MarioBounce),
+                                    );
+                                    ui.selectable_value(
+                                        ability,
+                                        MaxPowerAbility::DropShield,
+                                        get_ability_name(&MaxPowerAbility::DropShield),
+                                    );
+                                });
+                            if ui.button("Don't use ability").clicked() {
+                                def.ability = None;
+                            }
+                        } else {
+                            if ui.button("Use ability").clicked() {
+                                def.ability = Some(MaxPowerAbility::DoubleJump);
+                            }
                         }
                     }
-                },
-                Mode::LuaAutorunCode(code) => {
-                    ui.add(
-                        egui::TextEdit::multiline(code)
-                            .font(egui::TextStyle::Monospace)
-                            .code_editor()
-                            .lock_focus(true)
-                            .desired_width(f32::INFINITY)
-                    );
-                },
-            }
-        });
+                    Mode::LuaAutorunCode(code) => {
+                        ui.add(
+                            egui::TextEdit::multiline(code)
+                                .font(egui::TextStyle::Monospace)
+                                .code_editor()
+                                .lock_focus(true)
+                                .desired_width(f32::INFINITY),
+                        );
+                    }
+                }
+            });
     }
 }
 

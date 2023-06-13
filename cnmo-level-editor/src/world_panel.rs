@@ -1800,6 +1800,7 @@ fn draw_spawner(
         }
         WobjType::PlayerSpawn => draw_rect(384, 1216, 32, 32),
         WobjType::FinishTrigger => draw_rect(352, 2992, 32, 32),
+        WobjType::GravityTrigger { .. } => draw_rect(480, 1344, 32, 32),
         WobjType::CustomizeableMoveablePlatform {
             bitmap_x32,
             target_relative,

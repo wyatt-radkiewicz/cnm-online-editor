@@ -488,6 +488,11 @@ pub enum WobjType {
     },
     ///
     FinishTrigger,
+    ///
+    GravityTrigger {
+        ///
+        gravity: f32,
+    },
 }
 
 impl WobjType {
@@ -790,6 +795,9 @@ impl WobjType {
             122 => Ok(Self::Wolf),
             123 => Ok(Self::Supervirus),
             141 => Ok(Self::FinishTrigger),
+            143 => Ok(Self::GravityTrigger {
+                gravity: custom_float,
+            }),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1083,6 +1091,7 @@ impl WobjType {
             &Self::Lua { lua_wobj_type } => (lua_wobj_type as i32 + 124, 0, 0.0),
             &Self::Supervirus => (123, 0, 0.0),
             &Self::FinishTrigger => (141, 0, 0.0),
+            &Self::GravityTrigger { gravity } => (143, 0, gravity),
         }
     }
 }
