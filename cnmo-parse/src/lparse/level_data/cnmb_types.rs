@@ -1,17 +1,8 @@
-use crate::lparse::{
-    Error,
-    LParse,
-    EntryData,
-};
+use crate::lparse::{EntryData, Error, LParse};
 
 use crate::Rect;
 
-use super::{
-    Point,
-    Duration,
-    VersionSpecs,
-    consts::*,
-};
+use super::{consts::*, Duration, Point, VersionSpecs};
 
 /// Background image represents the 2 types of background layers in CNM Online.
 /// - Color: Clears the screen with the color pallete ID
@@ -27,7 +18,12 @@ pub enum BackgroundImage {
 
 impl Default for BackgroundImage {
     fn default() -> Self {
-        Self::Bitmap(Rect { x: 0, y: 0, w: 0, h: 0 })
+        Self::Bitmap(Rect {
+            x: 0,
+            y: 0,
+            w: 0,
+            h: 0,
+        })
     }
 }
 
@@ -60,12 +56,21 @@ pub struct BackgroundLayer {
 }
 
 impl BackgroundLayer {
-    pub(crate) fn from_lparse(cnmb: &LParse, _version: &VersionSpecs, index: usize) -> Result<Self, Error> {
-        let background_origin = &cnmb.try_get_entry("BG_ORIGIN")?.try_get_f32()?[index * 2..index * 2 + 2];
-        let background_scroll = &cnmb.try_get_entry("BG_SCROLL")?.try_get_f32()?[index * 2..index * 2 + 2];
-        let background_spacing = &cnmb.try_get_entry("BG_SPACING")?.try_get_i32()?[index * 2..index * 2 + 2];
-        let background_speed = &cnmb.try_get_entry("BG_SPEED")?.try_get_f32()?[index * 2..index * 2 + 2];
-        let background_repeat = &cnmb.try_get_entry("BG_REPEAT")?.try_get_u8()?[index * 2..index * 2 + 2];
+    pub(crate) fn from_lparse(
+        cnmb: &LParse,
+        _version: &VersionSpecs,
+        index: usize,
+    ) -> Result<Self, Error> {
+        let background_origin =
+            &cnmb.try_get_entry("BG_ORIGIN")?.try_get_f32()?[index * 2..index * 2 + 2];
+        let background_scroll =
+            &cnmb.try_get_entry("BG_SCROLL")?.try_get_f32()?[index * 2..index * 2 + 2];
+        let background_spacing =
+            &cnmb.try_get_entry("BG_SPACING")?.try_get_i32()?[index * 2..index * 2 + 2];
+        let background_speed =
+            &cnmb.try_get_entry("BG_SPEED")?.try_get_f32()?[index * 2..index * 2 + 2];
+        let background_repeat =
+            &cnmb.try_get_entry("BG_REPEAT")?.try_get_u8()?[index * 2..index * 2 + 2];
         let background_rect = cnmb.try_get_entry("BG_RECT")?.try_get_rect()?[index];
         let background_clear_color = cnmb.try_get_entry("BG_CLEAR_COLOR")?.try_get_i32()?[index];
         let background_foreground = cnmb.try_get_entry("BG_HIGHLAYER")?.try_get_u8()?[index];
@@ -118,18 +123,27 @@ impl BackgroundLayer {
             BackgroundImage::Bitmap(rect) => {
                 bg_rect.push(rect);
                 bg_clear_color.push(0);
-            },
+            }
             BackgroundImage::Color(color) => {
-                bg_rect.push(Rect { x: 0, y: 0, w: 0, h: 0 });
+                bg_rect.push(Rect {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0,
+                });
                 bg_clear_color.push(color as i32);
-            },
+            }
         };
         bg_highlayer.push(self.in_foreground as u8);
         bg_trans.push(self.transparency);
     }
 }
 
-pub(super) fn save_background_vec(cnmb: &mut LParse, version: &VersionSpecs, backgrounds: &[BackgroundLayer]) {
+pub(super) fn save_background_vec(
+    cnmb: &mut LParse,
+    version: &VersionSpecs,
+    backgrounds: &[BackgroundLayer],
+) {
     let mut bg_pos = Vec::new();
     let mut bg_origin = Vec::new();
     let mut bg_scroll = Vec::new();
@@ -154,20 +168,30 @@ pub(super) fn save_background_vec(cnmb: &mut LParse, version: &VersionSpecs, bac
             &mut bg_clear_color,
             &mut bg_highlayer,
             &mut bg_trans,
-            version
+            version,
         );
     }
 
-    cnmb.entries.insert("BG_POS".to_string(), EntryData::F32(bg_pos));
-    cnmb.entries.insert("BG_ORIGIN".to_string(), EntryData::F32(bg_origin));
-    cnmb.entries.insert("BG_SCROLL".to_string(), EntryData::F32(bg_scroll));
-    cnmb.entries.insert("BG_SPACING".to_string(), EntryData::I32(bg_spacing));
-    cnmb.entries.insert("BG_SPEED".to_string(), EntryData::F32(bg_speed));
-    cnmb.entries.insert("BG_REPEAT".to_string(), EntryData::U8(bg_repeat));
-    cnmb.entries.insert("BG_RECT".to_string(), EntryData::Rect(bg_rect));
-    cnmb.entries.insert("BG_CLEAR_COLOR".to_string(), EntryData::I32(bg_clear_color));
-    cnmb.entries.insert("BG_HIGHLAYER".to_string(), EntryData::U8(bg_highlayer));
-    cnmb.entries.insert("BG_TRANS".to_string(), EntryData::U8(bg_trans));
+    cnmb.entries
+        .insert("BG_POS".to_string(), EntryData::F32(bg_pos));
+    cnmb.entries
+        .insert("BG_ORIGIN".to_string(), EntryData::F32(bg_origin));
+    cnmb.entries
+        .insert("BG_SCROLL".to_string(), EntryData::F32(bg_scroll));
+    cnmb.entries
+        .insert("BG_SPACING".to_string(), EntryData::I32(bg_spacing));
+    cnmb.entries
+        .insert("BG_SPEED".to_string(), EntryData::F32(bg_speed));
+    cnmb.entries
+        .insert("BG_REPEAT".to_string(), EntryData::U8(bg_repeat));
+    cnmb.entries
+        .insert("BG_RECT".to_string(), EntryData::Rect(bg_rect));
+    cnmb.entries
+        .insert("BG_CLEAR_COLOR".to_string(), EntryData::I32(bg_clear_color));
+    cnmb.entries
+        .insert("BG_HIGHLAYER".to_string(), EntryData::U8(bg_highlayer));
+    cnmb.entries
+        .insert("BG_TRANS".to_string(), EntryData::U8(bg_trans));
 }
 
 /// How a tile will damage the player
@@ -182,6 +206,8 @@ pub enum DamageType {
     Spikes(i32),
     /// It will damage the player and act as quicksand
     Quicksand(i32),
+    /// It will make the player's friction worse
+    Ice(f32),
 }
 
 /// What collision type does the tile have?
@@ -218,16 +244,26 @@ impl Default for TileProperties {
         Self {
             solid: false,
             transparency: 0,
-            damage_type: DamageType::None, 
+            damage_type: DamageType::None,
             anim_speed: Duration(1),
             frames: vec![(1, 0)],
-            collision_data: CollisionType::Box(Rect { x: 0, y: 0, w: 32, h: 32 })
+            collision_data: CollisionType::Box(Rect {
+                x: 0,
+                y: 0,
+                w: 32,
+                h: 32,
+            }),
         }
     }
 }
 
 impl TileProperties {
-    pub(crate) fn from_lparse(cnmb: &LParse, version: &VersionSpecs, index: usize, ignore_warnings: bool) -> Result<Self, Error> {
+    pub(crate) fn from_lparse(
+        cnmb: &LParse,
+        version: &VersionSpecs,
+        index: usize,
+        ignore_warnings: bool,
+    ) -> Result<Self, Error> {
         let block_flags = cnmb.try_get_entry("BP_FLAGS")?.try_get_u32()?;
         let block_transparency = cnmb.try_get_entry("BP_TRANS")?.try_get_i32()?;
         let block_damage_type = cnmb.try_get_entry("BP_DMG_TYPE")?.try_get_i32()?;
@@ -242,8 +278,11 @@ impl TileProperties {
 
         let solid = block_flags[index] & 1 != 0;
         let transparency = match block_transparency[index] {
-            t if (t < LIGHT_BLACK as i32 || t > LIGHT_WHITE as i32) && !ignore_warnings => 
-                return Err(Error::Corrupted(format!("Light out of the normal bounds of {LIGHT_BLACK} to {LIGHT_WHITE}"))),
+            t if (t < LIGHT_BLACK as i32 || t > LIGHT_WHITE as i32) && !ignore_warnings => {
+                return Err(Error::Corrupted(format!(
+                    "Light out of the normal bounds of {LIGHT_BLACK} to {LIGHT_WHITE}"
+                )))
+            }
             t => t as u8,
         };
         let damage_type = match (block_damage_type[index], block_damage[index]) {
@@ -251,27 +290,41 @@ impl TileProperties {
             (1, damage) => DamageType::Lava(damage),
             (2, damage) => DamageType::Spikes(damage),
             (3, damage) => DamageType::Quicksand(damage),
-            _ if !ignore_warnings => return Err(Error::Corrupted("Unknown tile damage type!".to_string())),
+            (4, damage) => DamageType::Ice(damage as f32 / 100.0),
+            _ if !ignore_warnings => {
+                return Err(Error::Corrupted("Unknown tile damage type!".to_string()))
+            }
             _ => DamageType::None,
         };
         let anim_speed = Duration(block_anim_speed[index]);
-        let frames = (0..block_num_frames[index] as usize).map(|frame| (
-            block_frames_x[index * version.max_tile_frames + frame],
-            block_frames_y[index * version.max_tile_frames + frame],
-        )).collect();
+        let frames = (0..block_num_frames[index] as usize)
+            .map(|frame| {
+                (
+                    block_frames_x[index * version.max_tile_frames + frame],
+                    block_frames_y[index * version.max_tile_frames + frame],
+                )
+            })
+            .collect();
         let collision_data = match block_collision_type[index] {
             0 => CollisionType::Box(block_hitbox[index]),
             1 => {
                 let mut heightmap = [0u8; TILE_SIZE];
-                
+
                 for pixel in 0..TILE_SIZE {
                     heightmap[pixel] = block_heightmap[index * TILE_SIZE + pixel];
                 }
 
                 CollisionType::Heightmap(heightmap)
-            },
-            _ if !ignore_warnings => return Err(Error::Corrupted("Unknown tile collision type!".to_string())),
-            _ => CollisionType::Box(Rect { x: 0, y: 0, w: TILE_SIZE as i32, h: TILE_SIZE as i32 })
+            }
+            _ if !ignore_warnings => {
+                return Err(Error::Corrupted("Unknown tile collision type!".to_string()))
+            }
+            _ => CollisionType::Box(Rect {
+                x: 0,
+                y: 0,
+                w: TILE_SIZE as i32,
+                h: TILE_SIZE as i32,
+            }),
         };
 
         Ok(TileProperties {
@@ -280,11 +333,12 @@ impl TileProperties {
             damage_type,
             anim_speed,
             frames,
-            collision_data
+            collision_data,
         })
     }
 
-    fn save(&self,
+    fn save(
+        &self,
         bp_flags: &mut Vec<u32>,
         bp_trans: &mut Vec<i32>,
         bp_dmg_type: &mut Vec<i32>,
@@ -305,15 +359,24 @@ impl TileProperties {
             DamageType::Lava(dmg) => (1, dmg),
             DamageType::Spikes(dmg) => (2, dmg),
             DamageType::Quicksand(dmg) => (3, dmg),
+            DamageType::Ice(friction) => (4, (friction * 100.0) as i32),
         };
         bp_dmg_type.push(dmg_type);
         bp_dmg.push(dmg);
         bp_anim_speed.push(self.anim_speed.0);
         bp_num_frames.push(self.frames.len() as i32);
-        let mut positions = self.frames.iter().map(|frame| frame.0).collect::<Vec<i32>>();
+        let mut positions = self
+            .frames
+            .iter()
+            .map(|frame| frame.0)
+            .collect::<Vec<i32>>();
         positions.resize(version.max_tile_frames, 0);
         bp_framesx.append(&mut positions);
-        positions = self.frames.iter().map(|frame| frame.1).collect::<Vec<i32>>();
+        positions = self
+            .frames
+            .iter()
+            .map(|frame| frame.1)
+            .collect::<Vec<i32>>();
         positions.resize(version.max_tile_frames, 0);
         bp_framesy.append(&mut positions);
         match self.collision_data {
@@ -321,12 +384,17 @@ impl TileProperties {
                 bp_colltype.push(0);
                 bp_hitbox.push(rect);
                 bp_heightmap.append(&mut vec![0].repeat(TILE_SIZE));
-            },
+            }
             CollisionType::Heightmap(heightmap) => {
                 bp_colltype.push(1);
-                bp_hitbox.push(Rect { x: 0, y: 0, w: 0, h: 0 });
+                bp_hitbox.push(Rect {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0,
+                });
                 bp_heightmap.append(&mut heightmap.to_vec());
-            },
+            }
         };
     }
 }
@@ -356,7 +424,11 @@ pub(super) fn save_tile_properties_vec(
 
     for idx in 0..(tile_properties.len() + 1).max(version.preview_tile_index) + 1 {
         let tile = match idx {
-            idx if idx == 0 || (idx != version.preview_tile_index && idx > tile_properties.len()) => &air_tile,
+            idx if idx == 0
+                || (idx != version.preview_tile_index && idx > tile_properties.len()) =>
+            {
+                &air_tile
+            }
             idx if idx == version.preview_tile_index => metadata_tile,
             idx if idx < version.preview_tile_index => &tile_properties[idx - 1],
             idx if idx > version.preview_tile_index => &tile_properties[idx - 2],
@@ -374,22 +446,32 @@ pub(super) fn save_tile_properties_vec(
             &mut bp_heightmap,
             &mut bp_hitbox,
             &mut bp_colltype,
-            version
+            version,
         );
     }
 
-    cnmb.entries.insert("BP_FLAGS".to_string(), EntryData::U32(bp_flags));
-    cnmb.entries.insert("BP_TRANS".to_string(), EntryData::I32(bp_trans));
-    cnmb.entries.insert("BP_DMG_TYPE".to_string(), EntryData::I32(bp_dmg_type));
-    cnmb.entries.insert("BP_DMG".to_string(), EntryData::I32(bp_dmg));
-    cnmb.entries.insert("BP_ANIM_SPEED".to_string(), EntryData::I32(bp_anim_speed));
-    cnmb.entries.insert("BP_NUM_FRAMES".to_string(), EntryData::I32(bp_num_frames));
-    cnmb.entries.insert("BP_FRAMESX".to_string(), EntryData::I32(bp_framesx));
-    cnmb.entries.insert("BP_FRAMESY".to_string(), EntryData::I32(bp_framesy));
-    cnmb.entries.insert("BP_HEIGHTMAP".to_string(), EntryData::U8(bp_heightmap));
-    cnmb.entries.insert("BP_HITBOX".to_string(), EntryData::Rect(bp_hitbox));
-    cnmb.entries.insert("BP_COLLTYPE".to_string(), EntryData::I32(bp_colltype));
-
+    cnmb.entries
+        .insert("BP_FLAGS".to_string(), EntryData::U32(bp_flags));
+    cnmb.entries
+        .insert("BP_TRANS".to_string(), EntryData::I32(bp_trans));
+    cnmb.entries
+        .insert("BP_DMG_TYPE".to_string(), EntryData::I32(bp_dmg_type));
+    cnmb.entries
+        .insert("BP_DMG".to_string(), EntryData::I32(bp_dmg));
+    cnmb.entries
+        .insert("BP_ANIM_SPEED".to_string(), EntryData::I32(bp_anim_speed));
+    cnmb.entries
+        .insert("BP_NUM_FRAMES".to_string(), EntryData::I32(bp_num_frames));
+    cnmb.entries
+        .insert("BP_FRAMESX".to_string(), EntryData::I32(bp_framesx));
+    cnmb.entries
+        .insert("BP_FRAMESY".to_string(), EntryData::I32(bp_framesy));
+    cnmb.entries
+        .insert("BP_HEIGHTMAP".to_string(), EntryData::U8(bp_heightmap));
+    cnmb.entries
+        .insert("BP_HITBOX".to_string(), EntryData::Rect(bp_hitbox));
+    cnmb.entries
+        .insert("BP_COLLTYPE".to_string(), EntryData::I32(bp_colltype));
 }
 
 /// Represents a tile in CNM Online
@@ -471,26 +553,30 @@ pub struct Cells {
 
 #[cfg(feature = "serde")]
 impl serde::Serialize for Cells {
-    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         let mut bytes = bytebuffer::ByteBuffer::new();
         bytes.set_endian(bytebuffer::Endian::BigEndian);
         bytes.write_u32(self.width as u32);
         bytes.write_u32(self.height as u32);
         for cell in self.cells.iter() {
-            bytes.write_u16(cell.background.get_raw_id(&VersionSpecs::from_version(1).unwrap()));
-            bytes.write_u16(cell.foreground.get_raw_id(&VersionSpecs::from_version(1).unwrap()));
+            bytes.write_u16(
+                cell.background
+                    .get_raw_id(&VersionSpecs::from_version(1).unwrap()),
+            );
+            bytes.write_u16(
+                cell.foreground
+                    .get_raw_id(&VersionSpecs::from_version(1).unwrap()),
+            );
             bytes.write_u8(cell.light);
         }
-        
+
         serializer.serialize_str(base64::encode(bytes.as_bytes()).as_str())
     }
 }
 
 #[cfg(feature = "serde")]
 impl<'de> serde::de::Deserialize<'de> for Cells {
-    fn deserialize<D: serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error>
-    {
+    fn deserialize<D: serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         deserializer.deserialize_str(CellsVisitor)
     }
 }
@@ -518,15 +604,20 @@ impl<'de> serde::de::Visitor<'de> for CellsVisitor {
             _ => return Err(serde::de::Error::custom("Invalid bytes representation!")),
         };
         let mut cells = Vec::new();
-        for _ in 0..width*height {
-            let (background, foreground, light) = match (bytes.read_u16(), bytes.read_u16(), bytes.read_u8()) {
-                (Ok(background), Ok(foreground), Ok(light)) => (
-                    TileId::from_raw_id(background, &VersionSpecs::from_version(1).unwrap()),
-                    TileId::from_raw_id(foreground, &VersionSpecs::from_version(1).unwrap()),
-                    light
-                ),
-                _ => return Err(serde::de::Error::custom("Width and height don't match number of cells!")),
-            };
+        for _ in 0..width * height {
+            let (background, foreground, light) =
+                match (bytes.read_u16(), bytes.read_u16(), bytes.read_u8()) {
+                    (Ok(background), Ok(foreground), Ok(light)) => (
+                        TileId::from_raw_id(background, &VersionSpecs::from_version(1).unwrap()),
+                        TileId::from_raw_id(foreground, &VersionSpecs::from_version(1).unwrap()),
+                        light,
+                    ),
+                    _ => {
+                        return Err(serde::de::Error::custom(
+                            "Width and height don't match number of cells!",
+                        ))
+                    }
+                };
             cells.push(Cell {
                 background,
                 foreground,
@@ -537,7 +628,7 @@ impl<'de> serde::de::Visitor<'de> for CellsVisitor {
         Ok(Cells {
             cells,
             width,
-            height
+            height,
         })
     }
 }
@@ -545,7 +636,7 @@ impl<'de> serde::de::Visitor<'de> for CellsVisitor {
 impl Cells {
     /// Creates an empty grid of cells with the specified width and height
     pub fn new(width: usize, height: usize) -> Self {
-        let cells = (0..width*height).map(|_| Cell::default()).collect();
+        let cells = (0..width * height).map(|_| Cell::default()).collect();
 
         Self {
             width,
@@ -563,25 +654,33 @@ impl Cells {
         let background_layer = cnmb.try_get_entry("BLK_LAYER1")?.try_get_u16()?;
         let light_layer = cnmb.try_get_entry("BLK_LIGHT")?.try_get_u16()?;
 
-        let cells = (0..width*height).map(|index| {
-            let mut background = TileId::from_raw_id(background_layer[index], &VersionSpecs::from_version(1).unwrap());
-            let mut foreground = TileId::from_raw_id(foreground_layer[index], &VersionSpecs::from_version(1).unwrap());
-            if let Some(id) = background.0 {
-                if id as usize >= num_tile_properties {
-                    background.0 = None;
+        let cells = (0..width * height)
+            .map(|index| {
+                let mut background = TileId::from_raw_id(
+                    background_layer[index],
+                    &VersionSpecs::from_version(1).unwrap(),
+                );
+                let mut foreground = TileId::from_raw_id(
+                    foreground_layer[index],
+                    &VersionSpecs::from_version(1).unwrap(),
+                );
+                if let Some(id) = background.0 {
+                    if id as usize >= num_tile_properties {
+                        background.0 = None;
+                    }
                 }
-            }
-            if let Some(id) = foreground.0 {
-                if id as usize >= num_tile_properties {
-                    foreground.0 = None;
+                if let Some(id) = foreground.0 {
+                    if id as usize >= num_tile_properties {
+                        foreground.0 = None;
+                    }
                 }
-            }
-            Cell {
-                background,
-                foreground,
-                light: u8::try_from(light_layer[index]).unwrap_or(LIGHT_NORMAL),
-            }
-        }).collect();
+                Cell {
+                    background,
+                    foreground,
+                    light: u8::try_from(light_layer[index]).unwrap_or(LIGHT_NORMAL),
+                }
+            })
+            .collect();
 
         Ok(Self {
             width,
@@ -590,7 +689,12 @@ impl Cells {
         })
     }
 
-    pub(super) fn save(&self, cnmb: &mut LParse, num_tile_properties: usize, version: &VersionSpecs) {
+    pub(super) fn save(
+        &self,
+        cnmb: &mut LParse,
+        num_tile_properties: usize,
+        version: &VersionSpecs,
+    ) {
         let mut blocks_header = Vec::new();
         let mut blk_layer0 = Vec::new();
         let mut blk_layer1 = Vec::new();
@@ -606,10 +710,14 @@ impl Cells {
             blk_light.push(cell.light as u16);
         }
 
-        cnmb.entries.insert("BLOCKS_HEADER".to_string(), EntryData::I32(blocks_header));
-        cnmb.entries.insert("BLK_LAYER0".to_string(), EntryData::U16(blk_layer0));
-        cnmb.entries.insert("BLK_LAYER1".to_string(), EntryData::U16(blk_layer1));
-        cnmb.entries.insert("BLK_LIGHT".to_string(), EntryData::U16(blk_light));
+        cnmb.entries
+            .insert("BLOCKS_HEADER".to_string(), EntryData::I32(blocks_header));
+        cnmb.entries
+            .insert("BLK_LAYER0".to_string(), EntryData::U16(blk_layer0));
+        cnmb.entries
+            .insert("BLK_LAYER1".to_string(), EntryData::U16(blk_layer1));
+        cnmb.entries
+            .insert("BLK_LIGHT".to_string(), EntryData::U16(blk_light));
     }
 
     /// Returns a slice of the worlds cells
@@ -625,14 +733,16 @@ impl Cells {
     /// Returns a cell ref from the world. The x and y positions are clamped
     /// to the world's borders.
     pub fn get_cell(&self, x: i32, y: i32) -> &Cell {
-        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
+        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32
+            + x.clamp(0, self.width as i32 - 1);
         &self.cells[index as usize]
     }
 
     /// Returns a mut cell ref from the world. The x and y positions are clamped
     /// to the world's borders.
     pub fn get_cell_mut(&mut self, x: i32, y: i32) -> &mut Cell {
-        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32 + x.clamp(0, self.width as i32 - 1);
+        let index = y.clamp(0, self.height as i32 - 1) * self.width as i32
+            + x.clamp(0, self.width as i32 - 1);
         &mut self.cells[index as usize]
     }
 
@@ -653,15 +763,27 @@ impl Cells {
         }
 
         let mut new_cells = Self::new(new_width, new_height);
-        self.paste(&mut new_cells, (0, 0), (new_width as i32 - 1, new_height as i32 - 1), (0, 0));
+        self.paste(
+            &mut new_cells,
+            (0, 0),
+            (new_width as i32 - 1, new_height as i32 - 1),
+            (0, 0),
+        );
         *self = new_cells;
     }
 
     /// Pastes this cells grid into <other>.
-    pub fn paste(&self, other: &mut Self, src_min: (i32, i32), src_max: (i32, i32), dst: (i32, i32)) {
+    pub fn paste(
+        &self,
+        other: &mut Self,
+        src_min: (i32, i32),
+        src_max: (i32, i32),
+        dst: (i32, i32),
+    ) {
         for y in src_min.1..=src_max.1 {
             for x in src_min.0..=src_max.0 {
-                *other.get_cell_mut(x-src_min.0+dst.0, y-src_min.1+dst.1) = *self.get_cell(x, y);
+                *other.get_cell_mut(x - src_min.0 + dst.0, y - src_min.1 + dst.1) =
+                    *self.get_cell(x, y);
             }
         }
     }

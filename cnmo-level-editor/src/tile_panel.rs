@@ -140,6 +140,9 @@ impl TilePanel {
                     if ui.selectable_label(matches!(tile.damage_type, DamageType::Quicksand(_)), get_damage_type_name(&DamageType::Quicksand(0))).clicked() {
                         tile.damage_type = DamageType::Quicksand(1);
                     }
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Ice(_)), get_damage_type_name(&DamageType::Ice(1.0))).clicked() {
+                        tile.damage_type = DamageType::Ice(1.0);
+                    }
                 });
                 ui.end_row();
                 match &mut tile.damage_type {
@@ -156,6 +159,11 @@ impl TilePanel {
                                 ui.label("A damage type of \"Lava\" and 0 damage will effectivly be water");
                             });
                         });
+                        ui.end_row();
+                    },
+                    DamageType::Ice(ice) => {
+                        ui.label("Ice friction multiplier");
+                        ui.add(egui::DragValue::new(ice).speed(0.1));
                         ui.end_row();
                     },
                     _ => {},
@@ -365,6 +373,7 @@ fn get_damage_type_name(dmg_type: &DamageType) -> &str {
         DamageType::Lava(..) => "Lava",
         DamageType::Quicksand(..) => "Quicksand",
         DamageType::Spikes(..) => "Spikes",
+        DamageType::Ice(..) => "Ice"
     }
 }
 
