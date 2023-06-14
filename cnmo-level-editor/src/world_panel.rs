@@ -1630,7 +1630,7 @@ fn draw_spawner(
         }
         WobjType::Bozo { mark_ii } => {
             if *mark_ii {
-                draw_rect(384, 2688, 64, 128);
+                draw_rect(208, 2432, 48, 64);
             } else {
                 draw_rect(448, 64, 64, 128);
             }
@@ -1656,6 +1656,7 @@ fn draw_spawner(
         WobjType::TtNode { node_type } => match node_type {
             &TtNodeType::ChaseTrigger => draw_rect(320, 1248, 32, 32),
             &TtNodeType::NormalTrigger => draw_rect(320, 1280, 32, 32),
+            &TtNodeType::BozoWaypoint => draw_rect(384, 2528, 32, 32),
             &TtNodeType::Waypoint(waypoint_id) => {
                 draw_rect(320, 1312, 32, 32);
                 Sprite::create_string(

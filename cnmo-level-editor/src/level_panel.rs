@@ -1219,10 +1219,16 @@ fn show_spawner_properties(
                     TtNodeType::ChaseTrigger => "Dead Brother",
                     TtNodeType::NormalTrigger => "Golden Brother",
                     TtNodeType::Waypoint(_) => "Waypoint",
+                    TtNodeType::BozoWaypoint => "Bozo Waypoint",
                 })
                 .show_ui(ui, |ui| {
                     ui.selectable_value(node_type, TtNodeType::ChaseTrigger, "Dead Brother");
                     ui.selectable_value(node_type, TtNodeType::NormalTrigger, "Golden Brother");
+                    ui.selectable_value(
+                        node_type,
+                        TtNodeType::BozoWaypoint,
+                        "Bozo Waypoint (32 max)",
+                    );
                     ui.selectable_value(node_type, TtNodeType::Waypoint(0), "Waypoint");
                 });
             ui.end_row();

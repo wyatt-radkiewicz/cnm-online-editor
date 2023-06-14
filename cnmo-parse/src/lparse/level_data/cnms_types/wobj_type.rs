@@ -43,6 +43,8 @@ pub enum TtNodeType {
     ChaseTrigger,
     /// Maximum of 128 waypoints in version 1 of level spec
     Waypoint(i32),
+    /// This version is for bozo
+    BozoWaypoint,
 }
 
 /// Push/Conveyor type
@@ -578,6 +580,7 @@ impl WobjType {
                     51 => TtNodeType::ChaseTrigger,
                     52 => TtNodeType::NormalTrigger,
                     53 => TtNodeType::Waypoint(custom_int),
+                    146 => TtNodeType::BozoWaypoint,
                     _ => panic!("Unknown TT Node type!"),
                 },
             }),
@@ -880,6 +883,7 @@ impl WobjType {
                     TtNodeType::ChaseTrigger => (51, 0),
                     TtNodeType::NormalTrigger => (52, 0),
                     TtNodeType::Waypoint(waypoint_id) => (53, waypoint_id),
+                    TtNodeType::BozoWaypoint => (146, 0),
                 };
                 (wobj_type_id, custom_int, 0.0)
             }
