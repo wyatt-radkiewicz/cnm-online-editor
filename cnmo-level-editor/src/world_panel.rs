@@ -1323,7 +1323,13 @@ fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawne
         WobjType::TeleportArea1 { .. } | WobjType::Dragon { .. } | WobjType::SuperDragon { .. } => {
             (128.0, 128.0)
         }
-        WobjType::Bozo { .. } => (64.0, 128.0),
+        WobjType::Bozo { mark_ii } => {
+            if mark_ii {
+                (48.0, 64.0)
+            } else {
+                (64.0, 128.0)
+            }
+        }
         WobjType::TunesTrigger { size, .. } => match size {
             TunesTriggerSize::Small => (32.0, 32.0),
             TunesTriggerSize::Big => (64.0, 64.0),
