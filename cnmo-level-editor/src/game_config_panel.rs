@@ -15,6 +15,7 @@ pub struct GameConfigPanel {
     pub drag_source: Option<usize>,
     pub new_level: String,
     pub preview_gfx: bool,
+    preview_scroll_offset: f32,
 }
 
 impl GameConfigPanel {
@@ -25,23 +26,31 @@ impl GameConfigPanel {
             drag_source: None,
             new_level: "".to_string(),
             preview_gfx: false,
+            preview_scroll_offset: 0.0,
         }
     }
 
     pub fn update(&mut self, ui: &mut egui::Ui, editor_data: &mut EditorData) {
         if self.preview_gfx {
             egui::ScrollArea::new([true, true]).auto_shrink([false, false]).show(ui, |ui| {
-                let size = editor_data.gfx_size;
+                //let size = editor_data.gfx_size;
                 let (rect, response) = ui.allocate_exact_size(
-                    egui::vec2(size.0 as f32 * 2.0, size.1 as f32 * 2.0),
+                    ui.available_size(),
+                    //egui::vec2(size.0 as f32 * 2.0, size.1 as f32 * 2.0),
                     egui::Sense::hover()
                 );
+                let cw = editor_data.gfx_size.0 as f32;
+                let ch = (rect.height() / rect.width()) * editor_data.gfx_size.0 as f32;
+                self.preview_scroll_offset -= response.ctx.input().scroll_delta.y;
+                self.preview_scroll_offset = self
+                    .preview_scroll_offset
+                    .clamp(0.0, editor_data.gfx_size.1 as f32 - ch);
                 let mut camera = Camera::new();
-                camera.set_projection(size.0 as f32, size.1 as f32, None, true);
+                camera.set_projection(cw, ch, None, true);
                 let sprites = vec![Sprite::new(
                     (0.0, 0.0, 0.0),
-                    (size.0 as f32, size.1 as f32),
-                    (0.0, 0.0, size.0 as f32, size.1 as f32))];
+                    (editor_data.gfx_size.0 as f32, editor_data.gfx_size.1 as f32),
+                    (0.0, self.preview_scroll_offset, editor_data.gfx_size.0 as f32, editor_data.gfx_size.1 as f32))];
                 InstancedSprites::new()
                     .with_camera(camera)
                     .with_sprites(sprites)
@@ -49,8 +58,8 @@ impl GameConfigPanel {
                 if let Some(mut pos) = response.ctx.pointer_latest_pos() {
                     pos.x -= rect.left_top().x;
                     pos.y -= rect.left_top().y;
-                    pos.x /= 2.0;
-                    pos.y /= 2.0;
+                    pos.x = pos.x / rect.width() * cw;
+                    pos.y = pos.y / rect.height() * ch + self.preview_scroll_offset;
                     editor_data.info_bar = format!(
                         "pixel: ({}, {}), snap 32x32: ({}, {}), snap 16x16: ({}, {}), snap 8x8: ({}, {}), grid 32x32: ({}, {}), grid 16x16: ({}, {}), grid 8x8: ({}, {})",
                         pos.x as i32, pos.y as i32,
