@@ -851,16 +851,33 @@ impl WobjType {
                 ref text,
             } => {
                 let wobj_type_id = if dialoge_box { 108 } else { 9 };
-                let start = ending_text.len() as i32;
-                for line in text.lines() {
-                    if ending_text.len() == version.title_ending_text_line {
-                        ending_text.push("".to_string()); // Can't use the line that is used for the title!
+                let num_lines = text.lines().count();
+                let start = if let Some(pos) = ending_text
+                    .iter()
+                    .enumerate()
+                    .position(|(mut idx, _)| {
+                        for line in text.lines() {
+                            if ending_text.get(idx).unwrap_or(&String::new()) != line {
+                                return false;
+                            }
+                            idx += 1;
+                        }
+                        return true;
+                    }) {
+                    pos
+                } else {
+                    let start = ending_text.len();
+                    for line in text.lines() {
+                        if ending_text.len() == version.title_ending_text_line {
+                            ending_text.push("".to_string()); // Can't use the line that is used for the title!
+                        }
+                        ending_text.push(line.trim_end().to_string());
                     }
-                    ending_text.push(line.trim_end().to_string());
-                }
-                let end = ending_text.len() as i32 - 1;
+                    start
+                };
+                //println!("{start} <- start");
 
-                (wobj_type_id, start, end as f32)
+                (wobj_type_id, start as i32, (start + num_lines) as f32)
             }
             &Self::BackgroundSwitcher {
                 shape,
@@ -915,18 +932,28 @@ impl WobjType {
             &Self::Jumpthrough { big } => (if big { 91 } else { 90 }, 0, 0.0),
             &Self::HealthSetTrigger { target_health } => (104, 0, target_health),
             &Self::GraphicsChangeTrigger { ref gfx_file } => {
-                if ending_text.len() == version.title_ending_text_line {
-                    ending_text.push("".to_string());
-                }
-                ending_text.push(gfx_file.clone());
-                (109, ending_text.len() as i32 - 1, 0.0)
+                let start = if let Some(pos) = ending_text.iter().position(|line| line == gfx_file) {
+                    pos
+                } else {
+                    if ending_text.len() == version.title_ending_text_line {
+                        ending_text.push("".to_string());
+                    }
+                    ending_text.push(gfx_file.clone());
+                    ending_text.len() - 1
+                };
+                (109, start as i32, 0.0)
             }
             &Self::BossBarInfo { ref boss_name } => {
-                if ending_text.len() == version.title_ending_text_line {
-                    ending_text.push("".to_string());
-                }
-                ending_text.push(boss_name.clone());
-                (115, ending_text.len() as i32 - 1, 0.0)
+                let start = if let Some(pos) = ending_text.iter().position(|line| line == boss_name) {
+                    pos
+                } else {
+                    if ending_text.len() == version.title_ending_text_line {
+                        ending_text.push("".to_string());
+                    }
+                    ending_text.push(boss_name.clone());
+                    ending_text.len() - 1
+                };
+                (115, start as i32, 0.0)
             }
             &Self::BgSpeed {
                 vertical_axis,

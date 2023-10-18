@@ -1585,6 +1585,7 @@ fn draw_spawner(
                 ItemType::KeyRed => draw_rect(160, 480, 32, 32),
                 ItemType::KeyGreen => draw_rect(192, 480, 32, 32),
                 ItemType::KeyBlue => draw_rect(224, 480, 32, 32),
+                ItemType::ExtraLifeJuice => draw_rect(128, 736, 32, 32),
             }
         }
         WobjType::WandRune { rune_type } => match rune_type {
