@@ -69,9 +69,10 @@ macro_rules! generate_entry_data_func_mut {
 }
 
 /// A CNM LParse entry
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum EntryData {
     /// Null
+    #[default]
     Null,
     /// Dummy, different null means unused, dummy is used but has no data field
     Dummy,

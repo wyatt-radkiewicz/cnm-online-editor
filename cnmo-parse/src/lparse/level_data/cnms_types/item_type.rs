@@ -83,6 +83,8 @@ pub enum ItemType {
     KeyBlue,
     ///
     ExtraLifeJuice,
+    ///
+    Wrench,
 }
 
 impl ItemType {

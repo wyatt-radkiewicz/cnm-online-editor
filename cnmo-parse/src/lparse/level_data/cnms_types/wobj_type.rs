@@ -489,7 +489,10 @@ pub enum WobjType {
         trigger_type: UpgradeTriggerType,
     },
     ///
-    FinishTrigger,
+    FinishTrigger {
+        ///
+        next_level: String,
+    },
     ///
     GravityTrigger {
         ///
@@ -677,7 +680,7 @@ impl WobjType {
                 Ok(Self::CustomizeableMoveablePlatform {
                     bitmap_x32: (bitmap_x as u32, bitmap_y as u32),
                     target_relative: Point(vel_x * time, vel_y * time),
-                    speed: vel_x.max(vel_y),
+                    speed: if vel_x.abs().max(vel_y.abs()) == vel_x.abs() { vel_x.abs() } else { vel_y.abs() },
                     start_paused: custom_float < 0.0,
                     one_way: custom_float.fract().abs() > 0.1,
                 })
@@ -797,7 +800,9 @@ impl WobjType {
             101 => Ok(Self::RockGuySmasher),
             122 => Ok(Self::Wolf),
             123 => Ok(Self::Supervirus),
-            141 => Ok(Self::FinishTrigger),
+            141 => Ok(Self::FinishTrigger {
+                next_level: super::get_ending_text_line(cnms, version, custom_int as usize).unwrap_or("".to_string()),
+            }),
             143 => Ok(Self::GravityTrigger {
                 gravity: custom_float,
             }),
@@ -1005,7 +1010,7 @@ impl WobjType {
                 start_paused,
                 one_way,
             } => {
-                let mut frames_in_dir = target_relative.0.max(target_relative.1) / speed;
+                let mut frames_in_dir = target_relative.0.abs().max(target_relative.1.abs()) / speed;
                 if frames_in_dir == 0.0 {
                     frames_in_dir = 1.0;
                 }
@@ -1020,12 +1025,14 @@ impl WobjType {
                     (vel_x.fract().abs() * 4.0) as u32,
                     (vel_y.fract().abs() * 4.0) as u32,
                 );
+                
                 let bits = (bitmap_x32.0 & 0xf)
                     | ((bitmap_x32.1 & 0xfff) << 4)
                     | ix << 18
                     | fx << 16
                     | iy << 26
                     | fy << 24;
+                //println!("{ix} {iy} {fx} {fy} {bits} {}", i32::from_le_bytes(bits.to_le_bytes()));
 
                 (
                     107,
@@ -1121,7 +1128,20 @@ impl WobjType {
             &Self::Wolf => (122, 0, 0.0),
             &Self::Lua { lua_wobj_type } => (lua_wobj_type as i32 + 124, 0, 0.0),
             &Self::Supervirus => (123, 0, 0.0),
-            &Self::FinishTrigger => (141, 0, 0.0),
+            &Self::FinishTrigger { ref next_level } => {
+                let start = if let Some(pos) = ending_text.iter().position(|line| line == next_level) {
+                    //println!("Already found? {next_level}");
+                    pos
+                } else {
+                    if ending_text.len() == version.title_ending_text_line {
+                        ending_text.push("".to_string());
+                    }
+                    ending_text.push(next_level.clone());
+                    //println!("new at {}: {next_level}", ending_text.len() - 1);
+                    ending_text.len() - 1
+                };
+                (141, start as i32, 0.0)
+            },
             &Self::GravityTrigger { gravity } => (143, 0, gravity),
         }
     }

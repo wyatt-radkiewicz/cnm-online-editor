@@ -355,7 +355,7 @@ pub fn show_metadata_panel(
             if ui
                 .selectable_label(world_panel.show_grid, "Show grid")
                 .clicked()
-                || ui.ctx().input().key_pressed(egui::Key::G)
+                || (ui.ctx().input().key_pressed(egui::Key::G) && editor_data.editing_text == None)
             {
                 world_panel.show_grid = !world_panel.show_grid;
             }
@@ -926,6 +926,18 @@ impl PropertiesPanel {
                 {
                     layer.in_foreground = !layer.in_foreground;
                 }
+                ui.end_row();
+                ui.label("3D Top Width: ")
+                    .on_hover_text("How many pixels wide is the top of the 3d projection");
+                ui.add(egui::DragValue::new(&mut layer.top3d).speed(1.0));
+                ui.end_row();
+                ui.label("3D Bottom Width: ")
+                    .on_hover_text("How many pixels wide is the bottom of the 3d projection");
+                ui.add(egui::DragValue::new(&mut layer.bottom3d).speed(1.0));
+                ui.end_row();
+                ui.label("3D Height: ")
+                    .on_hover_text("How high the 3d projection is");
+                ui.add(egui::DragValue::new(&mut layer.height3d).speed(1.0));
                 ui.end_row();
                 ui.label("Image/Color: ");
                 egui::ComboBox::new("background_image_chooser", "")
@@ -1740,6 +1752,18 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(gravity));
             ui.end_row();
         }
+        &mut WobjType::FinishTrigger { ref mut next_level } => {
+            ui.label("Next Level: ").on_hover_text("The name of the next level file in the levels/ directiory without the extension");
+            let text_response = ui.text_edit_singleline(next_level);
+            if text_response.gained_focus() {
+                editor_data.editing_text = Some(text_response.id);
+            } else if text_response.lost_focus()
+                && editor_data.editing_text == Some(text_response.id)
+            {
+                editor_data.editing_text = None;
+            }
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -1824,6 +1848,7 @@ impl Iterator for ItemIter {
             37 => Some(KeyGreen),
             38 => Some(KeyBlue),
             39 => Some(ExtraLifeJuice),
+            40 => Some(Wrench),
             _ => None,
         }
     }
@@ -1873,6 +1898,7 @@ fn get_item_type_name(item_type: &ItemType) -> &str {
         &KeyGreen => "Key Green",
         &KeyBlue => "Key Blue",
         &ExtraLifeJuice => "1-Up Juice",
+        &Wrench => "Wrench",
     }
 }
 
@@ -2066,7 +2092,9 @@ impl Iterator for WobjIter {
                 size: Default::default(),
                 music_id: Default::default(),
             }),
-            55 => Some(FinishTrigger),
+            55 => Some(FinishTrigger {
+                next_level: Default::default(),
+            }),
             56 => Some(GravityTrigger {
                 gravity: Default::default(),
             }),
@@ -2147,7 +2175,7 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &Supervirus => "Supervirus",
         &Lua { .. } => "Lua",
         &UpgradeTrigger { .. } => "Upgrade",
-        &FinishTrigger => "Finish Trigger",
+        &FinishTrigger { .. } => "Finish Trigger",
         &GravityTrigger { .. } => "Gravity Trigger",
     }
 }

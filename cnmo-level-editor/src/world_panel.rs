@@ -1586,6 +1586,7 @@ fn draw_spawner(
                 ItemType::KeyGreen => draw_rect(192, 480, 32, 32),
                 ItemType::KeyBlue => draw_rect(224, 480, 32, 32),
                 ItemType::ExtraLifeJuice => draw_rect(128, 736, 32, 32),
+                ItemType::Wrench => draw_rect(160, 2048, 32, 32),
             }
         }
         WobjType::WandRune { rune_type } => match rune_type {
@@ -1807,7 +1808,7 @@ fn draw_spawner(
             Sprite::create_string(spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
         }
         WobjType::PlayerSpawn => draw_rect(384, 1216, 32, 32),
-        WobjType::FinishTrigger => draw_rect(352, 2992, 32, 32),
+        WobjType::FinishTrigger { .. } => draw_rect(352, 2992, 32, 32),
         WobjType::GravityTrigger { .. } => draw_rect(480, 1344, 32, 32),
         WobjType::CustomizeableMoveablePlatform {
             bitmap_x32,

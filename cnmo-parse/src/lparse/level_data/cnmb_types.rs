@@ -53,6 +53,12 @@ pub struct BackgroundLayer {
     pub repeat_horizontally: bool,
     /// Is the background drawn over all other game elements besides the HUD?
     pub in_foreground: bool,
+    /// How big the bottom of the 3d projection is
+    pub bottom3d: u32,
+    /// How big the top of the 3d projection is
+    pub top3d: u32,
+    /// How high the 3d projection is
+    pub height3d: u32,
 }
 
 impl BackgroundLayer {
@@ -75,6 +81,17 @@ impl BackgroundLayer {
         let background_clear_color = cnmb.try_get_entry("BG_CLEAR_COLOR")?.try_get_i32()?[index];
         let background_foreground = cnmb.try_get_entry("BG_HIGHLAYER")?.try_get_u8()?[index];
         let background_transparency = cnmb.try_get_entry("BG_TRANS")?.try_get_u8()?[index];
+        let (background_top3d,
+             background_bottom3d,
+             background_height3d) = if let Ok(ratios) = cnmb.try_get_entry("BG_RATIO3D") {
+            (
+                ratios.try_get_i32()?[index * 3 + 0] as u32,
+                ratios.try_get_i32()?[index * 3 + 1] as u32,
+                ratios.try_get_i32()?[index * 3 + 2] as u32,
+            )
+        } else {
+            (0, 0, 0)
+        };
 
         let image = if background_clear_color == 0 {
             BackgroundImage::Bitmap(background_rect)
@@ -93,6 +110,9 @@ impl BackgroundLayer {
             repeat_down: background_repeat[1] & 1 != 0,
             repeat_horizontally: background_repeat[0] != 0,
             in_foreground: background_foreground != 0,
+            top3d: background_top3d,
+            bottom3d: background_bottom3d,
+            height3d: background_height3d,
         })
     }
 
@@ -107,6 +127,7 @@ impl BackgroundLayer {
         bg_clear_color: &mut Vec<i32>,
         bg_highlayer: &mut Vec<u8>,
         bg_trans: &mut Vec<u8>,
+        bg_3d: &mut Vec<i32>,
         _version: &VersionSpecs,
     ) {
         bg_origin.push(self.origin.0);
@@ -136,6 +157,9 @@ impl BackgroundLayer {
         };
         bg_highlayer.push(self.in_foreground as u8);
         bg_trans.push(self.transparency);
+        bg_3d.push(self.top3d as i32);
+        bg_3d.push(self.bottom3d as i32);
+        bg_3d.push(self.height3d as i32);
     }
 }
 
@@ -154,6 +178,7 @@ pub(super) fn save_background_vec(
     let mut bg_clear_color = Vec::new();
     let mut bg_highlayer = Vec::new();
     let mut bg_trans = Vec::new();
+    let mut bg_3d = Vec::new();
 
     for background in &backgrounds[0..backgrounds.len().min(version.background_layers)] {
         bg_pos.push(0.0);
@@ -168,6 +193,7 @@ pub(super) fn save_background_vec(
             &mut bg_clear_color,
             &mut bg_highlayer,
             &mut bg_trans,
+            &mut bg_3d,
             version,
         );
     }
@@ -192,6 +218,8 @@ pub(super) fn save_background_vec(
         .insert("BG_HIGHLAYER".to_string(), EntryData::U8(bg_highlayer));
     cnmb.entries
         .insert("BG_TRANS".to_string(), EntryData::U8(bg_trans));
+    cnmb.entries
+        .insert("BG_RATIO3D".to_string(), EntryData::I32(bg_3d));
 }
 
 /// How a tile will damage the player
