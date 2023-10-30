@@ -578,7 +578,7 @@ impl WobjType {
             4 => Ok(Self::DroppedItem {
                 item: ItemType::Shotgun,
             }),
-            51 | 52 | 53 => Ok(Self::TtNode {
+            51 | 52 | 53 | 146 => Ok(Self::TtNode {
                 node_type: match wobj_type_id {
                     51 => TtNodeType::ChaseTrigger,
                     52 => TtNodeType::NormalTrigger,
@@ -856,8 +856,7 @@ impl WobjType {
                 ref text,
             } => {
                 let wobj_type_id = if dialoge_box { 108 } else { 9 };
-                let num_lines = text.lines().count();
-                let start = if let Some(pos) = ending_text
+                let (start, num_lines) = if let Some(pos) = ending_text
                     .iter()
                     .enumerate()
                     .position(|(mut idx, _)| {
@@ -869,20 +868,23 @@ impl WobjType {
                         }
                         return true;
                     }) {
-                    pos
+                    (pos, text.lines().count())
                 } else {
                     let start = ending_text.len();
+                    let mut len = 0;
                     for line in text.lines() {
                         if ending_text.len() == version.title_ending_text_line {
                             ending_text.push("".to_string()); // Can't use the line that is used for the title!
+                            len += 1;
                         }
                         ending_text.push(line.trim_end().to_string());
+                        len += 1;
                     }
-                    start
+                    (start, len)
                 };
                 //println!("{start} <- start");
 
-                (wobj_type_id, start as i32, (start + num_lines) as f32)
+                (wobj_type_id, start as i32, (start + num_lines - 1) as f32)
             }
             &Self::BackgroundSwitcher {
                 shape,

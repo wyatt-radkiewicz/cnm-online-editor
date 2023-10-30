@@ -177,6 +177,39 @@ impl DifficultyRating {
     }
 }
 
+/// Difficulty rating for a level
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, PartialEq, Eq, num_derive::FromPrimitive, num_derive::ToPrimitive)]
+pub enum LevelType {
+    ///
+    Normal,
+    ///
+    Secret,
+    ///
+    Unlockable,
+}
+
+impl LevelType {
+    /// Creates a difficuly rating from an ID
+    pub fn from_id(id: u8) -> Option<Self> {
+        num_traits::FromPrimitive::from_u8(id)
+    }
+
+    /// Gets the assiciated difficulty ID from this difficulty rating
+    pub fn get_id(&self) -> u8 {
+        num_traits::ToPrimitive::to_u8(self).unwrap_or(0)
+    }
+
+    /// To a string with spaces
+    pub fn to_string_pretty(&self) -> String {
+        match self {
+            &Self::Normal => "Normal".to_string(),
+            &Self::Secret => "Secret".to_string(),
+            &Self::Unlockable => "Secret Unlockable".to_string(),
+        }
+    }
+}
+
 /// Metadata for this level.
 /// 
 /// Controls stuff for how its shown on the level select menu.
@@ -192,6 +225,8 @@ pub struct LevelMetaData {
     pub preview_loc: (u32, u32),
     /// The difficulty rating of the level
     pub difficulty_rating: DifficultyRating,
+    /// The level type
+    pub level_type: LevelType,
 }
 
 impl LevelMetaData {
@@ -208,14 +243,19 @@ impl LevelMetaData {
         let preview_loc = (tile_properties.frames[0].0 as u32, tile_properties.frames[0].1 as u32);
         let difficulty_rating = DifficultyRating::from_difficulty_id(
             cnmb.try_get_entry("BP_DMG")?
-                .try_get_i32()?[version.preview_tile_index] as u8
+                .try_get_i32()?[version.preview_tile_index] as u8,
         ).unwrap_or(DifficultyRating::Normal);
+        let level_type = LevelType::from_id(
+            cnmb.try_get_entry("BP_ANIM_SPEED")?
+                .try_get_i32()?[version.preview_tile_index] as u8,
+        ).unwrap_or(LevelType::Normal);
 
         Ok(Self {
             title,
             subtitle,
             preview_loc,
             difficulty_rating,
+            level_type,
         })
     }
 
@@ -233,7 +273,7 @@ impl LevelMetaData {
             solid: false,
             transparency: consts::CLEAR,
             damage_type: cnmb_types::DamageType::Lava(self.difficulty_rating.get_difficulty_id() as i32),
-            anim_speed: Duration(1),
+            anim_speed: Duration(self.level_type.get_id().into()),
             frames: vec![(self.preview_loc.0 as i32, self.preview_loc.1 as i32)],
             collision_data: cnmb_types::CollisionType::Box(crate::Rect { x: 0, y: 0, w: 0, h: 0 }),
         }
@@ -277,6 +317,7 @@ impl LevelData {
                 subtitle: None,
                 preview_loc: (0, 0),
                 difficulty_rating: DifficultyRating::Normal,
+                level_type: LevelType::Normal,
             },
             background_layers,
         })

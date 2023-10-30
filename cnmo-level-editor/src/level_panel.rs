@@ -274,6 +274,18 @@ pub fn show_metadata_panel(
             });
             ui.end_row();
         }
+        {
+            let level_type = &mut level_data.metadata.level_type;
+            ui.label("Level Type: ");
+            egui::ComboBox::new("level_type", "")
+                .selected_text(level_type.to_string_pretty())
+                .show_ui(ui, |ui| {
+                ui.selectable_value(level_type, level_data::LevelType::Normal, level_data::LevelType::Normal.to_string_pretty());
+                ui.selectable_value(level_type, level_data::LevelType::Secret, level_data::LevelType::Secret.to_string_pretty());
+                ui.selectable_value(level_type, level_data::LevelType::Unlockable, level_data::LevelType::Unlockable.to_string_pretty());
+            });
+            ui.end_row();
+        }
         ui.label("Editor Mode: ");
         egui::ComboBox::new("editor_mode", "")
             .selected_text(format!("{:?}", editor_mode))
