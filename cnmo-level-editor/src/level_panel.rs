@@ -1,7 +1,7 @@
 use cnmo_parse::lparse::level_data;
 use cnmo_parse::lparse::level_data::cnmb_types::BackgroundImage;
 use cnmo_parse::lparse::level_data::cnms_types::item_type::ItemType;
-use cnmo_parse::lparse::level_data::cnms_types::wobj_type::WobjType;
+use cnmo_parse::lparse::level_data::cnms_types::wobj_type::{WobjType, CustomizableMovingPlatformType};
 use cnmo_parse::lparse::level_data::cnms_types::{Spawner, SpawnerMode};
 use eframe::egui;
 use std::env;
@@ -1484,7 +1484,7 @@ fn show_spawner_properties(
             ref mut target_relative,
             ref mut speed,
             ref mut start_paused,
-            ref mut one_way,
+            ref mut ty,
         } => {
             ui.label("Bitmap Tile X: ");
             ui.add(egui::DragValue::new(&mut bitmap_x32.0));
@@ -1507,9 +1507,26 @@ fn show_spawner_properties(
             {
                 *start_paused = !*start_paused;
             }
-            if ui.selectable_label(*one_way, "Only 1 Way").clicked() {
-                *one_way = !*one_way;
-            }
+            //if ui.selectable_label(*one_way, "Only 1 Way").clicked() {
+            //    *one_way = !*one_way;
+            //}
+            ui.end_row();
+            ui.label("Type: ").on_hover_text("You can set it to despawn once it hits its target destination, or to only go one way");
+            egui::ComboBox::new("cmpf_combo_box", "")
+                .selected_text(match ty {
+                    CustomizableMovingPlatformType::Normal => "Normal",
+                    CustomizableMovingPlatformType::OneWay => "One Way",
+                    CustomizableMovingPlatformType::Despawn => "Despawn",
+                })
+                .show_ui(ui, |ui| {
+                    ui.selectable_value(ty, CustomizableMovingPlatformType::Normal, "Normal");
+                    ui.selectable_value(ty, CustomizableMovingPlatformType::OneWay, "One Way");
+                    ui.selectable_value(ty, CustomizableMovingPlatformType::Despawn, "Despawn");
+                });
+            ui.end_row();
+            let frames_in_dir = ((target_relative.0.powi(2) + target_relative.1.powi(2)).sqrt() / *speed).ceil();
+            ui.label("Seconds/Frames Till Turn:");
+            ui.label(format!("{}/{}", frames_in_dir / 30.0, frames_in_dir as i32));
             ui.end_row();
         }
         &mut WobjType::LockedBlock {
@@ -2010,7 +2027,7 @@ impl Iterator for WobjIter {
                 target_relative: Default::default(),
                 speed: Default::default(),
                 start_paused: Default::default(),
-                one_way: Default::default(),
+                ty: Default::default(),
             }),
             28 => Some(DisapearingPlatform {
                 time_on: Default::default(),

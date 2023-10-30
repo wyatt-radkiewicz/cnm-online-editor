@@ -176,6 +176,37 @@ impl Default for WobjType {
     }
 }
 
+///
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
+pub enum CustomizableMovingPlatformType {
+    ///
+    #[default]
+    Normal,
+    ///
+    OneWay,
+    ///
+    Despawn
+}
+
+impl CustomizableMovingPlatformType {
+    ///
+    pub fn to_float_id(&self) -> f32 {
+        match self {
+            &Self::Normal => 0.0,
+            &Self::OneWay => 0.5,
+            &Self::Despawn => 0.25,
+        }
+    }
+
+    ///
+    pub fn from_float_id(id: f32) -> Self {
+        if id < 0.3 { Self::Despawn }
+        else if id < 0.6 { Self::OneWay }
+        else { Self::Normal }
+    }
+}
+
 /// Type of a CNM Online object (and what will spawn from a spawner)
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug, Clone)]
@@ -427,7 +458,7 @@ pub enum WobjType {
         ///
         start_paused: bool,
         ///
-        one_way: bool,
+        ty: CustomizableMovingPlatformType,
     },
     ///
     GraphicsChangeTrigger {
@@ -682,7 +713,8 @@ impl WobjType {
                     target_relative: Point(vel_x * time, vel_y * time),
                     speed: (vel_x.powi(2) + vel_y.powi(2)).sqrt(),//if vel_x.abs().max(vel_y.abs()) == vel_x.abs() { vel_x.abs() } else { vel_y.abs() },
                     start_paused: custom_float < 0.0,
-                    one_way: custom_float.fract().abs() > 0.1,
+                    ty: CustomizableMovingPlatformType::from_float_id(custom_float.fract().abs())
+                    //one_way: custom_float.fract().abs() > 0.1,
                 })
             }
             94 | 95 | 96 => Ok(Self::LockedBlock {
@@ -1010,7 +1042,7 @@ impl WobjType {
                 target_relative,
                 speed,
                 start_paused,
-                one_way,
+                ty,
             } => {
                 let mut frames_in_dir = ((target_relative.0.powi(2) + target_relative.1.powi(2)).sqrt() / speed).ceil();//target_relative.0.abs().max(target_relative.1.abs()) / speed;
                 if frames_in_dir == 0.0 {
@@ -1040,7 +1072,7 @@ impl WobjType {
                     107,
                     i32::from_le_bytes(bits.to_le_bytes()),
                     frames_in_dir.round() * if start_paused { -1.0 } else { 1.0 }
-                        + if one_way { 0.5 } else { 0.0 },
+                        + ty.to_float_id(),
                 )
             }
             &Self::LockedBlock { color, consume_key } => {
