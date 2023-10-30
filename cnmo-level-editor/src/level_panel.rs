@@ -204,7 +204,7 @@ pub fn show_metadata_panel(
                 std::env::current_dir()
                     .expect("Need permission on current dir")
                     .join(path),
-            )
+            ).args(["-editorwarp", "-level", ("levels/".to_string() + &editor_data.level_file_name).as_str()])
             .spawn()
             {
                 Ok(_) => log::info!("Starting playtest session"),
