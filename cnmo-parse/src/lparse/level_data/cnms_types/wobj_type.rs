@@ -666,12 +666,12 @@ impl WobjType {
             107 => {
                 // Customizable moving platform
                 let masked = custom_int as u32 >> 16 & 0xff;
-                let fpart_x = 0.25 * (masked & 0x3) as f32;
-                let mut vel_x = ((masked >> 2 & 0x3f) as i32 - 32) as f32;
+                let fpart_x = (1.0 / 16.0) * (masked & 0xf) as f32;
+                let mut vel_x = ((masked >> 4 & 0xf) as i32 - 8) as f32;
                 vel_x += if vel_x < 0.0 { -fpart_x } else { fpart_x };
                 let masked = custom_int as u32 >> 24 & 0xff;
-                let fpart_y = 0.25 * (masked & 0x3) as f32;
-                let mut vel_y = ((masked >> 2 & 0x3f) as i32 - 32) as f32;
+                let fpart_y = (1.0 / 16.0) * (masked & 0xf) as f32;
+                let mut vel_y = ((masked >> 4 & 0xf) as i32 - 8) as f32;
                 vel_y += if vel_y < 0.0 { -fpart_y } else { fpart_y };
                 let bitmap_x = custom_int & 0xf;
                 let bitmap_y = custom_int >> 4 & 0xfff;
@@ -680,7 +680,7 @@ impl WobjType {
                 Ok(Self::CustomizeableMoveablePlatform {
                     bitmap_x32: (bitmap_x as u32, bitmap_y as u32),
                     target_relative: Point(vel_x * time, vel_y * time),
-                    speed: if vel_x.abs().max(vel_y.abs()) == vel_x.abs() { vel_x.abs() } else { vel_y.abs() },
+                    speed: (vel_x.powi(2) + vel_y.powi(2)).sqrt(),//if vel_x.abs().max(vel_y.abs()) == vel_x.abs() { vel_x.abs() } else { vel_y.abs() },
                     start_paused: custom_float < 0.0,
                     one_way: custom_float.fract().abs() > 0.1,
                 })
@@ -1012,7 +1012,7 @@ impl WobjType {
                 start_paused,
                 one_way,
             } => {
-                let mut frames_in_dir = target_relative.0.abs().max(target_relative.1.abs()) / speed;
+                let mut frames_in_dir = ((target_relative.0.powi(2) + target_relative.1.powi(2)).sqrt() / speed).ceil();//target_relative.0.abs().max(target_relative.1.abs()) / speed;
                 if frames_in_dir == 0.0 {
                     frames_in_dir = 1.0;
                 }
@@ -1022,17 +1022,17 @@ impl WobjType {
                 );
 
                 let (ix, iy, fx, fy) = (
-                    ((vel_x.round() as i32 + 32) as u32).min(63),
-                    ((vel_y.round() as i32 + 32) as u32).min(63),
-                    (vel_x.fract().abs() * 4.0) as u32,
-                    (vel_y.fract().abs() * 4.0) as u32,
+                    ((vel_x.round() as i32 + 8) as u32).min(15),
+                    ((vel_y.round() as i32 + 8) as u32).min(15),
+                    (vel_x.fract().abs() * 16.0) as u32,
+                    (vel_y.fract().abs() * 16.0) as u32,
                 );
                 
                 let bits = (bitmap_x32.0 & 0xf)
                     | ((bitmap_x32.1 & 0xfff) << 4)
-                    | ix << 18
+                    | ix << (16+4)
                     | fx << 16
-                    | iy << 26
+                    | iy << (24+4)
                     | fy << 24;
                 //println!("{ix} {iy} {fx} {fy} {bits} {}", i32::from_le_bytes(bits.to_le_bytes()));
 
