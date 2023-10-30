@@ -31,16 +31,19 @@ pub enum SpawnerMode {
     /// This will show in both single and multiplayer and will spawn an wobj for every
     /// player in the server/game, this means the max spawns will be max_spawns*player_count
     PlayerCountBased,
+    /// This will not spawn in the level and will only be available in the spawner data.
+    NoSpawn,
 }
 
 impl SpawnerMode {
     fn from_packed_dropped_item(dropped_item: u32) -> Option<Self> {
-        let mode_id = (dropped_item & 0xf000_0000) >> 28;
+        let mode_id = (dropped_item & 0xff00_0000) >> 24;
         match mode_id {
             0 => Some(Self::MultiAndSingleplayer),
-            1 => Some(Self::SingleplayerOnly),
-            2 => Some(Self::MultiplayerOnly),
-            3 => Some(Self::PlayerCountBased),
+            0x10 => Some(Self::SingleplayerOnly),
+            0x20 => Some(Self::MultiplayerOnly),
+            0x30 => Some(Self::PlayerCountBased),
+            4 => Some(Self::NoSpawn),
             _ => None,
         }
     }
@@ -51,6 +54,7 @@ impl SpawnerMode {
             &Self::SingleplayerOnly => 1 << 28,
             &Self::MultiplayerOnly => 2 << 28,
             &Self::PlayerCountBased => 3 << 28,
+            &Self::NoSpawn => 4 << 24,
         }
     }
 }

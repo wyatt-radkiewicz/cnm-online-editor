@@ -688,6 +688,7 @@ impl PropertiesPanel {
                             "This will show in both single and multiplayer and will spawn an wobj for every\n
                             player in the server/game, this means the max spawns will be max_spawns*player_count"
                         );
+                        ui.selectable_value(&mut spawner.spawning_criteria.mode, SpawnerMode::NoSpawn, get_spawner_mode_name(&SpawnerMode::NoSpawn));
                     });
                     ui.end_row();
                     ui.label("Delay between spawns: ").on_hover_text_at_pointer("Delay in seconds");
@@ -1798,6 +1799,7 @@ fn get_spawner_mode_name(mode: &SpawnerMode) -> &str {
         &SpawnerMode::MultiplayerOnly => "Multiplayer Only",
         &SpawnerMode::SingleplayerOnly => "Singleplayer Only",
         &SpawnerMode::PlayerCountBased => "Player Count Based",
+        &SpawnerMode::NoSpawn => "Don't Spawn In Level",
     }
 }
 
