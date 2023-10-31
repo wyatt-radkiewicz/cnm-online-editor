@@ -1293,6 +1293,7 @@ fn show_spawner_properties(
             ref mut vertical,
             ref mut dist,
             ref mut speed,
+            ref mut despawn,
         } => {
             ui.label("");
             if ui.selectable_label(*vertical, "Is Vertical").clicked() {
@@ -1303,7 +1304,12 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(dist));
             ui.end_row();
             ui.label("Speed: ");
-            ui.add(egui::DragValue::new(speed));
+            ui.add(egui::DragValue::new(speed).clamp_range(0.0..=256.0));
+            ui.end_row();
+            ui.label("Despawn: ");
+            if ui.selectable_label(*despawn, "Despawn").clicked() {
+                *despawn = !*despawn;
+            }
             ui.end_row();
         }
         &mut WobjType::PushZone {
@@ -2060,6 +2066,7 @@ impl Iterator for WobjIter {
                 vertical: Default::default(),
                 dist: Default::default(),
                 speed: Default::default(),
+                despawn: Default::default(),
             }),
             32 => Some(MovingPlatform {
                 vertical: Default::default(),

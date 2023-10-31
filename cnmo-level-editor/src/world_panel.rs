@@ -1420,13 +1420,19 @@ fn draw_spawner(
         sprites.push(sprite);
     };
     let draw_moving = |sprites: &mut Vec<Sprite>, dist: f32, speed: f32, vertical: bool| {
-        let dist = dist.max(f32::EPSILON);
-        let unclamped_pos = editor_data.time_past.as_secs_f32() * (speed * 30.0);
-        let pos = if (unclamped_pos / dist) as i32 % 2 == 0 {
-            unclamped_pos.rem_euclid(dist)
+        let dist = if dist > -0.01 && dist < 0.01 { f32::EPSILON } else { dist };
+        let unclamped_pos = editor_data.time_past.as_secs_f32() * (speed * dist.signum() * 30.0);
+        let pos = if (unclamped_pos / dist.abs()) as i32 % 2 == 0 {
+            unclamped_pos.rem_euclid(dist.abs())
         } else {
-            dist - unclamped_pos.rem_euclid(dist)
+            dist.abs() - unclamped_pos.rem_euclid(dist.abs())
         };
+        let srcpos = if dist < 0.0 { 
+            level_data::Point(
+                spawner.pos.0 + if vertical { 0.0 } else { dist },
+                spawner.pos.1 + if vertical { dist } else { 0.0 },
+            )
+        } else { spawner.pos };
         if vertical {
             sprites.push(Sprite::new_pure_color(
                 (spawner.pos.0 + 16.0, spawner.pos.1 + 16.0, 0.0),
@@ -1435,8 +1441,8 @@ fn draw_spawner(
             ));
             sprites.append(
                 &mut Sprite::new_rect(
-                    (spawner.pos.0, pos + spawner.pos.1),
-                    (spawner.pos.0 + 32.0, pos + spawner.pos.1 + 32.0),
+                    (srcpos.0, pos + srcpos.1),
+                    (srcpos.0 + 32.0, pos + srcpos.1 + 32.0),
                     3.0,
                     (0.0, 0.2, 1.0, 0.8),
                 )
@@ -1450,8 +1456,8 @@ fn draw_spawner(
             ));
             sprites.append(
                 &mut Sprite::new_rect(
-                    (pos + spawner.pos.0, spawner.pos.1),
-                    (pos + spawner.pos.0 + 32.0, spawner.pos.1 + 32.0),
+                    (pos + srcpos.0, srcpos.1),
+                    (pos + srcpos.0 + 32.0, srcpos.1 + 32.0),
                     3.0,
                     (0.0, 0.2, 1.0, 0.8),
                 )
@@ -1526,6 +1532,7 @@ fn draw_spawner(
             vertical,
             dist,
             speed,
+            despawn: _,
         } => {
             draw_rect(480, 2048, 32, 32);
             draw_moving(sprites, *dist as f32, *speed, *vertical);

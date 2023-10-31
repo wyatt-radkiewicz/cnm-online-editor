@@ -97,7 +97,7 @@ impl Spawner {
         let spawner_group = if let Ok(entry) = cnms.try_get_entry("SP_GROUP") {
             let id = entry.try_get_u8()?[index];
             if id == 0xff { None }
-            else { Some(0) }
+            else { Some(id) }
         } else {
             None
         };

@@ -201,7 +201,8 @@ impl CustomizableMovingPlatformType {
 
     ///
     pub fn from_float_id(id: f32) -> Self {
-        if id < 0.3 { Self::Despawn }
+        if id < 0.1 { Self::Normal }
+        else if id < 0.3 { Self::Despawn }
         else if id < 0.6 { Self::OneWay }
         else { Self::Normal }
     }
@@ -355,6 +356,8 @@ pub enum WobjType {
         dist: i32,
         ///
         speed: f32,
+        ///
+        despawn: bool,
     },
     ///
     SuperDragon {
@@ -625,7 +628,8 @@ impl WobjType {
             61 | 62 => Ok(Self::MovingFire {
                 vertical: wobj_type_id == 61,
                 dist: custom_int,
-                speed: custom_float,
+                speed: custom_float.abs(),
+                despawn: custom_float < 0.0,
             }),
             77 | 78 | 80 => Ok(Self::PushZone {
                 push_zone_type: match wobj_type_id {
@@ -713,7 +717,7 @@ impl WobjType {
                     target_relative: Point(vel_x * time, vel_y * time),
                     speed: (vel_x.powi(2) + vel_y.powi(2)).sqrt(),//if vel_x.abs().max(vel_y.abs()) == vel_x.abs() { vel_x.abs() } else { vel_y.abs() },
                     start_paused: custom_float < 0.0,
-                    ty: CustomizableMovingPlatformType::from_float_id(custom_float.fract().abs())
+                    ty: CustomizableMovingPlatformType::from_float_id(custom_float.abs().fract())
                     //one_way: custom_float.fract().abs() > 0.1,
                 })
             }
@@ -951,9 +955,10 @@ impl WobjType {
                 vertical,
                 dist,
                 speed,
+                despawn,
             } => {
                 let wobj_type_id = if vertical { 61 } else { 62 };
-                (wobj_type_id, dist, speed)
+                (wobj_type_id, dist, speed * if despawn { -1.0 } else { 1.0 })
             }
             &Self::PushZone {
                 push_zone_type,
