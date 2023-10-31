@@ -187,6 +187,8 @@ pub enum LevelType {
     Secret,
     ///
     Unlockable,
+    ///
+    Unranked,
 }
 
 impl LevelType {
@@ -206,6 +208,7 @@ impl LevelType {
             &Self::Normal => "Normal".to_string(),
             &Self::Secret => "Secret".to_string(),
             &Self::Unlockable => "Secret Unlockable".to_string(),
+            &Self::Unranked => "No Ranks".to_string(),
         }
     }
 }

@@ -526,6 +526,10 @@ pub enum WobjType {
     FinishTrigger {
         ///
         next_level: String,
+        ///
+        extra_unlocked_level: Option<String>,
+        ///
+        is_secret: bool,
     },
     ///
     GravityTrigger {
@@ -684,7 +688,7 @@ impl WobjType {
             }),
             10 | 82 => Ok(Self::MovingPlatform {
                 vertical: wobj_type_id == 82,
-                dist: custom_float * custom_int as f32,
+                dist: (custom_float * custom_int as f32).abs(),
                 speed: custom_float,
             }),
             83 => Ok(Self::DisapearingPlatform {
@@ -837,7 +841,13 @@ impl WobjType {
             122 => Ok(Self::Wolf),
             123 => Ok(Self::Supervirus),
             141 => Ok(Self::FinishTrigger {
-                next_level: super::get_ending_text_line(cnms, version, custom_int as usize).unwrap_or("".to_string()),
+                next_level: super::get_ending_text_line(cnms, version, (custom_int & 0xff) as usize).unwrap_or("".to_string()),
+                extra_unlocked_level: if custom_float as i32 > 0 {
+                    Some(super::get_ending_text_line(cnms, version, custom_float as usize - 1).unwrap_or("".to_string()))
+                } else {
+                    None
+                },
+                is_secret: (custom_int & 0xf00) != 0,
             }),
             143 => Ok(Self::GravityTrigger {
                 gravity: custom_float,
@@ -1172,19 +1182,30 @@ impl WobjType {
             &Self::Wolf => (122, 0, 0.0),
             &Self::Lua { lua_wobj_type } => (lua_wobj_type as i32 + 124, 0, 0.0),
             &Self::Supervirus => (123, 0, 0.0),
-            &Self::FinishTrigger { ref next_level } => {
+            &Self::FinishTrigger { ref next_level, ref extra_unlocked_level, is_secret } => {
                 let start = if let Some(pos) = ending_text.iter().position(|line| line == next_level) {
-                    //println!("Already found? {next_level}");
                     pos
                 } else {
                     if ending_text.len() == version.title_ending_text_line {
                         ending_text.push("".to_string());
                     }
                     ending_text.push(next_level.clone());
-                    //println!("new at {}: {next_level}", ending_text.len() - 1);
                     ending_text.len() - 1
                 };
-                (141, start as i32, 0.0)
+                let extra_start = if let Some(extra_level) = extra_unlocked_level {
+                    if let Some(pos) = ending_text.iter().position(|line| line == extra_level) {
+                        (pos + 1) as f32
+                    } else {
+                        if ending_text.len() == version.title_ending_text_line {
+                            ending_text.push("".to_string());
+                        }
+                        ending_text.push(extra_level.clone());
+                        (ending_text.len() - 1 + 1) as f32
+                    }
+                } else {
+                    0.0
+                };
+                (141, start as i32 | if is_secret { 0xf00 } else { 0 }, extra_start)
             },
             &Self::GravityTrigger { gravity } => (143, 0, gravity),
         }

@@ -283,6 +283,7 @@ pub fn show_metadata_panel(
                 ui.selectable_value(level_type, level_data::LevelType::Normal, level_data::LevelType::Normal.to_string_pretty());
                 ui.selectable_value(level_type, level_data::LevelType::Secret, level_data::LevelType::Secret.to_string_pretty());
                 ui.selectable_value(level_type, level_data::LevelType::Unlockable, level_data::LevelType::Unlockable.to_string_pretty());
+                ui.selectable_value(level_type, level_data::LevelType::Unranked, level_data::LevelType::Unranked.to_string_pretty());
             });
             ui.end_row();
         }
@@ -1803,7 +1804,7 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(gravity));
             ui.end_row();
         }
-        &mut WobjType::FinishTrigger { ref mut next_level } => {
+        &mut WobjType::FinishTrigger { ref mut next_level, ref mut extra_unlocked_level, ref mut is_secret } => {
             ui.label("Next Level: ").on_hover_text("The name of the next level file in the levels/ directiory without the extension");
             let text_response = ui.text_edit_singleline(next_level);
             if text_response.gained_focus() {
@@ -1814,6 +1815,33 @@ fn show_spawner_properties(
                 editor_data.editing_text = None;
             }
             ui.end_row();
+            ui.label("Is Secret Exit: ");
+            if ui.selectable_label(*is_secret, "Secret").clicked() {
+                *is_secret = !*is_secret;
+            }
+            ui.end_row();
+            ui.label("Unlocks Extra Level: ");
+            let extra_level_response = ui.selectable_label(extra_unlocked_level != &None, "Yes");
+            if extra_level_response.clicked() {
+                if extra_unlocked_level == &None {
+                    *extra_unlocked_level = Some("level_name".to_string());
+                } else {
+                    *extra_unlocked_level = None;
+                }
+            }
+            ui.end_row();
+            if let Some(extra_level) = extra_unlocked_level {
+                ui.label("Unlocks: ").on_hover_text("The name of the next level file in the levels/ directiory without the extension");
+                let text_response = ui.text_edit_singleline(extra_level);
+                if text_response.gained_focus() {
+                    editor_data.editing_text = Some(text_response.id);
+                } else if text_response.lost_focus()
+                    && editor_data.editing_text == Some(text_response.id)
+                {
+                    editor_data.editing_text = None;
+                }
+                ui.end_row();
+            }
         }
         _ => {}
     }
@@ -2147,6 +2175,8 @@ impl Iterator for WobjIter {
             }),
             55 => Some(FinishTrigger {
                 next_level: Default::default(),
+                extra_unlocked_level: None,
+                is_secret: false,
             }),
             56 => Some(GravityTrigger {
                 gravity: Default::default(),
