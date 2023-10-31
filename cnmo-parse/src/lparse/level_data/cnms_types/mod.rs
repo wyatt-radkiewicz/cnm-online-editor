@@ -114,7 +114,7 @@ impl Spawner {
                 },
                 max_concurrent_spawns: max_spawns as u32,
             },
-            dropped_item: ItemType::from_item_id(dropped_item),
+            dropped_item: ItemType::from_item_id(dropped_item & 0x00ff_ffff),
             spawner_group,
         })
     }
