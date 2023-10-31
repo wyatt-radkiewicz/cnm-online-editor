@@ -150,6 +150,9 @@ impl Spawner {
 
 pub(crate) fn get_ending_text_line(cnms: &LParse, version: &VersionSpecs, index: usize) -> Result<String, Error> {
     let (start, end) = (index * version.ending_text_line_len, (index + 1) * version.ending_text_line_len);
+    if end > version.ending_text_line_len * version.ending_text_lines {
+        return Err(Error::Corrupted(format!("Can't find ending text entry id {index} probably because it is out of the range 0..{}.", version.ending_text_lines)));
+    }
     let buffer = cnms.try_get_entry("ENDINGTEXT")?.try_get_u8()?[start..end].iter().cloned().collect();
     match String::from_utf8(buffer) {
         Ok(s) => Ok(s.trim_end_matches('\0').to_string()),

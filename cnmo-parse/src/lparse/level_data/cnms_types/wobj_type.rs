@@ -574,7 +574,7 @@ impl WobjType {
             9 | 108 => {
                 // Ending Text/Dialoge Box
                 let mut text = "".to_string();
-                for i in custom_int as usize..custom_float as usize {
+                for i in custom_int as usize..=custom_float as usize {
                     text += (super::get_ending_text_line(cnms, version, i).unwrap_or_default()
                         + "\n")
                         .as_str();
