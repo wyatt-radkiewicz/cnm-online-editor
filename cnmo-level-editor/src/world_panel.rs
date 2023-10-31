@@ -1203,6 +1203,7 @@ impl WorldPanel {
                 spawner.dropped_item = editor_data.spawner_template.dropped_item.clone();
                 spawner.spawning_criteria = editor_data.spawner_template.spawning_criteria.clone();
                 spawner.type_data = editor_data.spawner_template.type_data.clone();
+                spawner.spawner_group = editor_data.spawner_template.spawner_group.clone();
                 log::info!("Pasted Spawner Data in Place");
             }
         }
