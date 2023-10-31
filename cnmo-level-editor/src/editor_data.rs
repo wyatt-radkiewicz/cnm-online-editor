@@ -66,7 +66,8 @@ impl EditorData {
                     mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
                     max_concurrent_spawns: 0,
                 },
-                dropped_item: None
+                dropped_item: None,
+                spawner_group: None,
             },
             spawner_grid_size: 8.0,
             editing_text: None,

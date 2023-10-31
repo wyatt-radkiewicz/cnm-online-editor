@@ -712,6 +712,21 @@ impl PropertiesPanel {
                         show_item_combobox(item, ui);
                         ui.end_row();
                     }
+                    ui.label("In group: ");
+                    let group_response = ui.selectable_label(spawner.spawner_group != None, "Is Grouped");
+                    if group_response.clicked() {
+                        if spawner.spawner_group == None {
+                            spawner.spawner_group = Some(0);
+                        } else {
+                            spawner.spawner_group = None;
+                        }
+                    }
+                    ui.end_row();
+                    if let Some(ref mut item) = &mut spawner.spawner_group {
+                        ui.label("Group ID: ");
+                        ui.add(egui::DragValue::new(item).clamp_range(0..=31));
+                        ui.end_row();
+                    }
                     show_spawner_properties(spawner, ui, editor_data, world_panel);
                 });
             }

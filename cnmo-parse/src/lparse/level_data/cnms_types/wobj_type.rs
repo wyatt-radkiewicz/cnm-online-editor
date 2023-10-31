@@ -1048,10 +1048,13 @@ impl WobjType {
                 if frames_in_dir == 0.0 {
                     frames_in_dir = 1.0;
                 }
-                let (vel_x, vel_y) = (
+
+                let (mut vel_x, mut vel_y) = (
                     target_relative.0 / frames_in_dir,
                     target_relative.1 / frames_in_dir,
                 );
+                if vel_x.fract().abs() > 31.0 / 32.0 { vel_x = vel_x.round(); }
+                if vel_y.fract().abs() > 31.0 / 32.0 { vel_y = vel_y.round(); }
 
                 let (ix, iy, fx, fy) = (
                     ((vel_x.round() as i32 + 8) as u32).min(15),
@@ -1067,6 +1070,8 @@ impl WobjType {
                     | iy << (24+4)
                     | fy << 24;
                 //println!("{ix} {iy} {fx} {fy} {bits} {}", i32::from_le_bytes(bits.to_le_bytes()));
+                //println!("dist: {}", ((target_relative.0.powi(2) + target_relative.1.powi(2)).sqrt()));
+                //println!("vel_x: {}, vel_x * frames_in_dir: {}", vel_x, vel_x * frames_in_dir);
 
                 (
                     107,

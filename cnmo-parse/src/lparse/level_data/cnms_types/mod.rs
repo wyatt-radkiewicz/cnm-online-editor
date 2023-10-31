@@ -83,6 +83,9 @@ pub struct Spawner {
     pub spawning_criteria: SpawningCriteria,
     /// What item it will drop once it's destroyed
     pub dropped_item: Option<ItemType>,
+    /// What spawner group its a part of (spawners in these
+    /// groups will be guarenteed to spawn on the exact same tick)
+    pub spawner_group: Option<u8>,
 }
 
 impl Spawner {
@@ -91,6 +94,13 @@ impl Spawner {
         let duration = cnms.try_get_entry("SP_DURATION")?.try_get_i32()?[index];
         let max_spawns = cnms.try_get_entry("SP_MAX")?.try_get_i32()?[index];
         let dropped_item = cnms.try_get_entry("SP_DITEM")?.try_get_u32()?[index];
+        let spawner_group = if let Ok(entry) = cnms.try_get_entry("SP_GROUP") {
+            let id = entry.try_get_u8()?[index];
+            if id == 0xff { None }
+            else { Some(0) }
+        } else {
+            None
+        };
 
         Ok(Self {
             pos: Point(position[0], position[1]),
@@ -105,6 +115,7 @@ impl Spawner {
                 max_concurrent_spawns: max_spawns as u32,
             },
             dropped_item: ItemType::from_item_id(dropped_item),
+            spawner_group,
         })
     }
 
@@ -115,7 +126,7 @@ impl Spawner {
         checkpoints: &mut Vec<f32>,
         ending_text: &mut Vec<String>,
         version: &VersionSpecs,
-    ) -> (Point, i32, i32, i32, i32, f32, u32) {
+    ) -> (Point, i32, i32, i32, i32, f32, u32, u8) {
         let wobj_type_info = self.type_data.serialize(
             teleports,
             spawns,
@@ -132,6 +143,7 @@ impl Spawner {
             wobj_type_info.1,
             wobj_type_info.2,
             if let Some(i) = self.dropped_item { i.get_item_id() } else { 0 } | self.spawning_criteria.mode.to_packed_dropped_item(),
+            if let Some(group) = self.spawner_group { group } else { 0xff },
         )
     }
 }
@@ -185,6 +197,7 @@ pub(super) fn save_spawner_vec(cnms: &mut LParse, version: &VersionSpecs, level_
     let mut sp_ci = Vec::new();
     let mut sp_cf = Vec::new();
     let mut sp_ditem = Vec::new();
+    let mut sp_group = Vec::new();
 
     // Collect the spawner data
     for spawner in spawners.iter() {
@@ -203,6 +216,7 @@ pub(super) fn save_spawner_vec(cnms: &mut LParse, version: &VersionSpecs, level_
         sp_ci.push(data.4);
         sp_cf.push(data.5);
         sp_ditem.push(data.6);
+        sp_group.push(data.7);
     }
 
     // Finalize things like ending text and the number of teleports
@@ -249,5 +263,6 @@ pub(super) fn save_spawner_vec(cnms: &mut LParse, version: &VersionSpecs, level_
     cnms.entries.insert("SP_CI".to_string(), EntryData::I32(sp_ci));
     cnms.entries.insert("SP_CF".to_string(), EntryData::F32(sp_cf));
     cnms.entries.insert("SP_DITEM".to_string(), EntryData::U32(sp_ditem));
+    cnms.entries.insert("SP_GROUP".to_string(), EntryData::U8(sp_group));
     cnms.entries.insert("NUM_SPAWNERS".to_string(), EntryData::I32(vec![spawners.len() as i32]));
 }
