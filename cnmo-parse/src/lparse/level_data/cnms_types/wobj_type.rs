@@ -536,6 +536,11 @@ pub enum WobjType {
         ///
         gravity: f32,
     },
+    ///
+    SkinUnlock {
+        ///
+        id: u8,
+    },
 }
 
 impl WobjType {
@@ -851,6 +856,9 @@ impl WobjType {
             }),
             143 => Ok(Self::GravityTrigger {
                 gravity: custom_float,
+            }),
+            148 => Ok(Self::SkinUnlock {
+                id: custom_int as u8,
             }),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
@@ -1208,6 +1216,7 @@ impl WobjType {
                 (141, start as i32 | if is_secret { 0xf00 } else { 0 }, extra_start)
             },
             &Self::GravityTrigger { gravity } => (143, 0, gravity),
+            &Self::SkinUnlock { id } => (148, id as i32, 0.0),
         }
     }
 }

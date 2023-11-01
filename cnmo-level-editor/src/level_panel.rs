@@ -641,7 +641,7 @@ impl PropertiesPanel {
                 } else {
                     "Background"
                 });
-                if response.clicked() || ui.ctx().input().key_pressed(egui::Key::Q) {
+                if response.clicked() || (ui.ctx().input().key_pressed(egui::Key::Q) && editor_data.editing_text == None) {
                     editor_data.foreground_placing = !editor_data.foreground_placing;
                     editor_data.light_placing = None;
                 }
@@ -1843,6 +1843,11 @@ fn show_spawner_properties(
                 ui.end_row();
             }
         }
+        &mut WobjType::SkinUnlock { ref mut id } => {
+            ui.label("Skin ID");
+            ui.add(egui::DragValue::new(id).clamp_range(0..=9));
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -2192,6 +2197,9 @@ impl Iterator for WobjIter {
             59 => Some(WandRune {
                 rune_type: Default::default(),
             }),
+            60 => Some(SkinUnlock {
+                id: Default::default(),
+            }),
             _ => None,
         }
     }
@@ -2260,5 +2268,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &UpgradeTrigger { .. } => "Upgrade",
         &FinishTrigger { .. } => "Finish Trigger",
         &GravityTrigger { .. } => "Gravity Trigger",
+        &SkinUnlock { .. } => "Skin Unlock",
     }
 }
