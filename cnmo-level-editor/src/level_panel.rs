@@ -1167,6 +1167,51 @@ fn show_spawner_properties(
                 ui.end_row();
             }
         }
+        &mut WobjType::TeleportArea2 {
+            ref mut link_id,
+            ref mut loc,
+            ref mut start_activated,
+            ref mut teleport_players,
+        } => {
+            ui.label("Link ID: ");
+            ui.add(egui::DragValue::new(link_id).clamp_range(0..=65535));
+            ui.end_row();
+            ui.label("Location X: ");
+            ui.add(egui::DragValue::new(&mut loc.0));
+            ui.end_row();
+            ui.label("Location Y: ");
+            ui.add(egui::DragValue::new(&mut loc.1));
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view on teleport location").clicked() {
+                world_panel.camera.pos.x = loc.0;
+                world_panel.camera.pos.y = loc.1;
+            }
+            ui.end_row();
+            ui.label("");
+            if ui.button("Center view back on trigger area").clicked() {
+                world_panel.camera.pos.x = spawner.pos.0;
+                world_panel.camera.pos.y = spawner.pos.1;
+            }
+            ui.end_row();
+            if editor_data.spawner_grid_size > 1.0 {
+                ui.label("");
+                if ui.button("Snap teleport location to grid").clicked() {
+                    loc.0 = (loc.0 / editor_data.spawner_grid_size).round()
+                        * editor_data.spawner_grid_size;
+                    loc.1 = (loc.1 / editor_data.spawner_grid_size).round()
+                        * editor_data.spawner_grid_size;
+                }
+                ui.end_row();
+            }
+            if ui.selectable_label(*teleport_players, "Teleport Players").clicked() {
+                *teleport_players = !*teleport_players;
+            }
+            if ui.selectable_label(*start_activated, "Start Activated").clicked() {
+                *start_activated = !*start_activated;
+            }
+            ui.end_row();
+        }
         &mut WobjType::TunesTrigger {
             ref mut size,
             ref mut music_id,
@@ -1848,6 +1893,17 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(id).clamp_range(0..=9));
             ui.end_row();
         }
+        &mut WobjType::CoolPlatform { ref mut time_off_before, ref mut time_on, ref mut time_off_after } => {
+            ui.label("Time off before");
+            ui.add(egui::DragValue::new(time_off_before)).on_hover_text("This is in frames. CNM Online runs at 30 fps");
+            ui.end_row();
+            ui.label("Time on");
+            ui.add(egui::DragValue::new(time_on)).on_hover_text("This is in frames. CNM Online runs at 30 fps");
+            ui.end_row();
+            ui.label("Time off after");
+            ui.add(egui::DragValue::new(time_off_after)).on_hover_text("This is in frames. CNM Online runs at 30 fps");
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -2127,77 +2183,88 @@ impl Iterator for WobjIter {
             39 => Some(Vortex {
                 attract_enemies: Default::default(),
             }),
+            40 => Some(CoolPlatform {
+                time_off_before: Default::default(),
+                time_on: Default::default(),
+                time_off_after: Default::default(),
+            }),
 
             // Triggers
-            40 => Some(BackgroundSwitcher {
+            41 => Some(BackgroundSwitcher {
                 shape: Default::default(),
                 enabled_layers: Default::default(),
             }),
-            41 => Some(BgSpeed {
+            42 => Some(BgSpeed {
                 vertical_axis: Default::default(),
                 layer: Default::default(),
                 speed: Default::default(),
             }),
-            42 => Some(BgTransparency {
+            43 => Some(BgTransparency {
                 layer: Default::default(),
                 transparency: Default::default(),
             }),
-            43 => Some(BossBarInfo {
+            44 => Some(BossBarInfo {
                 boss_name: Default::default(),
             }),
-            44 => Some(Checkpoint {
+            45 => Some(Checkpoint {
                 checkpoint_num: Default::default(),
             }),
-            45 => Some(GraphicsChangeTrigger {
+            46 => Some(GraphicsChangeTrigger {
                 gfx_file: Default::default(),
             }),
-            46 => Some(HealthSetTrigger {
+            47 => Some(HealthSetTrigger {
                 target_health: Default::default(),
             }),
-            47 => Some(PlayerSpawn),
-            48 => Some(SfxPoint {
+            48 => Some(PlayerSpawn),
+            49 => Some(SfxPoint {
                 sound_id: Default::default(),
             }),
-            49 => Some(Teleport(Default::default())),
-            50 => Some(TeleportArea1 {
+            50 => Some(Teleport(Default::default())),
+            51 => Some(TeleportArea1 {
                 link_id: Default::default(),
                 loc: Default::default(),
             }),
-            51 => Some(TeleportTrigger1 {
+            52 => Some(TeleportArea2 {
+                link_id: Default::default(),
+                loc: Default::default(),
+                teleport_players: true,
+                start_activated: false,
+            }),
+            53 => Some(TeleportTrigger1 {
                 link_id: Default::default(),
                 delay_secs: Default::default(),
             }),
-            52 => Some(TextSpawner {
+            54 => Some(TextSpawner {
                 dialoge_box: Default::default(),
                 text: Default::default(),
             }),
-            53 => Some(TtNode {
+            55 => Some(TtNode {
                 node_type: Default::default(),
             }),
-            54 => Some(TunesTrigger {
+            56 => Some(TunesTrigger {
                 size: Default::default(),
                 music_id: Default::default(),
             }),
-            55 => Some(FinishTrigger {
+            57 => Some(FinishTrigger {
                 next_level: Default::default(),
                 extra_unlocked_level: None,
                 is_secret: false,
             }),
-            56 => Some(GravityTrigger {
+            58 => Some(GravityTrigger {
                 gravity: Default::default(),
             }),
 
             // Collectables
-            57 => Some(DroppedItem {
+            59 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            58 => Some(UpgradeTrigger {
+            60 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            59 => Some(WandRune {
+            61 => Some(WandRune {
                 rune_type: Default::default(),
             }),
-            60 => Some(SkinUnlock {
+            62 => Some(SkinUnlock {
                 id: Default::default(),
             }),
             _ => None,
@@ -2269,5 +2336,7 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &FinishTrigger { .. } => "Finish Trigger",
         &GravityTrigger { .. } => "Gravity Trigger",
         &SkinUnlock { .. } => "Skin Unlock",
+        &CoolPlatform { .. } => "Megaman Platform",
+        &TeleportArea2 { .. } => "Teleport Area (Teleports Everything)",
     }
 }

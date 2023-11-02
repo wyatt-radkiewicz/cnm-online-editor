@@ -541,6 +541,26 @@ pub enum WobjType {
         ///
         id: u8,
     },
+    ///
+    CoolPlatform {
+        ///
+        time_off_before: u8,
+        ///
+        time_on: u8,
+        ///
+        time_off_after: u8,
+    },
+    ///
+    TeleportArea2 {
+        ///
+        loc: Point,
+        ///
+        start_activated: bool,
+        ///
+        teleport_players: bool,
+        ///
+        link_id: u32,
+    },
 }
 
 impl WobjType {
@@ -860,6 +880,20 @@ impl WobjType {
             148 => Ok(Self::SkinUnlock {
                 id: custom_int as u8,
             }),
+            149 => Ok(Self::CoolPlatform {
+                time_off_before: (custom_int & 0xff) as u8,
+                time_on: (custom_int >> 8 & 0xff) as u8,
+                time_off_after: (custom_int >> 16 & 0xff) as u8,
+            }),
+            150 => {
+                let loc = Teleport::from_lparse(cnms, version, custom_int as usize)?.loc;
+                Ok(Self::TeleportArea2 {
+                    loc,
+                    start_activated: custom_int & 0x10000 != 0,
+                    teleport_players: custom_int & 0x20000 == 0,
+                    link_id: custom_float as u32,
+                })
+            }
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1217,6 +1251,25 @@ impl WobjType {
             },
             &Self::GravityTrigger { gravity } => (143, 0, gravity),
             &Self::SkinUnlock { id } => (148, id as i32, 0.0),
+            &Self::CoolPlatform { time_off_before, time_on, time_off_after } => {
+                (
+                    149,
+                    (time_off_after as i32) |
+                    ((time_on as i32) << 8) |
+                    ((time_off_before as i32) << 16),
+                    0.0
+                )
+            }
+            &Self::TeleportArea2 { link_id, loc, teleport_players, start_activated } => {
+                teleports.push(Teleport {
+                    name: "_TELEARE2".to_string(),
+                    cost: 0,
+                    loc,
+                });
+                let teleport_players_bit = if teleport_players { 0x20000 } else { 0x00000 };
+                let start_activated_bit = if start_activated { 0x10000 } else { 0x00000 };
+                (150, (teleports.len() as i32 - 1) | teleport_players_bit | start_activated_bit, link_id as f32)
+            }
         }
     }
 }

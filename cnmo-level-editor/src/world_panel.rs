@@ -1218,6 +1218,10 @@ impl WorldPanel {
                 populated |= true;
                 location = Some(*loc);
             }
+            if let WobjType::TeleportArea2 { loc, .. } = &spawner.type_data {
+                populated |= true;
+                location = Some(*loc);
+            }
             if let Some(loc) = location {
                 sprites.push(Sprite::new(
                     (loc.0 - 16.0, loc.1 - 16.0, 0.0),
@@ -1284,7 +1288,8 @@ impl WorldPanel {
                                 ..
                             },
                         )
-                        | WobjType::TeleportArea1 { loc, .. } => {
+                        | WobjType::TeleportArea1 { loc, .. }
+                        | WobjType::TeleportArea2 { loc, .. } => {
                             if ui.button("Set teleport location").clicked() {
                                 editor_data
                                     .cells_history
@@ -1321,7 +1326,7 @@ fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawne
         UpgradeTriggerType,
     };
     match spawner.type_data {
-        WobjType::TeleportArea1 { .. } | WobjType::Dragon { .. } | WobjType::SuperDragon { .. } => {
+        WobjType::TeleportArea1 { .. } | WobjType::TeleportArea2 { .. } | WobjType::Dragon { .. } | WobjType::SuperDragon { .. } => {
             (128.0, 128.0)
         }
         WobjType::Bozo { mark_ii } => {
@@ -1794,8 +1799,11 @@ fn draw_spawner(
             draw_rect(480, 3392 + (32 * *vertical_axis as i32), 32, 32)
         }
         WobjType::BgTransparency { .. } => draw_rect(480, 3392 + 64, 32, 32),
-        WobjType::TeleportTrigger1 { link_id, .. } | WobjType::TeleportArea1 { link_id, .. } => {
-            if matches!(spawner.type_data, WobjType::TeleportTrigger1 { .. }) {
+        WobjType::TeleportTrigger1 { link_id, .. } | WobjType::TeleportArea2 { link_id, .. } | WobjType::TeleportArea1 { link_id, .. } => {
+            if matches!(spawner.type_data, WobjType::TeleportArea2 { .. }) {
+                draw_rect(384, 4224, 128, 128);
+                draw_rect(352, 4288, 32, 32);
+            } else if matches!(spawner.type_data, WobjType::TeleportTrigger1 { .. }) {
                 draw_rect(480, 3392 + 96, 32, 96);
             } else {
                 draw_rect(384, 4224, 128, 128);
@@ -1884,6 +1892,27 @@ fn draw_spawner(
                     }
                 )
             );
+        },
+        WobjType::CoolPlatform {
+            time_off_before,
+            time_on,
+            time_off_after
+        } => {
+            let mut sprite = Sprite::new(
+                (spawner.pos.0, spawner.pos.1, 0.0),
+                (32.0, 32.0),
+                (352.0, 2112.0, 32.0, 32.0),
+            );
+            let time = editor_data
+                .time_past
+                .as_secs_f32()
+                .rem_euclid((*time_off_before as f32 / 30.0) + (*time_on as f32 / 30.0) + (*time_off_after as f32 / 30.0));
+            if time > (*time_off_after) as f32 / 30.0 && time < (*time_off_after + *time_on) as f32 / 30.0 {
+                sprite.tint = [1.0, 1.0, 1.0, 1.0];
+            } else {
+                sprite.tint = [0.5, 0.5, 0.5, 0.5];
+            }
+            sprites.push(sprite);
         },
     }
 }
