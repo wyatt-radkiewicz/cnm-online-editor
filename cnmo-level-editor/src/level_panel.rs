@@ -408,6 +408,13 @@ pub fn show_metadata_panel(
                 editor_data.tool = Tool::Brush;
             }
             if ui
+                .selectable_label(matches!(editor_data.tool, Tool::Light), "Light (T)")
+                .clicked()
+                || (ui.ctx().input().key_pressed(egui::Key::T) && editor_data.editing_text == None)
+            {
+                editor_data.tool = Tool::Light;
+            }
+            if ui
                 .selectable_label(matches!(editor_data.tool, Tool::Eraser), "Eraser (E)")
                 .clicked()
                 || (ui.ctx().input().key_pressed(egui::Key::E) && editor_data.editing_text == None)
@@ -630,7 +637,26 @@ impl PropertiesPanel {
         ui: &mut egui::Ui,
         world_panel: &mut WorldPanel,
     ) {
-        if !matches!(editor_data.tool, Tool::Spawners) {
+        if matches!(editor_data.tool, Tool::Light) {
+            ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
+                ui.heading("Light Edit Mode");
+            });
+            ui.horizontal(|ui| {
+                ui.label("Color Level").on_hover_text("0 => White, 3 => Normal, 7 => Black");
+
+                egui::ComboBox::new("light_combo_box", "")
+                    .selected_text(editor_data.light_tool_level.to_string())
+                    .show_ui(ui, |ui| {
+                        for l in 0..=level_data::consts::LIGHT_BLACK {
+                            ui.selectable_value(
+                                &mut editor_data.light_tool_level,
+                                l,
+                                format!("{l}"),
+                            );
+                        }
+                    });
+            });
+        } else if !matches!(editor_data.tool, Tool::Spawners) {
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
                 ui.heading("Tiles");
             });
@@ -643,28 +669,9 @@ impl PropertiesPanel {
                 });
                 if response.clicked() || (ui.ctx().input().key_pressed(egui::Key::Q) && editor_data.editing_text == None) {
                     editor_data.foreground_placing = !editor_data.foreground_placing;
-                    editor_data.light_placing = None;
+                    //editor_data.light_placing = None;
                 }
                 response.on_hover_text("Press (Q) to switch between foreground and background");
-                egui::ComboBox::new("light_combo_box", "")
-                    .selected_text(format!(
-                        "{}",
-                        if let Some(id) = editor_data.light_placing {
-                            id.to_string()
-                        } else {
-                            "***".to_string()
-                        }
-                    ))
-                    .show_ui(ui, |ui| {
-                        ui.selectable_value(&mut editor_data.light_placing, None, "***");
-                        for l in 0..level_data::consts::LIGHT_WHITE {
-                            ui.selectable_value(
-                                &mut editor_data.light_placing,
-                                Some(l),
-                                format!("{l}"),
-                            );
-                        }
-                    });
             });
             self.tile_viewer.edit_tiles = false;
             self.tile_viewer.max_height = Some(ui.available_height() / 2.4);

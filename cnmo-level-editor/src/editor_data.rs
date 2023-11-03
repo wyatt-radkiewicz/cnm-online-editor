@@ -8,12 +8,14 @@ pub enum Tool {
     Fill,
     TilePicker,
     Spawners,
+    Light,
 }
 
 pub struct EditorData {
     pub selected_tiles: Vec<usize>,
     pub foreground_placing: bool,
-    pub light_placing: Option<u8>,
+    //pub light_placing: Option<u8>,
+    pub light_tool_level: u8,
     pub palette: Vec<[u8; 3]>,
     pub dt: std::time::Duration,
     pub time_past: std::time::Duration,
@@ -45,7 +47,8 @@ impl EditorData {
             palette,
             dt: std::time::Duration::from_secs_f32(f32::EPSILON),
             last_update: std::time::Instant::now(),
-            light_placing: None,
+            light_tool_level: cnmo_parse::lparse::level_data::consts::LIGHT_NORMAL,
+            //light_placing: None,
             gfx_size,
             time_past: std::time::Duration::ZERO,
             tool: Tool::Brush,

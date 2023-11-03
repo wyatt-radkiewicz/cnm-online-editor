@@ -129,7 +129,7 @@ impl WorldPanel {
             );
         }
         if response.hovered()
-            && response.ctx.input().modifiers.ctrl
+            && (response.ctx.input().modifiers.ctrl || response.ctx.input().modifiers.mac_cmd)
             && response.ctx.input().key_pressed(egui::Key::Z)
         {
             if let Some(history) = editor_data.cells_history.pop() {
@@ -468,9 +468,17 @@ impl WorldPanel {
             editor_data.viewer_selection = None;
         }
 
+        if matches!(editor_data.tool, Tool::Light) {
+            let tile_ref = level_data.cells.get_cell_mut(mx, my);
+            if response.ctx.input().pointer.primary_down() && response.hovered() {
+                tile_ref.light = editor_data.light_tool_level;
+            } else if response.ctx.input().pointer.secondary_down() && response.hovered() {
+                tile_ref.light = level_data::consts::LIGHT_NORMAL;
+            }
+        }
+
         if tile_placing_enabled && self.copy_selection == None {
-            if editor_data.light_placing == None
-                && matches!(editor_data.tool, Tool::Eraser)
+            if matches!(editor_data.tool, Tool::Eraser)
                 && (response.ctx.input().pointer.primary_clicked()
                     || response.ctx.input().pointer.secondary_clicked())
             {
@@ -482,13 +490,7 @@ impl WorldPanel {
                 }
             }
             let tile_ref = level_data.cells.get_cell_mut(mx, my);
-            if let Some(light_id) = editor_data.light_placing {
-                if response.ctx.input().pointer.primary_down() {
-                    tile_ref.light = light_id;
-                } else if response.ctx.input().pointer.secondary_down() {
-                    tile_ref.light = level_data::consts::LIGHT_NORMAL;
-                }
-            } else if matches!(editor_data.tool, Tool::Eraser) {
+            if matches!(editor_data.tool, Tool::Eraser) {
                 if response.ctx.input().pointer.primary_down() && response.hovered() {
                     if editor_data.foreground_placing {
                         tile_ref.foreground = level_data::cnmb_types::TileId(None);
@@ -519,7 +521,7 @@ impl WorldPanel {
                         % props.frames.len();
                     let tint = if self.gray_other
                         && editor_data.foreground_placing != foreground
-                        && editor_data.light_placing == None
+                        && !matches!(editor_data.tool, Tool::Light) 
                     {
                         0.5
                     } else {
@@ -555,9 +557,11 @@ impl WorldPanel {
                 if tile.light != LIGHT_NORMAL {
                     let color = if tile.light < LIGHT_NORMAL { 1.0 } else { 0.0 };
                     let percent = if tile.light < LIGHT_NORMAL {
-                        1.0 - (tile.light as f32 / (LIGHT_NORMAL - 1) as f32)
+                        1.0 - (tile.light as f32 / LIGHT_NORMAL as f32)
+                    } else if tile.light > LIGHT_NORMAL {
+                        (tile.light - LIGHT_NORMAL) as f32 / (LIGHT_BLACK - LIGHT_NORMAL) as f32
                     } else {
-                        (tile.light - LIGHT_NORMAL) as f32 / (LIGHT_WHITE - LIGHT_NORMAL) as f32
+                        0.0
                     };
                     sprites.push(Sprite::new_pure_color(
                         pos,
@@ -1186,7 +1190,7 @@ impl WorldPanel {
                 }
             }
             if response.ctx.input().key_pressed(egui::Key::C)
-                && response.ctx.input().modifiers.ctrl
+                && (response.ctx.input().modifiers.ctrl || response.ctx.input().modifiers.mac_cmd)
                 && editor_data.editing_text == None
             {
                 editor_data.spawner_template = spawner.clone();
@@ -1245,7 +1249,7 @@ impl WorldPanel {
                 ));
             }
         }
-        if (response.ctx.input().key_pressed(egui::Key::V) && response.ctx.input().modifiers.ctrl)
+        if (response.ctx.input().key_pressed(egui::Key::V) && (response.ctx.input().modifiers.ctrl || response.ctx.input().modifiers.mac_cmd))
             || (ui.ctx().input().key_pressed(egui::Key::Space) && editor_data.editing_text == None)
         {
             editor_data
