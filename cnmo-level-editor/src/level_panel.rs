@@ -1897,7 +1897,7 @@ fn show_spawner_properties(
         }
         &mut WobjType::SkinUnlock { ref mut id } => {
             ui.label("Skin ID");
-            ui.add(egui::DragValue::new(id).clamp_range(0..=9));
+            ui.add(egui::DragValue::new(id).clamp_range(0..=10));
             ui.end_row();
         }
         &mut WobjType::CoolPlatform { ref mut time_off_before, ref mut time_on, ref mut time_off_after } => {
