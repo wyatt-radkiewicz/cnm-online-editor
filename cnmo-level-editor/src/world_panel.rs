@@ -1143,6 +1143,7 @@ impl WorldPanel {
                     .push((level_data.cells.clone(), duplicated_spawners.clone()));
                 let mut spawner = editor_data.spawner_template.clone();
                 spawner.dropped_item = None;
+                spawner.spawner_group = None;
                 spawner.spawning_criteria = SpawningCriteria {
                     spawn_delay_secs: 0.0,
                     mode: cnmo_parse::lparse::level_data::cnms_types::SpawnerMode::MultiAndSingleplayer,
