@@ -306,7 +306,7 @@ impl TileProperties {
 
         let solid = block_flags[index] & 1 != 0;
         let transparency = match block_transparency[index] {
-            t if (t < LIGHT_BLACK as i32 || t > LIGHT_WHITE as i32) && !ignore_warnings => {
+            t if (t < LIGHT_WHITE as i32 || t > LIGHT_BLACK as i32) && !ignore_warnings => {
                 return Err(Error::Corrupted(format!(
                     "Light out of the normal bounds of {LIGHT_BLACK} to {LIGHT_WHITE}"
                 )))
