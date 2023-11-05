@@ -1242,14 +1242,20 @@ fn show_spawner_properties(
         }
         &mut WobjType::TextSpawner {
             ref mut dialoge_box,
+            ref mut despawn,
             ref mut text,
         } => {
-            ui.label("");
             if ui
                 .selectable_label(*dialoge_box, "Is dialoge box")
                 .clicked()
             {
                 *dialoge_box = !*dialoge_box;
+            }
+            if ui
+                .selectable_label(*despawn, "Despawn after being seen")
+                .clicked()
+            {
+                *despawn = !*despawn;
             }
             ui.end_row();
             ui.label("Lines");
@@ -2243,6 +2249,7 @@ impl Iterator for WobjIter {
             }),
             54 => Some(TextSpawner {
                 dialoge_box: Default::default(),
+                despawn: false,
                 text: Default::default(),
             }),
             55 => Some(TtNode {

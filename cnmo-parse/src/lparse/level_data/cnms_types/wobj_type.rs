@@ -233,6 +233,8 @@ pub enum WobjType {
         ///
         dialoge_box: bool,
         ///
+        despawn: bool,
+        ///
         text: String,
     },
     ///
@@ -603,7 +605,7 @@ impl WobjType {
             9 | 108 => {
                 // Ending Text/Dialoge Box
                 let mut text = "".to_string();
-                for i in custom_int as usize..=custom_float as usize {
+                for i in (custom_int & 0x00ff_ffff) as usize..=custom_float as usize {
                     text += (super::get_ending_text_line(cnms, version, i).unwrap_or_default()
                         + "\n")
                         .as_str();
@@ -611,6 +613,7 @@ impl WobjType {
 
                 Ok(Self::TextSpawner {
                     dialoge_box: wobj_type_id == 108,
+                    despawn: (custom_int & (0xff00_0000u32 as i32)) != 0,
                     text,
                 })
             }
@@ -941,6 +944,7 @@ impl WobjType {
             }
             &Self::TextSpawner {
                 dialoge_box,
+                despawn,
                 ref text,
             } => {
                 let wobj_type_id = if dialoge_box { 108 } else { 9 };
@@ -972,7 +976,7 @@ impl WobjType {
                 };
                 //println!("{start} <- start");
 
-                (wobj_type_id, start as i32, (start + num_lines - 1) as f32)
+                (wobj_type_id, start as i32 | if despawn { 0x0100_0000u32 as i32 } else { 0 }, (start + num_lines - 1) as f32)
             }
             &Self::BackgroundSwitcher {
                 shape,
