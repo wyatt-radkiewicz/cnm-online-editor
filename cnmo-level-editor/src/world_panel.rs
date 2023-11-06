@@ -1250,7 +1250,7 @@ impl WorldPanel {
                 ));
             }
         }
-        if (response.ctx.input().key_pressed(egui::Key::V) && (response.ctx.input().modifiers.ctrl || response.ctx.input().modifiers.mac_cmd))
+        if (response.ctx.input().key_pressed(egui::Key::V) && (response.ctx.input().modifiers.ctrl || response.ctx.input().modifiers.mac_cmd) && editor_data.editing_text == None)
             || (ui.ctx().input().key_pressed(egui::Key::Space) && editor_data.editing_text == None)
         {
             editor_data
