@@ -67,7 +67,7 @@ pub fn show_metadata_panel(
             log::warn!("File open dialog didn't return path!");
         }
     }
-    if ui.button("Save Level").clicked() {
+    if ui.button("Save Level").clicked() || (ui.ctx().input().key_pressed(egui::Key::S) && (ui.ctx().input().modifiers.mac_cmd || ui.ctx().input().modifiers.ctrl)) {
         // let path = rfd::FileDialog::new()
         //     .set_directory("./")
         //     .set_title("Save an editor project file")
@@ -177,7 +177,7 @@ pub fn show_metadata_panel(
             log::warn!("Can't open cnm lparse files");
         }
     };
-    if ui.button("Compile Level").clicked() {
+    if ui.button("Compile Level").clicked() || (ui.ctx().input().key_pressed(egui::Key::E) && (ui.ctx().input().modifiers.mac_cmd || ui.ctx().input().modifiers.ctrl)) {
         compile();
     }
     ui.label("");
@@ -417,7 +417,7 @@ pub fn show_metadata_panel(
             if ui
                 .selectable_label(matches!(editor_data.tool, Tool::Eraser), "Eraser (E)")
                 .clicked()
-                || (ui.ctx().input().key_pressed(egui::Key::E) && editor_data.editing_text == None)
+                || (ui.ctx().input().key_pressed(egui::Key::E) && !(ui.ctx().input().modifiers.mac_cmd || ui.ctx().input().modifiers.ctrl) && editor_data.editing_text == None)
             {
                 editor_data.tool = Tool::Eraser;
             }
@@ -441,7 +441,7 @@ pub fn show_metadata_panel(
             if ui
                 .selectable_label(matches!(editor_data.tool, Tool::Spawners), "Spawners (S)")
                 .clicked()
-                || (ui.ctx().input().key_pressed(egui::Key::S) && editor_data.editing_text == None)
+                || (ui.ctx().input().key_pressed(egui::Key::S) && !(ui.ctx().input().modifiers.mac_cmd || ui.ctx().input().modifiers.ctrl) && editor_data.editing_text == None)
             {
                 editor_data.tool = Tool::Spawners;
             }
