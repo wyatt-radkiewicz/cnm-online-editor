@@ -313,24 +313,24 @@ pub fn show_metadata_panel(
         });
         ui.end_row();
 
-        if ui.ctx().input().key_pressed(egui::Key::T) && ui.ctx().input().modifiers.ctrl {
+        if ui.ctx().input().key_pressed(egui::Key::T) && (ui.ctx().input().modifiers.ctrl || ui.ctx().input().modifiers.mac_cmd) {
             *editor_mode = super::EditorMode::Tile;
             editor_data.reset_selected_tiles();
             editor_data.editing_text = None;
         }
-        if ui.ctx().input().key_pressed(egui::Key::B) && ui.ctx().input().modifiers.ctrl {
+        if ui.ctx().input().key_pressed(egui::Key::B) && (ui.ctx().input().modifiers.ctrl || ui.ctx().input().modifiers.mac_cmd) {
             *editor_mode = super::EditorMode::Background;
             world_panel.editing_background = true;
             editor_data.reset_selected_tiles();
             editor_data.editing_text = None;
         }
-        if ui.ctx().input().key_pressed(egui::Key::L) && ui.ctx().input().modifiers.ctrl {
+        if ui.ctx().input().key_pressed(egui::Key::L) && (ui.ctx().input().modifiers.ctrl || ui.ctx().input().modifiers.mac_cmd) {
             *editor_mode = super::EditorMode::Level;
             world_panel.editing_background = false;
             editor_data.reset_selected_tiles();
             editor_data.editing_text = None;
         }
-        if ui.ctx().input().key_pressed(egui::Key::G) && ui.ctx().input().modifiers.ctrl {
+        if ui.ctx().input().key_pressed(egui::Key::G) && (ui.ctx().input().modifiers.ctrl || ui.ctx().input().modifiers.mac_cmd) {
             *editor_mode = super::EditorMode::GameConfig;
             world_panel.editing_background = false;
             editor_data.reset_selected_tiles();
