@@ -1517,6 +1517,7 @@ fn show_spawner_properties(
             ref mut speed,
             ref mut bitmapx,
             ref mut bitmapy,
+            ref mut jumpthrough,
         } => {
             ui.label("");
             if ui.selectable_label(*vertical, "Is Vertical").clicked() {
@@ -1534,6 +1535,11 @@ fn show_spawner_properties(
             ui.end_row();
             ui.label("Bitmap Y: ");
             ui.add(egui::DragValue::new(bitmapy).clamp_range(0..=0xfff));
+            ui.end_row();
+            ui.label("");
+            if ui.selectable_label(*jumpthrough, "Is Jumpthrough").clicked() {
+                *jumpthrough = !*jumpthrough;
+            }
             ui.end_row();
         }
         &mut WobjType::DisapearingPlatform {
@@ -2184,6 +2190,7 @@ impl Iterator for WobjIter {
                 speed: Default::default(),
                 bitmapx: Default::default(),
                 bitmapy: Default::default(),
+                jumpthrough: Default::default(),
             }),
             33 => Some(PushZone {
                 push_zone_type: Default::default(),
@@ -2277,18 +2284,19 @@ impl Iterator for WobjIter {
             58 => Some(GravityTrigger {
                 gravity: Default::default(),
             }),
+            59 => Some(InvisBlock),
 
             // Collectables
-            59 => Some(DroppedItem {
+            60 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            60 => Some(UpgradeTrigger {
+            61 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            61 => Some(WandRune {
+            62 => Some(WandRune {
                 rune_type: Default::default(),
             }),
-            62 => Some(SkinUnlock {
+            63 => Some(SkinUnlock {
                 id: Default::default(),
             }),
             _ => None,
@@ -2362,5 +2370,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &SkinUnlock { .. } => "Skin Unlock",
         &CoolPlatform { .. } => "Megaman Platform",
         &TeleportArea2 { .. } => "Teleport Area (Teleports Everything)",
+        &InvisBlock => "Invisible Block",
     }
 }

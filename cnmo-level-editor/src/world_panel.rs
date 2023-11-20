@@ -1536,6 +1536,7 @@ fn draw_spawner(
             speed,
             bitmapx,
             bitmapy,
+            jumpthrough: _,
         } => {
             draw_rect(
                 if *bitmapx == 0 { 9 } else { *bitmapx as i32 } * 32,
@@ -1927,5 +1928,6 @@ fn draw_spawner(
             }
             sprites.push(sprite);
         },
+        WobjType::InvisBlock => draw_rect(128, 7744, 32, 32),
     }
 }

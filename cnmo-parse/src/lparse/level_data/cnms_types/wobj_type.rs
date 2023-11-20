@@ -249,6 +249,8 @@ pub enum WobjType {
         bitmapx: u16,
         ///
         bitmapy: u16,
+        ///
+        jumpthrough: bool,
     },
     ///
     BreakableWall {
@@ -567,6 +569,8 @@ pub enum WobjType {
         ///
         link_id: u32,
     },
+    ///
+    InvisBlock,
 }
 
 impl WobjType {
@@ -730,7 +734,8 @@ impl WobjType {
             }),
             10 | 82 => Ok(Self::MovingPlatform {
                 vertical: wobj_type_id == 82,
-                dist: (custom_float * (custom_int & 0xffff) as f32).abs(),
+                dist: (custom_float * (custom_int & 0x7fff) as f32).abs(),
+                jumpthrough: (custom_int & 0x8000) != 0,
                 speed: custom_float,
                 bitmapx: ((custom_int >> (16+12)) & 0xf) as u16,
                 bitmapy: ((custom_int >> 16) & 0xfff) as u16,
@@ -905,7 +910,7 @@ impl WobjType {
                 time_off_before: (custom_int >> 16 & 0xff) as u8,
             }),
             150 => {
-                let loc = if (custom_int as usize) < version.get_num_teleports() {
+                let loc = if ((custom_int & 0xffff) as usize) < version.get_num_teleports() {
                     Teleport::from_lparse(cnms, version, custom_int as usize)?.loc
                 } else {
                     Teleport::default().loc
@@ -917,6 +922,7 @@ impl WobjType {
                     link_id: custom_float as u32,
                 })
             }
+            153 => Ok(Self::InvisBlock),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1102,9 +1108,11 @@ impl WobjType {
                 speed,
                 bitmapx,
                 bitmapy,
+                jumpthrough,
             } => (
                 if vertical { 82 } else { 10 },
-                (((dist / speed).abs() as i32) & 0xffff) |
+                (((dist / speed).abs() as i32) & 0x7fff) |
+                    (if jumpthrough { 0x8000 } else { 0 }) |
                     (((bitmapx as i32) & 0xf) << (16+12)) |
                     (((bitmapy as i32) & 0xfff) << 16),
                 speed,
@@ -1297,7 +1305,8 @@ impl WobjType {
                 let teleport_players_bit = if teleport_players { 0x20000 } else { 0x00000 };
                 let start_activated_bit = if start_activated { 0x10000 } else { 0x00000 };
                 (150, (teleports.len() as i32 - 1) | teleport_players_bit | start_activated_bit, link_id as f32)
-            }
+            },
+            &Self::InvisBlock => (153, 0, 0.0),
         }
     }
 }
