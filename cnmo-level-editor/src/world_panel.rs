@@ -1551,8 +1551,10 @@ fn draw_spawner(
             dist,
             speed,
             despawn: _,
+            bitmapx,
+            bitmapy,
         } => {
-            draw_rect(480, 2048, 32, 32);
+            draw_rect(*bitmapx as i32 * 32, *bitmapy as i32 * 32, 32, 32);
             draw_moving(sprites, *dist as f32, *speed, *vertical);
         }
         WobjType::BreakableWall { skin_id, .. } => match skin_id {

@@ -366,6 +366,10 @@ pub enum WobjType {
         speed: f32,
         ///
         despawn: bool,
+        ///
+        bitmapx: u16,
+        ///
+        bitmapy: u16,
     },
     ///
     SuperDragon {
@@ -675,12 +679,19 @@ impl WobjType {
                 origin_x: custom_int,
                 degrees_per_second: custom_float * FRAME_RATE as f32,
             }),
-            61 | 62 => Ok(Self::MovingFire {
-                vertical: wobj_type_id == 61,
-                dist: custom_int,
-                speed: custom_float.abs(),
-                despawn: custom_float < 0.0,
-            }),
+            61 | 62 => {
+                let bitmap = custom_int >> 16;
+                let bitmapx = if bitmap == 0 || bitmap == -1 { 10 } else { ((custom_int >> (16+12)) & 0xf) as u16 };
+                let bitmapy = if bitmap == 0 || bitmap == -1 { 70 } else { ((custom_int >> (16)) & 0xfff) as u16 };
+                Ok(Self::MovingFire {
+                    vertical: wobj_type_id == 61,
+                    dist: ((custom_int & 0xffff) << 16) >> 16,
+                    speed: custom_float.abs(),
+                    despawn: custom_float < 0.0,
+                    bitmapx,
+                    bitmapy,
+                })
+            },
             77 | 78 | 80 => Ok(Self::PushZone {
                 push_zone_type: match wobj_type_id {
                     77 => PushZoneType::Horizontal,
@@ -1038,9 +1049,15 @@ impl WobjType {
                 dist,
                 speed,
                 despawn,
+                bitmapx,
+                bitmapy,
             } => {
                 let wobj_type_id = if vertical { 61 } else { 62 };
-                (wobj_type_id, dist, speed * if despawn { -1.0 } else { 1.0 })
+                (
+                    wobj_type_id,
+                    (dist & 0xffff) | (((bitmapx as i32) & 0xf) << (16+12)) | (((bitmapy as i32) & 0xfff) << 16),
+                    speed * if despawn { -1.0 } else { 1.0 }
+                )
             }
             &Self::PushZone {
                 push_zone_type,
