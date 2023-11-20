@@ -1534,8 +1534,15 @@ fn draw_spawner(
             vertical,
             dist,
             speed,
+            bitmapx,
+            bitmapy,
         } => {
-            draw_rect(288, 160, 32, 32);
+            draw_rect(
+                if *bitmapx == 0 { 9 } else { *bitmapx as i32 } * 32,
+                if *bitmapy == 0 { 5 } else { *bitmapy as i32 } * 32,
+                32,
+                32
+            );
             draw_moving(sprites, *dist, *speed, *vertical);
         }
         WobjType::MovingFire {

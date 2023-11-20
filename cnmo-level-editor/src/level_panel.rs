@@ -1515,6 +1515,8 @@ fn show_spawner_properties(
             ref mut vertical,
             ref mut dist,
             ref mut speed,
+            ref mut bitmapx,
+            ref mut bitmapy,
         } => {
             ui.label("");
             if ui.selectable_label(*vertical, "Is Vertical").clicked() {
@@ -1526,6 +1528,12 @@ fn show_spawner_properties(
             ui.end_row();
             ui.label("Speed: ");
             ui.add(egui::DragValue::new(speed));
+            ui.end_row();
+            ui.label("Bitmap X: ");
+            ui.add(egui::DragValue::new(bitmapx).clamp_range(0..=0xf));
+            ui.end_row();
+            ui.label("Bitmap Y: ");
+            ui.add(egui::DragValue::new(bitmapy).clamp_range(0..=0xfff));
             ui.end_row();
         }
         &mut WobjType::DisapearingPlatform {
@@ -2174,6 +2182,8 @@ impl Iterator for WobjIter {
                 vertical: Default::default(),
                 dist: Default::default(),
                 speed: Default::default(),
+                bitmapx: Default::default(),
+                bitmapy: Default::default(),
             }),
             33 => Some(PushZone {
                 push_zone_type: Default::default(),

@@ -260,6 +260,8 @@ pub struct TileProperties {
     pub damage_type: DamageType,
     /// How many frames until the tile changes its frame?
     pub anim_speed: Duration,
+    /// "Angle" of the ground
+    pub angle: u16,
     /// Tile locations in GFX.BMP of repsective frames (be careful of how many frames
     /// you can have, you need to look at [`crate::lparse::level_data::VersionSpecs`])
     pub frames: Vec<(i32, i32)>,
@@ -275,6 +277,7 @@ impl Default for TileProperties {
             damage_type: DamageType::None,
             anim_speed: Duration(1),
             frames: vec![(1, 0)],
+            angle: 0,
             collision_data: CollisionType::Box(Rect {
                 x: 0,
                 y: 0,
@@ -325,7 +328,7 @@ impl TileProperties {
             _ => DamageType::None,
         };
         let anim_speed = Duration(block_anim_speed[index]);
-        let frames = (0..block_num_frames[index] as usize)
+        let frames = (0..(block_num_frames[index] & 0xff) as usize)
             .map(|frame| {
                 (
                     block_frames_x[index * version.max_tile_frames + frame],
@@ -333,6 +336,7 @@ impl TileProperties {
                 )
             })
             .collect();
+        let angle = block_num_frames[index] >> 8;
         let collision_data = match block_collision_type[index] {
             0 => CollisionType::Box(block_hitbox[index]),
             1 => {
@@ -360,6 +364,7 @@ impl TileProperties {
             transparency,
             damage_type,
             anim_speed,
+            angle: angle.try_into().unwrap(),
             frames,
             collision_data,
         })
@@ -392,7 +397,7 @@ impl TileProperties {
         bp_dmg_type.push(dmg_type);
         bp_dmg.push(dmg);
         bp_anim_speed.push(self.anim_speed.0);
-        bp_num_frames.push(self.frames.len() as i32);
+        bp_num_frames.push(((self.frames.len() as i32) & 0xff) | ((self.angle as i32) << 8));
         let mut positions = self
             .frames
             .iter()

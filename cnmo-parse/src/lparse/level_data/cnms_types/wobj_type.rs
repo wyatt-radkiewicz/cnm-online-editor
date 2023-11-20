@@ -245,6 +245,10 @@ pub enum WobjType {
         dist: f32,
         ///
         speed: f32,
+        ///
+        bitmapx: u16,
+        ///
+        bitmapy: u16,
     },
     ///
     BreakableWall {
@@ -716,8 +720,10 @@ impl WobjType {
             }),
             10 | 82 => Ok(Self::MovingPlatform {
                 vertical: wobj_type_id == 82,
-                dist: (custom_float * custom_int as f32).abs(),
+                dist: (custom_float * (custom_int & 0xffff) as f32).abs(),
                 speed: custom_float,
+                bitmapx: ((custom_int >> (16+12)) & 0xf) as u16,
+                bitmapy: ((custom_int >> 16) & 0xfff) as u16,
             }),
             83 => Ok(Self::DisapearingPlatform {
                 time_on: ((custom_int / FRAME_RATE) as f32).abs(),
@@ -1080,9 +1086,13 @@ impl WobjType {
                 vertical,
                 dist,
                 speed,
+                bitmapx,
+                bitmapy,
             } => (
                 if vertical { 82 } else { 10 },
-                (dist / speed).abs() as i32,
+                (((dist / speed).abs() as i32) & 0xffff) |
+                    (((bitmapx as i32) & 0xf) << (16+12)) |
+                    (((bitmapy as i32) & 0xfff) << 16),
                 speed,
             ),
             &Self::DisapearingPlatform {

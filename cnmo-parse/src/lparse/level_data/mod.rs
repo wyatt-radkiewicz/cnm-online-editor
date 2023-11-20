@@ -277,6 +277,7 @@ impl LevelMetaData {
             transparency: consts::CLEAR,
             damage_type: cnmb_types::DamageType::Lava(self.difficulty_rating.get_difficulty_id() as i32),
             anim_speed: Duration(self.level_type.get_id().into()),
+            angle: 0,
             frames: vec![(self.preview_loc.0 as i32, self.preview_loc.1 as i32)],
             collision_data: cnmb_types::CollisionType::Box(crate::Rect { x: 0, y: 0, w: 0, h: 0 }),
         }

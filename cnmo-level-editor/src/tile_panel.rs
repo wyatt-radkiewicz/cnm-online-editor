@@ -132,6 +132,9 @@ impl TilePanel {
                     });
                 });
                 ui.end_row();
+                ui.label("Angle: ");
+                ui.add(egui::Slider::new(&mut tile.angle, 0..=359));
+                ui.end_row();
                 ui.label("Damage type: ");
                 egui::ComboBox::new("damage_type_combo_box", "")
                     .selected_text(get_damage_type_name(&tile.damage_type))
