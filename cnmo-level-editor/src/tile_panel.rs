@@ -255,13 +255,17 @@ impl TilePanel {
                     if ui.selectable_label(matches!(tile.collision_data, CollisionType::Box(_)), "Box").clicked() {
                         tile.collision_data = CollisionType::Box(cnmo_parse::Rect { x: 0, y: 0, w: 32, h: 32 });
                     }
+                    if ui.selectable_label(matches!(tile.collision_data, CollisionType::Jumpthrough(_)), "Jumpthrough").clicked() {
+                        tile.collision_data = CollisionType::Jumpthrough(cnmo_parse::Rect { x: 0, y: 0, w: 32, h: 32 });
+                    }
                     if ui.selectable_label(matches!(tile.collision_data, CollisionType::Heightmap(_)), "Heightmap").clicked() {
                         tile.collision_data = CollisionType::Heightmap([32u8; 32]);
                     }
                 });
             });
             match &mut tile.collision_data {
-                &mut CollisionType::Box(ref mut rect) => {
+                &mut CollisionType::Box(ref mut rect) |
+                &mut CollisionType::Jumpthrough(ref mut rect) => {
                     ui.horizontal(|ui| {
                         ui.label(format!("Left: {}", rect.x));
                         ui.label(format!("Right: {}", rect.x+rect.w));
@@ -391,6 +395,7 @@ fn get_damage_type_name(dmg_type: &DamageType) -> &str {
 fn get_collision_type_name(collision_type: &CollisionType) -> &str {
     match collision_type {
         CollisionType::Box(..) => "Box",
+        CollisionType::Jumpthrough(..) => "Jumpthrough",
         CollisionType::Heightmap(..) => "Heightmap",
     }
 }

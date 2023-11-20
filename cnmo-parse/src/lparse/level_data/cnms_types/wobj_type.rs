@@ -581,13 +581,23 @@ impl WobjType {
         let custom_float = cnms.try_get_entry("SP_CF")?.try_get_f32()?[index];
 
         match wobj_type_id {
-            1 => Ok(Self::Teleport(Teleport::from_lparse(
-                cnms,
-                version,
-                custom_int as usize,
-            )?)),
+            1 => {
+                if (custom_int as usize) < version.get_num_teleports() {
+                    Ok(Self::Teleport(Teleport::from_lparse(
+                        cnms,
+                        version,
+                        custom_int as usize,
+                    )?))
+                } else {
+                    Ok(Default::default())
+                }
+            }
             120 => {
-                let loc = Teleport::from_lparse(cnms, version, custom_int as usize)?.loc;
+                let loc = if (custom_int as usize) < version.get_num_teleports() {
+                    Teleport::from_lparse(cnms, version, custom_int as usize)?.loc
+                } else {
+                    Teleport::default().loc
+                };
                 Ok(Self::TeleportArea1 {
                     link_id: custom_float as u32,
                     loc,
@@ -895,7 +905,11 @@ impl WobjType {
                 time_off_before: (custom_int >> 16 & 0xff) as u8,
             }),
             150 => {
-                let loc = Teleport::from_lparse(cnms, version, custom_int as usize)?.loc;
+                let loc = if (custom_int as usize) < version.get_num_teleports() {
+                    Teleport::from_lparse(cnms, version, custom_int as usize)?.loc
+                } else {
+                    Teleport::default().loc
+                };
                 Ok(Self::TeleportArea2 {
                     loc,
                     start_activated: custom_int & 0x10000 != 0,

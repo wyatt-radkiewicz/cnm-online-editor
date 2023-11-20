@@ -244,6 +244,8 @@ pub enum DamageType {
 pub enum CollisionType {
     /// A normal box
     Box(Rect),
+    /// A Jumpthrough box
+    Jumpthrough(Rect),
     /// A hightmap that has 0 at the bottom of the cell, and 32 at the top (i think).
     Heightmap([u8; TILE_SIZE]),
 }
@@ -339,6 +341,7 @@ impl TileProperties {
         let angle = block_num_frames[index] >> 8;
         let collision_data = match block_collision_type[index] {
             0 => CollisionType::Box(block_hitbox[index]),
+            2 => CollisionType::Jumpthrough(block_hitbox[index]),
             1 => {
                 let mut heightmap = [0u8; TILE_SIZE];
 
@@ -415,6 +418,11 @@ impl TileProperties {
         match self.collision_data {
             CollisionType::Box(rect) => {
                 bp_colltype.push(0);
+                bp_hitbox.push(rect);
+                bp_heightmap.append(&mut vec![0].repeat(TILE_SIZE));
+            }
+            CollisionType::Jumpthrough(rect) => {
+                bp_colltype.push(2);
                 bp_hitbox.push(rect);
                 bp_heightmap.append(&mut vec![0].repeat(TILE_SIZE));
             }
