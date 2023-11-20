@@ -890,9 +890,9 @@ impl WobjType {
                 id: custom_int as u8,
             }),
             149 => Ok(Self::CoolPlatform {
-                time_off_before: (custom_int & 0xff) as u8,
+                time_off_after: (custom_int & 0xff) as u8,
                 time_on: (custom_int >> 8 & 0xff) as u8,
-                time_off_after: (custom_int >> 16 & 0xff) as u8,
+                time_off_before: (custom_int >> 16 & 0xff) as u8,
             }),
             150 => {
                 let loc = Teleport::from_lparse(cnms, version, custom_int as usize)?.loc;
