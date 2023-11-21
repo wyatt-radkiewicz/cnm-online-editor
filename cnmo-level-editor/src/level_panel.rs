@@ -10,6 +10,7 @@ use crate::editor_data::{EditorData, Tool};
 use crate::game_config_panel::GameConfigPanel;
 use crate::tile_viewer;
 use crate::world_panel::WorldPanel;
+//use crate::common_gfx;
 
 crate::create_instance_resource!(LevelIconPreviewSpriteInstances);
 
@@ -21,6 +22,7 @@ pub fn show_metadata_panel(
     ui: &mut egui::Ui,
     bg_panel: &mut crate::bgpanel::BgPanel,
     cfg_panel: &mut crate::game_config_panel::GameConfigPanel,
+    force_gfx_reload: &mut bool,
 ) {
     ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
         ui.heading("File");
@@ -38,6 +40,8 @@ pub fn show_metadata_panel(
         log::info!("Created a new level!");
         editor_data.reset_selected_tiles();
         editor_data.level_file_name = "newlvl".to_string();
+        *force_gfx_reload |= editor_data.set_gfx_file("gfx.bmp");
+        //editor_data.set_gfx_file("gfx.bmp");
     }
     if ui.button("Load Level").clicked() {
         // let path = rfd::FileDialog::new()
@@ -56,6 +60,7 @@ pub fn show_metadata_panel(
                     editor_data.reset_selected_tiles();
                     editor_data.cells_history =
                         vec![(level_data.cells.clone(), level_data.spawners.clone())];
+                    *force_gfx_reload |= editor_data.set_gfx_file(&editor_data.level_file_name.clone());
                     log::info!("Loaded the level!");
                 } else {
                     log::error!("Invalid editor project file!");
@@ -80,6 +85,7 @@ pub fn show_metadata_panel(
             let file = std::fs::File::create(path);
             if let Ok(file) = file {
                 let _ = serde_json::to_writer_pretty(file, level_data);
+                *force_gfx_reload |= editor_data.set_gfx_file(&editor_data.level_file_name.clone());
                 log::info!("Saved the level!");
             } else {
                 log::error!("Can't open the file for writing!");
@@ -96,7 +102,7 @@ pub fn show_metadata_panel(
             .add_filter("CNM Level Files", &["cnmb", "cnms"])
             .pick_files();
         if let Some(paths) = paths {
-            let (mut cnmb, mut cnms) = (None, None);
+            let (mut cnmb, mut cnms, mut level_name) = (None, None, None);
             for path in paths.iter() {
                 let ext = match path.extension() {
                     Some(ext) => ext.to_string_lossy().to_string(),
@@ -105,12 +111,18 @@ pub fn show_metadata_panel(
 
                 if ext == "cnmb" {
                     cnmb = Some(cnmo_parse::lparse::LParse::from_file(path));
+                    let with_ext = path.file_name().unwrap_or(std::ffi::OsStr::new("")).to_string_lossy();
+                    level_name = Some(if let Some(name) = with_ext.split('.').next() {
+                        name.to_string()
+                    } else {
+                        "gfx.bmp".to_string()
+                    });
                 } else if ext == "cnms" {
                     cnms = Some(cnmo_parse::lparse::LParse::from_file(path));
                 }
             }
 
-            if let (Some(Ok(cnmb)), Some(Ok(cnms))) = (cnmb, cnms) {
+            if let (Some(Ok(cnmb)), Some(Ok(cnms)), Some(level_name)) = (cnmb, cnms, level_name) {
                 let result = level_data::LevelData::from_lparse(&cnmb, &cnms, false);
                 match result {
                     Ok(data) => {
@@ -118,6 +130,7 @@ pub fn show_metadata_panel(
                         editor_data.reset_selected_tiles();
                         editor_data.cells_history =
                             vec![(level_data.cells.clone(), level_data.spawners.clone())];
+                        *force_gfx_reload |= editor_data.set_gfx_file(level_name.as_str());
                         log::info!("Successfully decompiled the level files!");
                     }
                     Err(err) => {

@@ -94,10 +94,10 @@ impl eframe::App for LevelEditorApp {
                     match res {
                         Ok(events) => {
                             for event in events {
-                                if event.path.file_name() == Some(std::ffi::OsString::from_str("gfx.bmp").unwrap().as_os_str()) &&
-                                    std::path::Path::new("./gfx.bmp").exists() {
-                                    log::info!("hot-reloading GFX.BMP");
-                                    let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&self.render_state, "gfx.bmp");
+                                if event.path.file_name() == Some(std::ffi::OsString::from_str(self.editor_data.level_gfx_file.as_str()).unwrap().as_os_str()) &&
+                                    std::path::Path::new(("./".to_string() + self.editor_data.level_gfx_file.as_str()).as_str()).exists() {
+                                    log::info!("hot-reloading GRAPHICS");
+                                    let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&self.render_state, self.editor_data.level_gfx_file.as_str());
                                     self.editor_data.palette = palette;
                                     self.editor_data.gfx_size = dimensions;
                                     self.editor_data.opaques = opaques;
@@ -114,7 +114,15 @@ impl eframe::App for LevelEditorApp {
         ctx.request_repaint();
         self.editor_data.update_delta_time();
         egui::SidePanel::right("editor_options").resizable(true).max_width(500.0).show(ctx, |ui| {
-            level_panel::show_metadata_panel(&mut self.world_panel, &mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.bg_panel, &mut self.game_config_panel);
+            let mut force_gfx_reload = false;
+            level_panel::show_metadata_panel(&mut self.world_panel, &mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.bg_panel, &mut self.game_config_panel, &mut force_gfx_reload);
+            if force_gfx_reload {
+                log::info!("loading GRAPHICS");
+                let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&self.render_state, self.editor_data.level_gfx_file.as_str());
+                self.editor_data.palette = palette;
+                self.editor_data.gfx_size = dimensions;
+                self.editor_data.opaques = opaques;
+            }
         });
         egui::SidePanel::left("editor_properties").resizable(true).max_width(500.0).show(ctx, |ui| {
             self.properties_panel.show_propeties_panel(&mut self.editor_data, &mut self.mode, &mut self.level_data, ui, &mut self.world_panel, &mut self.game_config_panel);

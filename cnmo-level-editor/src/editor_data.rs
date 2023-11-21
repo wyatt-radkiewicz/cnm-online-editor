@@ -1,5 +1,6 @@
 use cnmo_parse::lparse::level_data::{cnmb_types::Cells, cnms_types::{Spawner, wobj_type::WobjType}};
 use eframe::egui;
+use std::path::Path;
 
 #[derive(strum::Display)]
 pub enum Tool {
@@ -37,6 +38,7 @@ pub struct EditorData {
     pub game_config_file: cnmo_parse::cnma::Cnma,
     pub info_bar: String,
     pub level_file_name: String,
+    pub level_gfx_file: String,
 }
 
 impl EditorData {
@@ -77,6 +79,7 @@ impl EditorData {
             game_config_file: cnmo_parse::cnma::Cnma::from_file("audio.cnma").expect("Expected audio.cnma in current directory!"),
             info_bar: "Welcome to the CNM Online Editor!".to_string(),
             level_file_name: "newlvl".to_string(),
+            level_gfx_file: "gfx.bmp".to_string(),
         }
     }
 
@@ -91,5 +94,15 @@ impl EditorData {
         self.dt = now - self.last_update;
         self.last_update = now;
         self.time_past += self.dt;
+    }
+
+    pub fn set_gfx_file(&mut self, lvlname: &str) -> bool {
+        let old_file = self.level_gfx_file.clone();
+        if lvlname != "gfx.bmp" && Path::new(("./levels/".to_string() + lvlname + ".bmp").as_str()).exists() {
+            self.level_gfx_file = "levels/".to_string() + lvlname + ".bmp";
+        } else {
+            self.level_gfx_file = "gfx.bmp".to_string();
+        }
+        return self.level_gfx_file != old_file;
     }
 }
