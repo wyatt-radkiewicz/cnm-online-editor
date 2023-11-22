@@ -1,4 +1,4 @@
-use cnmo_parse::cnma::{MaxPowerAbility, Mode, ResourceId};
+use cnmo_parse::cnma::{MaxPowerAbility, Mode, ResourceId, PetAI};
 use eframe::egui;
 
 use crate::{
@@ -253,6 +253,101 @@ impl GameConfigPanel {
                                 .lock_focus(true)
                                 .desired_width(f32::INFINITY),
                         );
+                    }
+                    Mode::PetDefs(ref mut defs) => {
+                        let mut ui_id = 0;
+                        for ref mut def in defs.iter_mut() {
+                            egui::Grid::new("defs".to_string() + &ui_id.to_string()).num_columns(2).show(ui, |ui| {
+                                ui.label("Name: ");
+                                ui.add(egui::TextEdit::singleline(&mut def.name));
+                                ui.end_row();
+                                ui.label("Animation Base X: ").on_hover_text("This is what tile (32x32) in the graphics file it is");
+                                ui.add(egui::DragValue::new(&mut def.animbase.0).clamp_range(0..=15));
+                                ui.end_row();
+                                ui.label("Animation Base Y: ").on_hover_text("This is what tile (32x32) in the graphics file it is");
+                                ui.add(egui::DragValue::new(&mut def.animbase.1).clamp_range(0..=1023));
+                                ui.end_row();
+                                ui.label("Icon Base X: ").on_hover_text("This is what tile (32x32) in the graphics file it is");
+                                ui.add(egui::DragValue::new(&mut def.iconbase.0).clamp_range(0..=15));
+                                ui.end_row();
+                                ui.label("Icon Base Y: ").on_hover_text("This is what tile (32x32) in the graphics file it is");
+                                ui.add(egui::DragValue::new(&mut def.iconbase.1).clamp_range(0..=1023));
+                                ui.end_row();
+
+                                ui.label("Pet AI Type: ");
+                                egui::ComboBox::new("pet_ai_combo_box".to_string() + &ui_id.to_string(), "")
+                                    .selected_text(match def.ai {
+                                        PetAI::Fly { .. } => "Fly",
+                                        PetAI::Walk { .. } => "Walk",
+                                    })
+                                    .show_ui(ui, |ui| {
+                                        ui.selectable_value(&mut def.ai, PetAI::Fly {
+                                            num_fly_frames: 1,
+                                            fly_speed: 4.0,
+                                            fly_thrust: 2.0,
+                                        }, "Fly");
+                                        ui.selectable_value(&mut def.ai, PetAI::Walk {
+                                            num_idle_frames: 1,
+                                            num_walk_frames: 1,
+                                            num_fall_frames: 1,
+                                            walk_speed: 5.0,
+                                            jump_height: 8.0,
+                                        }, "Walk");
+                                    });
+                                ui.end_row();
+
+                                match &mut def.ai {
+                                    &mut PetAI::Fly {
+                                        ref mut num_fly_frames,
+                                        ref mut fly_speed,
+                                        ref mut fly_thrust,
+                                    } => {
+                                        ui.label("Number of Flying Frames: ");
+                                        ui.add(egui::DragValue::new(num_fly_frames).clamp_range(0..=15));
+                                        ui.end_row();
+                                        ui.label("Fly Speed: ").on_hover_text("Refrence: player walk speed is 5");
+                                        ui.add(egui::DragValue::new(fly_speed).clamp_range(-15.0..=15.0));
+                                        ui.end_row();
+                                        ui.label("Fly Thrust: ").on_hover_text("Refrence: around 2-3 is a good place to start");
+                                        ui.add(egui::DragValue::new(fly_thrust).clamp_range(-15.0..=15.0));
+                                        ui.end_row();
+                                    },
+                                    &mut PetAI::Walk {
+                                        ref mut num_idle_frames,
+                                        ref mut num_walk_frames,
+                                        ref mut num_fall_frames,
+                                        ref mut walk_speed,
+                                        ref mut jump_height,
+                                    } => {
+                                        ui.label("Number of Idle Frames: ");
+                                        ui.add(egui::DragValue::new(num_idle_frames).clamp_range(0..=15));
+                                        ui.end_row();
+                                        ui.label("Number of Walk Frames: ");
+                                        ui.add(egui::DragValue::new(num_walk_frames).clamp_range(0..=15));
+                                        ui.end_row();
+                                        ui.label("Number of Fall Frames: ");
+                                        ui.add(egui::DragValue::new(num_fall_frames).clamp_range(0..=15));
+                                        ui.end_row();
+                                        ui.label("Walk Speed: ").on_hover_text("Refrence: player walk speed is 5");
+                                        ui.add(egui::DragValue::new(walk_speed).clamp_range(-15.0..=15.0));
+                                        ui.end_row();
+                                        ui.label("Jump Thrust: ").on_hover_text("Refrence: player jump thrust is 10");
+                                        ui.add(egui::DragValue::new(jump_height).clamp_range(-15.0..=15.0));
+                                        ui.end_row();
+                                    },
+                                }
+                            });
+                            ui.separator();
+                            ui_id += 1;
+                        }
+                        ui.horizontal(|ui| {
+                            if ui.button("Add Definition").clicked() {
+                                defs.push(Default::default());
+                            }
+                            if ui.button("Remove Definition").clicked() {
+                                defs.pop();
+                            }
+                        });
                     }
                 }
             });

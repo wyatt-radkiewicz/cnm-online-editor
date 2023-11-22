@@ -94,6 +94,137 @@ pub enum MaxPowerAbility {
     MarioBounce,
 }
 
+/// Pet AI Settings
+#[derive(Debug, Clone, PartialEq)]
+pub enum PetAI {
+    ///
+    Fly {
+        ///
+        num_fly_frames: u8,
+        ///
+        fly_speed: f32,
+        ///
+        fly_thrust: f32,
+    },
+    ///
+    Walk {
+        ///
+        num_idle_frames: u8,
+        ///
+        num_walk_frames: u8,
+        ///
+        num_fall_frames: u8,
+        ///
+        walk_speed: f32,
+        ///
+        jump_height: f32,
+    },
+}
+
+impl Default for PetAI {
+    fn default() -> Self {
+        Self::Fly {
+            num_fly_frames: 1,
+            fly_speed: 4.0,
+            fly_thrust: 2.0,
+        }
+    }
+}
+
+/// A Pet definition
+#[derive(Debug, Clone, PartialEq)]
+pub struct PetDef {
+    ///
+    pub name: String,
+    ///
+    pub animbase: (u16, u16),
+    ///
+    pub iconbase: (u16, u16),
+    ///
+    pub ai: PetAI,
+}
+
+impl Default for PetDef {
+    fn default() -> Self {
+        Self {
+            name: "SLIMYTEST".to_string(),
+            animbase: (0, 0),
+            iconbase: (0, 0),
+            ai: Default::default(),
+        }
+    }
+}
+
+impl PetDef {
+    ///
+    pub fn from_string(s: &str, line: usize) -> Result<Self, Error> {
+        let words = s.split(' ').map(|s| s.to_owned()).collect::<Vec<String>>();
+        if words.len() < 6 { return Err(Error::CorruptedEntry(line)) }
+        let name = words[0].trim_end_matches('"').trim_matches('"').to_owned();
+        let basex = words[1].parse::<u16>().unwrap_or(0);
+        let basey = words[2].parse::<u16>().unwrap_or(0);
+        let iconx = words[3].parse::<u16>().unwrap_or(0);
+        let icony = words[4].parse::<u16>().unwrap_or(0);
+        
+        match words[5].chars().next() {
+            Some('f') => {
+                if words.len() < 9 { return Err(Error::CorruptedEntry(line)) }
+                Ok(Self {
+                    name,
+                    animbase: (basex, basey),
+                    iconbase: (iconx, icony),
+                    ai: PetAI::Fly {
+                        num_fly_frames: words[6].parse::<u8>().unwrap_or(1),
+                        fly_speed: words[7].parse::<f32>().unwrap_or(4.0),
+                        fly_thrust: words[8].parse::<f32>().unwrap_or(2.0),
+                    }
+                })
+            },
+            Some('w') => {
+                if words.len() < 11 { return Err(Error::CorruptedEntry(line)) }
+                Ok(Self {
+                    name,
+                    animbase: (basex, basey),
+                    iconbase: (iconx, icony),
+                    ai: PetAI::Walk {
+                        num_idle_frames: words[6].parse::<u8>().unwrap_or(1),
+                        num_walk_frames: words[7].parse::<u8>().unwrap_or(1),
+                        num_fall_frames: words[8].parse::<u8>().unwrap_or(1),
+                        walk_speed: words[9].parse::<f32>().unwrap_or(5.0),
+                        jump_height: words[10].parse::<f32>().unwrap_or(8.0),
+                    }
+                })
+            },
+            _ => Err(Error::CorruptedEntry(line))
+        }
+    }
+
+    ///
+    pub fn as_string(&self) -> String {
+        "\"".to_string() + &self.name + "\" " + &self.animbase.0.to_string() + " " + &self.animbase.1.to_string() + " " + 
+            &self.iconbase.0.to_string() + " " + &self.iconbase.1.to_string() + " " + 
+        &(match self.ai {
+            PetAI::Fly {
+                ref num_fly_frames,
+                ref fly_speed,
+                ref fly_thrust,
+            } => {
+                "f ".to_string() + &num_fly_frames.to_string() + " " + &fly_speed.to_string() + " " + &fly_thrust.to_string()
+            },
+            PetAI::Walk {
+                ref num_idle_frames,
+                ref num_walk_frames,
+                ref num_fall_frames,
+                ref walk_speed,
+                ref jump_height,
+            } => {
+                "w ".to_string() + &num_idle_frames.to_string() + " " + &num_walk_frames.to_string() + " " + &num_fall_frames.to_string()
+                    + " " + &walk_speed.to_string() + " " + &jump_height.to_string()
+            }
+        })
+    }
+}
+
 /// What section/mode contents there are
 #[derive(Debug, Clone, PartialEq)]
 pub enum Mode {
@@ -111,6 +242,8 @@ pub enum Mode {
     /// Code run at the beginning of the game, certain function names
     /// will run as hooks for object code, etc.
     LuaAutorunCode(String),
+    /// Pet Definitions
+    PetDefs(Vec<PetDef>),
 }
 
 /// CNMA file. Holds generic configuration of the game and resource
@@ -169,6 +302,10 @@ impl Cnma {
                         mode_locked = true;
                         Some(Mode::LuaAutorunCode("".to_string()))
                     }
+                    Some("PETDEFS") => {
+                        mode_locked = true;
+                        Some(Mode::PetDefs(vec![]))
+                    }
                     Some(mode_name) => {
                         return Err(Error::Corrupted(format!(
                             "Unkown audio mode name {mode_name}"
@@ -193,6 +330,21 @@ impl Cnma {
                     _ => {
                         return Err(Error::Corrupted(
                             "__ENDLUA__ found outside of LUA_AUTORUN mode segment!".to_string(),
+                        ))
+                    }
+                }
+
+                continue;
+            } else if line.starts_with("ENDPETS") && mode_locked {
+                match current_mode {
+                    Some(Mode::PetDefs(_)) => {
+                        mode_locked = false;
+                        cnma.modes.push(current_mode.as_ref().unwrap().clone());
+                        current_mode = None;
+                    }
+                    _ => {
+                        return Err(Error::Corrupted(
+                            "ENDPETS found outside of PETDEFS mode segment!".to_string(),
                         ))
                     }
                 }
@@ -249,6 +401,9 @@ impl Cnma {
                 }
                 Some(&mut Mode::LuaAutorunCode(ref mut code)) => {
                     code.push_str((line.to_string() + "\n").as_str());
+                }
+                Some(&mut Mode::PetDefs(ref mut defs)) => {
+                    defs.push(PetDef::from_string(line, line_num)?);
                 }
                 None => return Err(Error::NoMode),
             }
@@ -308,10 +463,19 @@ impl Cnma {
                     contents.push_str("MODE LUA_AUTORUN\n");
                     contents.push_str(s.as_str());
                 }
+                &Mode::PetDefs(ref pets) => {
+                    contents.push_str("MODE PETDEFS\n");
+                    for pet in pets {
+                        contents.push_str((pet.as_string() + "\n").as_str());
+                    }
+                }
             }
 
             if let &Mode::LuaAutorunCode(_) = mode {
                 contents.push_str("__ENDLUA__\n");
+            }
+            if let &Mode::PetDefs(_) = mode {
+                contents.push_str("ENDPETS\n");
             }
         }
 

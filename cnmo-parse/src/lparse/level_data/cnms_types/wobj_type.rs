@@ -575,6 +575,11 @@ pub enum WobjType {
     },
     ///
     InvisBlock,
+    ///
+    PetUnlock {
+        ///
+        petid: u8,
+    },
 }
 
 impl WobjType {
@@ -934,6 +939,9 @@ impl WobjType {
                 })
             }
             153 => Ok(Self::InvisBlock),
+            154 => Ok(Self::PetUnlock {
+                petid: custom_int as u8,
+            }),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1324,6 +1332,7 @@ impl WobjType {
                 (150, (teleports.len() as i32 - 1) | teleport_players_bit | start_activated_bit, link_id as f32)
             },
             &Self::InvisBlock => (153, 0, 0.0),
+            &Self::PetUnlock { petid } => (154, petid as i32, 0.0)
         }
     }
 }

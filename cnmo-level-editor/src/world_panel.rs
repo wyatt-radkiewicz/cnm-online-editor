@@ -1939,5 +1939,6 @@ fn draw_spawner(
             sprites.push(sprite);
         },
         WobjType::InvisBlock => draw_rect(384, editor_data.gfx_size.1 as i32 + 192, 32, 32),
+        WobjType::PetUnlock { .. } => draw_rect(352, editor_data.gfx_size.1 as i32 + 192, 32, 32),
     }
 }

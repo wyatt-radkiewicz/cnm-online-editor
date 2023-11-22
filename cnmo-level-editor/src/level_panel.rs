@@ -259,7 +259,7 @@ pub fn show_metadata_panel(
             ui.end_row();
             let loc = &mut level_data.metadata.preview_loc;
             ui.add(egui::DragValue::new(&mut loc.0).clamp_range(0..=editor_data.gfx_size.0 / 32 - 3));
-            ui.add(egui::DragValue::new(&mut loc.1).clamp_range(0..=editor_data.gfx_size.1 / 32 - 2));
+            ui.add(egui::DragValue::new(&mut loc.1));
             ui.end_row();
             let (rect, _) = ui.allocate_exact_size(egui::Vec2::new(96.0, 64.0), egui::Sense::focusable_noninteractive());
             crate::instanced_sprites::InstancedSprites::new()
@@ -1955,6 +1955,11 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(time_off_after)).on_hover_text("This is in frames. CNM Online runs at 30 fps");
             ui.end_row();
         }
+        &mut WobjType::PetUnlock { ref mut petid } => {
+            ui.label("Pet ID");
+            ui.add(egui::DragValue::new(petid));
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -1968,6 +1973,7 @@ fn get_cnma_mode_name(mode: &cnmo_parse::cnma::Mode) -> &str {
         &Mode::LuaAutorunCode(_) => "LUA Code",
         &Mode::MaxPowerDef(_) => "Max Power Abilities",
         &Mode::MusicVolumeOverride => "Deprecated (Music Volume Override)",
+        &Mode::PetDefs(_) => "Pet Definitions",
     }
 }
 
@@ -2325,6 +2331,9 @@ impl Iterator for WobjIter {
             63 => Some(SkinUnlock {
                 id: Default::default(),
             }),
+            64 => Some(PetUnlock {
+                petid: Default::default(),
+            }),
             _ => None,
         }
     }
@@ -2397,5 +2406,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &CoolPlatform { .. } => "Megaman Platform",
         &TeleportArea2 { .. } => "Teleport Area (Teleports Everything)",
         &InvisBlock => "Invisible Block",
+        &PetUnlock { .. } => "Pet Unlock",
     }
 }
