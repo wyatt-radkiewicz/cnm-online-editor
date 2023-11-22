@@ -697,6 +697,9 @@ impl PropertiesPanel {
             if let Some(idx) = editor_data.selected_spawner {
                 let spawner = &mut level_data.spawners[idx];
 
+                ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
+                    ui.heading("Type: ".to_string() + get_wobj_type_name(&spawner.type_data));
+                });
                 egui::Grid::new("spawner_properties_grid").num_columns(2).striped(true).show(ui, |ui| {
                     ui.label("Spawning Mode: ");
                     egui::ComboBox::new("spawning_mode_combobox", "")

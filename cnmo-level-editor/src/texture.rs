@@ -10,6 +10,79 @@ pub struct Texture {
     pub dimensions: (u32, u32),
 }
 
+struct ImageData {
+    pub palette: Vec<[u8; 3]>,
+    pub image: image::ImageBuffer<image::Rgba<u8>, Vec<u8>>,
+    pub size: (u32, u32),
+}
+
+static EDITOR_BASE: &'static [u8] = include_bytes!("editorbase.bmp");
+
+impl ImageData {
+    fn from_file<P: AsRef<std::path::Path>>(path: P) -> Option<Self> {
+        Self::get_image(&Self::get_buffer_from_file(path))
+    }
+
+    fn get_buffer_from_file<P: AsRef<std::path::Path>>(path: P) -> Vec<u8> {
+        match std::fs::read(path.as_ref()) {
+            Ok(ref buffer) => buffer.to_vec(),
+            Err(_) => {
+                log::error!("Can't open image file: {:?}.", path.as_ref());
+                log::error!("Loading backup image file instead.");
+                include_bytes!("gfx_backup.bmp").to_vec()
+            },
+        }
+    }
+
+    fn get_image(buffer: &[u8]) -> Option<Self> {
+        let decoder = match image::codecs::bmp::BmpDecoder::new(Cursor::new(buffer)) {
+            Ok(decoder) => decoder,
+            Err(_) => {
+                log::warn!("not a bmp file!");
+                return None;
+            },
+        };
+        let image = image::load_from_memory(buffer).unwrap();
+        let rgba = image.to_rgba8();
+        Some(Self {
+            palette: match decoder.get_palette() {
+                Some(slice) => slice.to_owned(),
+                None => Vec::new(),
+            },
+            image: rgba,
+            size: <image::DynamicImage as image::GenericImageView>::dimensions(&image),
+        })
+    }
+
+    pub fn construct_editorimage(self) -> (Self, u32) {
+        let editorbase = Self::get_image(EDITOR_BASE).unwrap();
+        let mut newimage = image::ImageBuffer::<image::Rgba<u8>, Vec<u8>>::new(self.size.0, self.size.1 + editorbase.size.1);
+        
+        // Put the base image here
+        for y in 0..self.size.1 {
+            for x in 0..self.size.0 {
+                newimage.put_pixel(x, y, *self.image.get_pixel(x, y));
+            }
+        }
+
+        // Add on the editorbase thing
+        for y in 0..editorbase.size.1 {
+            for x in 0..editorbase.size.0 {
+                newimage.put_pixel(x, y + self.size.1, *editorbase.image.get_pixel(x, y));
+            }
+        }
+
+        (
+            Self {
+                palette: self.palette,
+                image: newimage,
+                size: self.size,
+            },
+            self.size.1 + editorbase.size.1
+        )
+    }
+}
+
 impl Texture {
     pub fn new<S: Into<(u32, u32)> + Clone>(device: &wgpu::Device, label: Option<&str>, size: S) -> Self {
         let texture = device.create_texture(&wgpu::TextureDescriptor {
@@ -46,32 +119,16 @@ impl Texture {
     }
 
     pub fn from_file<P: AsRef<std::path::Path>>(device: &wgpu::Device, queue: &wgpu::Queue, path: P) -> Self {
-        Self::from_memory(device, queue, match std::fs::read(path.as_ref()) {
-            Ok(ref buffer) => buffer.as_slice(),
-            Err(_) => {
-                log::error!("Can't open image file: {:?}.", path.as_ref());
-                log::error!("Loading backup image file instead.");
-                include_bytes!("gfx_backup.bmp")
-            },
-        })
+        match ImageData::from_file(path) {
+            Some(image) => Self::from_memory(device, queue, image.construct_editorimage()),
+            None => Self::new(device, None, (1, 1)),
+        }
     }
 
-    pub fn from_memory(device: &wgpu::Device, queue: &wgpu::Queue, buffer: &[u8]) -> Self {
-        let decoder = match image::codecs::bmp::BmpDecoder::new(Cursor::new(buffer)) {
-            Ok(decoder) => decoder,
-            Err(_) => {
-                log::warn!("not a bmp file!");
-                return Self::new(device, None, (1, 1));
-            },
-        };
-        let image = image::load_from_memory(buffer).unwrap();
-        let rgba = image.to_rgba8();
-        let dimensions = <image::DynamicImage as image::GenericImageView>::dimensions(&image);
-        let mut texture = Self::new(device, Some("texture"), dimensions);
-        texture.palette = match decoder.get_palette() {
-            Some(slice) => slice.to_owned(),
-            None => Vec::new(),
-        };
+    fn from_memory(device: &wgpu::Device, queue: &wgpu::Queue, image: (ImageData, u32)) -> Self {
+        let size = (image.0.size.0, image.1);
+        let mut texture = Self::new(device, Some("texture"), size);
+        texture.palette = image.0.palette;
         queue.write_texture(
             wgpu::ImageCopyTexture {
                 texture: &texture.texture,
@@ -79,18 +136,19 @@ impl Texture {
                 origin: wgpu::Origin3d::ZERO,
                 aspect: wgpu::TextureAspect::All,
             },
-            &rgba,
+            &image.0.image,
             wgpu::ImageDataLayout {
                 offset: 0,
-                bytes_per_row: std::num::NonZeroU32::new(4 * dimensions.0),
-                rows_per_image: std::num::NonZeroU32::new(dimensions.1),
+                bytes_per_row: std::num::NonZeroU32::new(4 * size.0),
+                rows_per_image: std::num::NonZeroU32::new(size.1),
             },
             wgpu::Extent3d {
-                width: dimensions.0,
-                height: dimensions.1,
+                width: size.0,
+                height: size.1,
                 depth_or_array_layers: 1,
             },
         );
+        texture.dimensions = image.0.size;
         texture
     }
 }

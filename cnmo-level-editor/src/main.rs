@@ -2,7 +2,7 @@
 
 
 use notify::RecursiveMode;
-use std::{sync::mpsc::Receiver, str::FromStr};
+use std::sync::mpsc::Receiver;
 
 use eframe::egui;
 use cnmo_parse::lparse::level_data;
@@ -64,7 +64,7 @@ impl LevelEditorApp {
         let mut debouncer =
             notify_debouncer_mini::new_debouncer(std::time::Duration::from_secs(2), None, tx)
             .expect("Need hot-realoading file watching for editor to boot");
-        debouncer.watcher().watch(&std::path::Path::new("."), RecursiveMode::Recursive).expect("Can't open working directory for hot-reloading");
+        debouncer.watcher().watch(&std::path::Path::new("./"), RecursiveMode::Recursive).expect("Can't open working directory for hot-reloading");
 
         Self {
             level_data: level_data::LevelData::from_version(1).expect("Can't create empty level!"),
@@ -94,7 +94,8 @@ impl eframe::App for LevelEditorApp {
                     match res {
                         Ok(events) => {
                             for event in events {
-                                if event.path.file_name() == Some(std::ffi::OsString::from_str(self.editor_data.level_gfx_file.as_str()).unwrap().as_os_str()) &&
+                                log::info!("file changed: {}", event.path.to_string_lossy());
+                                if event.path.ends_with(self.editor_data.level_gfx_file.as_str()) &&
                                     std::path::Path::new(("./".to_string() + self.editor_data.level_gfx_file.as_str()).as_str()).exists() {
                                     log::info!("hot-reloading GRAPHICS");
                                     let (palette, dimensions, opaques) = common_gfx::GfxCommonResources::insert_resource(&self.render_state, self.editor_data.level_gfx_file.as_str());

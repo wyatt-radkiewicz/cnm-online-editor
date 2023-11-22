@@ -49,15 +49,15 @@ impl Sprite {
     }
 
     #[allow(unused)]
-    pub fn create_string(origin_x: f32, origin_y: f32, size: f32, s: &str, sprites: &mut Vec<Sprite>) {
+    pub fn create_string(srcx: u32, srcy: u32, origin_x: f32, origin_y: f32, size: f32, s: &str, sprites: &mut Vec<Sprite>) {
         let mut x = origin_x;
         for char in s.chars() {
             if !char.is_ascii() {
                 continue;
             }
             let index = char as u8;
-            let src_x = 384 + ((index as u32 % 16) * 8);
-            let src_y = 448 + ((index as u32 / 16) * 8);
+            let src_x = srcx + ((index as u32 % 16) * 8);
+            let src_y = srcy + ((index as u32 / 16) * 8);
             sprites.push(Sprite::new(
                 (x, origin_y, 0.0),
                 (size, size),

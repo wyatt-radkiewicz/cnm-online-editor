@@ -1478,13 +1478,15 @@ fn draw_spawner(
 
     match &spawner.type_data {
         WobjType::Teleport(tele) => {
-            draw_rect(96, 32, 32, 32);
+            draw_rect(0, 32, 32, 32);
             let tele_string = if tele.cost == 0 {
                 tele.name.clone()
             } else {
                 format!("{}: ${}", tele.name, tele.cost)
             };
             Sprite::create_string(
+                384,
+                editor_data.gfx_size.1,
                 spawner.pos.0 - (tele_string.len() as f32 * 2.0) + 16.0,
                 spawner.pos.1 - 5.0,
                 4.0,
@@ -1494,28 +1496,30 @@ fn draw_spawner(
         }
         WobjType::Slime { flying } => {
             if *flying {
-                draw_rect(448, 320, 32, 32);
+                draw_rect(448, 256, 32, 32);
             } else {
-                draw_rect(32, 256, 32, 32);
+                draw_rect(192, 32, 32, 32);
             }
         }
         WobjType::TunesTrigger { size, music_id } => {
             let half_width = match size {
                 TunesTriggerSize::Small => {
-                    draw_rect(416, 1216, 32, 32);
+                    draw_rect(128, editor_data.gfx_size.1 as i32, 32, 32);
                     16.0
                 }
                 TunesTriggerSize::Big => {
-                    draw_rect(448, 1216, 64, 64);
+                    draw_rect(0, editor_data.gfx_size.1 as i32 + 32, 64, 64);
                     32.0
                 }
                 TunesTriggerSize::VeryBig => {
-                    draw_rect(416, 2848, 96, 96);
+                    draw_rect(96, editor_data.gfx_size.1 as i32 + 128, 96, 96);
                     48.0
                 }
             };
             let id_string = format!("Music ID: {}", *music_id);
             Sprite::create_string(
+                384,
+                editor_data.gfx_size.1,
                 spawner.pos.0 - (id_string.len() as f32 * 2.0) + half_width,
                 spawner.pos.1 - 5.0,
                 4.0,
@@ -1525,9 +1529,9 @@ fn draw_spawner(
         }
         WobjType::TextSpawner { dialoge_box, .. } => {
             if *dialoge_box {
-                draw_rect(288, 1344, 32, 32);
+                draw_rect(96, editor_data.gfx_size.1 as i32 + 64, 32, 32);
             } else {
-                draw_rect(352, 1216, 32, 32);
+                draw_rect(64, editor_data.gfx_size.1 as i32, 32, 32);
             }
         }
         WobjType::MovingPlatform {
@@ -1558,87 +1562,89 @@ fn draw_spawner(
             draw_moving(sprites, *dist as f32, *speed, *vertical);
         }
         WobjType::BreakableWall { skin_id, .. } => match skin_id {
-            &Some(0) => draw_rect(288, 1312, 32, 32),
-            &Some(1) => draw_rect(256, 1248, 32, 32),
-            &Some(2) => draw_rect(288, 1248, 32, 32),
-            &Some(3) => draw_rect(256, 1280, 32, 32),
-            &Some(4) => draw_rect(288, 1280, 32, 32),
-            &Some(5) => draw_rect(256, 1312, 32, 32),
-            _ => draw_rect(256, 160, 32, 32),
+            &Some(0) => draw_rect(256, 608, 32, 32),
+            &Some(1) => draw_rect(288, 608, 32, 32),
+            &Some(2) => draw_rect(256, 640, 32, 32),
+            &Some(3) => draw_rect(288, 640, 32, 32),
+            &Some(4) => draw_rect(256, 672, 32, 32),
+            &Some(5) => draw_rect(32, 32, 32, 32),
+            _ => draw_rect(32, 32, 32, 32),
         },
         WobjType::BackgroundSwitcher { shape, .. } => match shape {
-            &BackgroundSwitcherShape::Small => draw_rect(352, 1312, 32, 32),
-            &BackgroundSwitcherShape::Horizontal => draw_rect(384, 2816, 128, 32),
-            &BackgroundSwitcherShape::Vertical => draw_rect(384, 2848, 32, 96),
+            &BackgroundSwitcherShape::Small => draw_rect(32, editor_data.gfx_size.1 as i32 + 160, 32, 32),
+            &BackgroundSwitcherShape::Horizontal => draw_rect(64, editor_data.gfx_size.1 as i32 + 96, 128, 32),
+            &BackgroundSwitcherShape::Vertical => draw_rect(64, editor_data.gfx_size.1 as i32 + 128, 32, 96),
         },
         WobjType::DroppedItem { item } => {
-            draw_rect(320, 1216, 32, 32);
+            draw_rect(32, editor_data.gfx_size.1 as i32, 32, 32);
             match item {
-                ItemType::Shotgun => draw_rect(32, 352, 32, 32),
-                ItemType::Knife => draw_rect(64, 352, 32, 32),
-                ItemType::Apple => draw_rect(96, 352, 32, 32),
-                ItemType::Cake => draw_rect(128, 352, 32, 32),
-                ItemType::StrengthPotion => draw_rect(160, 352, 32, 32),
-                ItemType::SpeedPotion => draw_rect(192, 352, 32, 32),
-                ItemType::JumpPotion => draw_rect(224, 352, 32, 32),
-                ItemType::Sword => draw_rect(0, 384, 32, 32),
-                ItemType::HealthPotion => draw_rect(32, 384, 32, 32),
-                ItemType::Sniper => draw_rect(64, 384, 32, 32),
-                ItemType::Money50 => draw_rect(96, 384, 32, 32),
-                ItemType::Money100 => draw_rect(128, 384, 32, 32),
-                ItemType::Money500 => draw_rect(160, 384, 32, 32),
-                ItemType::Cheeseburger => draw_rect(192, 384, 32, 32),
-                ItemType::GoldenAxe => draw_rect(224, 384, 32, 32),
-                ItemType::UnboundWand => draw_rect(0, 416, 32, 32),
-                ItemType::FireWand => draw_rect(32, 416, 32, 32),
-                ItemType::IceWand => draw_rect(64, 416, 32, 32),
-                ItemType::AirWand => draw_rect(96, 416, 32, 32),
-                ItemType::LightningWand => draw_rect(128, 416, 32, 32),
-                ItemType::GoldenShotgun => draw_rect(160, 416, 32, 32),
-                ItemType::LaserRifle => draw_rect(192, 416, 32, 32),
-                ItemType::RocketLauncher => draw_rect(224, 416, 32, 32),
-                ItemType::FirePotion => draw_rect(0, 448, 32, 32),
-                ItemType::Minigun => draw_rect(32, 448, 32, 32),
-                ItemType::MegaPotion => draw_rect(64, 448, 32, 32),
-                ItemType::UltraMegaPotion => draw_rect(96, 448, 32, 32),
-                ItemType::Awp => draw_rect(128, 448, 32, 32),
-                ItemType::Flamethrower => draw_rect(160, 448, 32, 32),
-                ItemType::PoisionusStrengthPotion => draw_rect(192, 448, 32, 32),
-                ItemType::PoisionusSpeedPotion => draw_rect(224, 448, 32, 32),
-                ItemType::PoisionusJumpPotion => draw_rect(0, 480, 32, 32),
-                ItemType::Beastchurger => draw_rect(32, 480, 32, 32),
-                ItemType::UltraSword => draw_rect(64, 480, 32, 32),
-                ItemType::HeavyHammer => draw_rect(96, 480, 32, 32),
-                ItemType::FissionGun => draw_rect(128, 480, 32, 32),
-                ItemType::KeyRed => draw_rect(160, 480, 32, 32),
-                ItemType::KeyGreen => draw_rect(192, 480, 32, 32),
-                ItemType::KeyBlue => draw_rect(224, 480, 32, 32),
-                ItemType::ExtraLifeJuice => draw_rect(128, 736, 32, 32),
-                ItemType::Wrench => draw_rect(160, 2048, 32, 32),
+                ItemType::Shotgun => draw_rect(32, 352-256, 32, 32),
+                ItemType::Knife => draw_rect(64, 352-256, 32, 32),
+                ItemType::Apple => draw_rect(96, 352-256, 32, 32),
+                ItemType::Cake => draw_rect(128, 352-256, 32, 32),
+                ItemType::StrengthPotion => draw_rect(160, 352-256, 32, 32),
+                ItemType::SpeedPotion => draw_rect(192, 352-256, 32, 32),
+                ItemType::JumpPotion => draw_rect(224, 352-256, 32, 32),
+                ItemType::Sword => draw_rect(0, 384-256, 32, 32),
+                ItemType::HealthPotion => draw_rect(32, 384-256, 32, 32),
+                ItemType::Sniper => draw_rect(64, 384-256, 32, 32),
+                ItemType::Money50 => draw_rect(96, 384-256, 32, 32),
+                ItemType::Money100 => draw_rect(128, 384-256, 32, 32),
+                ItemType::Money500 => draw_rect(160, 384-256, 32, 32),
+                ItemType::Cheeseburger => draw_rect(192, 384-256, 32, 32),
+                ItemType::GoldenAxe => draw_rect(224, 384-256, 32, 32),
+                ItemType::UnboundWand => draw_rect(0, 416-256, 32, 32),
+                ItemType::FireWand => draw_rect(32, 416-256, 32, 32),
+                ItemType::IceWand => draw_rect(64, 416-256, 32, 32),
+                ItemType::AirWand => draw_rect(96, 416-256, 32, 32),
+                ItemType::LightningWand => draw_rect(128, 416-256, 32, 32),
+                ItemType::GoldenShotgun => draw_rect(160, 416-256, 32, 32),
+                ItemType::LaserRifle => draw_rect(192, 416-256, 32, 32),
+                ItemType::RocketLauncher => draw_rect(224, 416-256, 32, 32),
+                ItemType::FirePotion => draw_rect(0, 448-256, 32, 32),
+                ItemType::Minigun => draw_rect(32, 448-256, 32, 32),
+                ItemType::MegaPotion => draw_rect(64, 448-256, 32, 32),
+                ItemType::UltraMegaPotion => draw_rect(96, 448-256, 32, 32),
+                ItemType::Awp => draw_rect(128, 448-256, 32, 32),
+                ItemType::Flamethrower => draw_rect(160, 448-256, 32, 32),
+                ItemType::PoisionusStrengthPotion => draw_rect(192, 448-256, 32, 32),
+                ItemType::PoisionusSpeedPotion => draw_rect(224, 448-256, 32, 32),
+                ItemType::PoisionusJumpPotion => draw_rect(0, 480-256, 32, 32),
+                ItemType::Beastchurger => draw_rect(32, 480-256, 32, 32),
+                ItemType::UltraSword => draw_rect(64, 480-256, 32, 32),
+                ItemType::HeavyHammer => draw_rect(96, 480-256, 32, 32),
+                ItemType::FissionGun => draw_rect(128, 480-256, 32, 32),
+                ItemType::KeyRed => draw_rect(160, 480-256, 32, 32),
+                ItemType::KeyGreen => draw_rect(192, 480-256, 32, 32),
+                ItemType::KeyBlue => draw_rect(224, 480-256, 32, 32),
+                ItemType::ExtraLifeJuice => draw_rect(256, 96, 32, 32),
+                ItemType::Wrench => draw_rect(288, 96, 32, 32),
             }
         }
         WobjType::WandRune { rune_type } => match rune_type {
-            RuneType::Ice => draw_rect(263, 361, 46, 44),
-            RuneType::Air => draw_rect(448, 32, 64, 32),
-            RuneType::Fire => draw_rect(256, 64, 64, 64),
-            RuneType::Lightning => draw_rect(320, 64, 64, 64),
+            RuneType::Ice => draw_rect(326, 136, 48, 46),
+            RuneType::Air => draw_rect(128, 0, 64, 32),
+            RuneType::Fire => draw_rect(256, 128, 64, 64),
+            RuneType::Lightning => draw_rect(384, 64, 64, 64),
         },
         WobjType::UpgradeTrigger { trigger_type } => match trigger_type {
-            UpgradeTriggerType::DeephausBoots => draw_rect(256, 128, 32, 32),
-            UpgradeTriggerType::Wings => draw_rect(320, 352, 36, 38),
-            UpgradeTriggerType::CrystalWings => draw_rect(384, 352, 48, 48),
-            UpgradeTriggerType::None => draw_rect(480, 3936, 32, 32),
-            UpgradeTriggerType::Vortex => draw_rect(96, 224, 32, 32),
+            UpgradeTriggerType::DeephausBoots => draw_rect(400, 0, 32, 32),
+            UpgradeTriggerType::Wings => draw_rect(419, 1050, 41, 31),
+            UpgradeTriggerType::CrystalWings => draw_rect(322, 1048, 41, 35),
+            UpgradeTriggerType::None => draw_rect(0, 192, 32, 32),
+            UpgradeTriggerType::Vortex => draw_rect(160, 32, 32, 32),
             UpgradeTriggerType::MaxPowerRune {
                 skin_power_override,
             } => {
-                draw_rect(192, 1120, 48, 48);
+                draw_rect(192, 480, 48, 48);
                 let text = if let Some(skin) = skin_power_override {
                     format!("override skin: {}", skin)
                 } else {
                     "".to_string()
                 };
                 Sprite::create_string(
+                    384,
+                    editor_data.gfx_size.1,
                     spawner.pos.0 + 24.0 - (text.len() as f32 * 2.0),
                     spawner.pos.1 - 5.0,
                     4.0,
@@ -1649,53 +1655,55 @@ fn draw_spawner(
         },
         WobjType::Heavy { face_left, .. } => {
             if *face_left {
-                draw_rect(128 + 64, 224, -64, 64)
+                draw_rect(384 + 64, 256, -64, 64)
             } else {
-                draw_rect(128, 224, 64, 64)
+                draw_rect(384, 256, 64, 64)
             }
         }
         WobjType::Dragon { space_skin } => {
             if *space_skin {
-                draw_rect(256, 640, 128, 128);
+                draw_rect(0, 320, 128, 128);
             } else {
-                draw_rect(192, 224, 128, 128);
+                draw_rect(256, 320, 128, 128);
             }
         }
         WobjType::BozoPin { .. } => {
-            draw_rect(320, 1088, 48, 64);
+            draw_rect(320, 448, 48, 64);
         }
         WobjType::Bozo { mark_ii } => {
             if *mark_ii {
-                draw_rect(224, 2432, 48, 64);
+                draw_rect(0, 896, 48, 64);
             } else {
-                draw_rect(448, 64, 64, 128);
+                draw_rect(448, 0, 64, 128);
             }
         }
-        WobjType::SilverSlime => draw_rect(64, 256, 32, 32),
+        WobjType::SilverSlime => draw_rect(224, 32, 32, 32),
         WobjType::LavaMonster { face_left } => {
             if *face_left {
-                draw_rect(416 + 48, 400, -48, 48);
+                draw_rect(256 + 48, 48, -48, 48);
             } else {
-                draw_rect(416, 400, 48, 48);
+                draw_rect(256, 48, 48, 48);
             }
         }
         WobjType::TtMinion { small } => {
             if *small {
-                draw_rect(256, 416, 32, 32);
+                draw_rect(224, 0, 32, 32);
             } else {
-                draw_rect(288, 416, 32, 64);
+                draw_rect(352, 48, 32, 64);
             }
         }
-        WobjType::SlimeWalker => draw_rect(384, 1376, 64, 64),
-        WobjType::MegaFish { .. } => draw_rect(256, 448, 32, 32),
-        WobjType::LavaDragonHead { .. } => draw_rect(0, 2368, 64, 64),
+        WobjType::SlimeWalker => draw_rect(0, 448, 64, 64),
+        WobjType::MegaFish { .. } => draw_rect(64, 64, 32, 32),
+        WobjType::LavaDragonHead { .. } => draw_rect(0, 976, 64, 64),
         WobjType::TtNode { node_type } => match node_type {
-            &TtNodeType::ChaseTrigger => draw_rect(320, 1248, 32, 32),
-            &TtNodeType::NormalTrigger => draw_rect(320, 1280, 32, 32),
-            &TtNodeType::BozoWaypoint => draw_rect(320, 2496, 32, 32),
+            &TtNodeType::ChaseTrigger => draw_rect(0, editor_data.gfx_size.1 as i32 + 96, 32, 32),
+            &TtNodeType::NormalTrigger => draw_rect(0, editor_data.gfx_size.1 as i32 + 128, 32, 32),
+            &TtNodeType::BozoWaypoint => draw_rect(160, editor_data.gfx_size.1 as i32 + 64, 32, 32),
             &TtNodeType::Waypoint(waypoint_id) => {
-                draw_rect(320, 1312, 32, 32);
+                draw_rect(0, editor_data.gfx_size.1 as i32 + 160, 32, 32);
                 Sprite::create_string(
+                    384,
+                    editor_data.gfx_size.1,
                     spawner.pos.0,
                     spawner.pos.1 - 5.0,
                     4.0,
@@ -1704,15 +1712,15 @@ fn draw_spawner(
                 );
             }
         },
-        WobjType::TtBoss { .. } => draw_rect(384, 416, 32, 32),
-        WobjType::EaterBug { .. } => draw_rect(352, 1408, 32, 96),
-        WobjType::SpiderWalker { .. } => draw_rect(288, 1472, 32, 32),
-        WobjType::SpikeTrap => draw_rect(224, 1536, 32, 32),
+        WobjType::TtBoss { .. } => draw_rect(96, 64, 32, 32),
+        WobjType::EaterBug { .. } => draw_rect(320, 576, 32, 96),
+        WobjType::SpiderWalker { .. } => draw_rect(228, 672, 32, 32),
+        WobjType::SpikeTrap => draw_rect(160, 576, 32, 32),
         WobjType::RotatingFireColunmPiece {
             origin_x,
             degrees_per_second,
         } => {
-            draw_rect(416, 2048, 32, 32);
+            draw_rect(160, editor_data.gfx_size.1 as i32 + 32, 32, 32);
             let dist = spawner.pos.0 - *origin_x as f32;
             let pos_x = *origin_x as f32
                 + dist
@@ -1732,18 +1740,18 @@ fn draw_spawner(
                 .to_vec(),
             );
         }
-        WobjType::SuperDragon { .. } => draw_rect(384, 1664, 128, 128),
-        WobjType::SuperDragonLandingZone { .. } => draw_rect(384, 2080, 32, 32),
-        WobjType::BozoLaserMinion { .. } => draw_rect(384, 2528, 32, 64),
-        WobjType::Checkpoint { .. } => draw_rect(384, 2592, 32, 32),
-        WobjType::SpikeGuy => draw_rect(384, 2208, 32, 32),
-        WobjType::BanditGuy { .. } => draw_rect(416, 2208, 32, 32),
+        WobjType::SuperDragon { .. } => draw_rect(192, 704, 128, 128),
+        WobjType::SuperDragonLandingZone { .. } => draw_rect(224, editor_data.gfx_size.1 as i32, 32, 32),
+        WobjType::BozoLaserMinion { .. } => draw_rect(240, 896, 32, 64),
+        WobjType::Checkpoint { .. } => draw_rect(224, 256, 32, 32),
+        WobjType::SpikeGuy => draw_rect(288, 832, 32, 32),
+        WobjType::BanditGuy { .. } => draw_rect(128, 480, 32, 32),
         WobjType::PushZone { push_zone_type, .. } => match push_zone_type {
-            PushZoneType::Horizontal => draw_rect(384, 1856, 128, 128),
-            PushZoneType::Vertical => draw_rect(384, 1792, 64, 64),
-            PushZoneType::HorizontalSmall => draw_rect(416, 2592, 32, 32),
+            PushZoneType::Horizontal => draw_rect(256, editor_data.gfx_size.1 as i32 + 64, 128, 128),
+            PushZoneType::Vertical => draw_rect(256, editor_data.gfx_size.1 as i32, 64, 64),
+            PushZoneType::HorizontalSmall => draw_rect(224, editor_data.gfx_size.1 as i32 + 64, 32, 32),
         },
-        WobjType::VerticalWindZone { .. } => draw_rect(384 + 64, 1792, 64, 64),
+        WobjType::VerticalWindZone { .. } => draw_rect(320, editor_data.gfx_size.1 as i32, 64, 64),
         WobjType::DisapearingPlatform {
             time_on,
             time_off,
@@ -1752,7 +1760,7 @@ fn draw_spawner(
             let mut sprite = Sprite::new(
                 (spawner.pos.0, spawner.pos.1, 0.0),
                 (32.0, 32.0),
-                (352.0, 2112.0, 32.0, 32.0),
+                (256.0, 0.0, 32.0, 32.0),
             );
             let time = editor_data
                 .time_past
@@ -1771,9 +1779,9 @@ fn draw_spawner(
             }
             sprites.push(sprite);
         }
-        WobjType::KamakaziSlime => draw_rect(448, 2080, 32, 32),
+        WobjType::KamakaziSlime => draw_rect(128, 448, 32, 32),
         WobjType::SpringBoard { jump_velocity } => {
-            draw_rect(448, 0, 32, 32);
+            draw_rect(64, 0, 32, 32);
             sprites.push(Sprite::new_pure_color(
                 (spawner.pos.0 + 16.0, spawner.pos.1 + 2.0, 0.0),
                 (3.0, -jump_velocity * jump_velocity),
@@ -1782,65 +1790,65 @@ fn draw_spawner(
         }
         WobjType::Jumpthrough { big } => {
             if *big {
-                draw_rect(416, 2944, 96, 32);
+                draw_rect(256, editor_data.gfx_size.1 as i32 + 192, 96, 32);
             } else {
-                draw_rect(384, 2944, 32, 32);
+                draw_rect(224, editor_data.gfx_size.1 as i32 + 192, 32, 32);
             }
         }
-        WobjType::BreakablePlatform { .. } => draw_rect(256, 1184, 32, 32),
+        WobjType::BreakablePlatform { .. } => draw_rect(256, 544, 32, 32),
         WobjType::LockedBlock { color, .. } => match color {
-            &KeyColor::Red => draw_rect(288, 1120, 32, 32),
-            &KeyColor::Green => draw_rect(288, 1152, 32, 32),
-            &KeyColor::Blue => draw_rect(288, 1184, 32, 32),
+            &KeyColor::Red => draw_rect(288, 480, 32, 32),
+            &KeyColor::Green => draw_rect(288, 512, 32, 32),
+            &KeyColor::Blue => draw_rect(288, 544, 32, 32),
         },
         WobjType::RockGuy { rock_guy_type } => match rock_guy_type {
-            RockGuyType::Medium => draw_rect(384, 3040, 32, 64),
-            RockGuyType::Small1 => draw_rect(390, 3117, 22, 19),
+            RockGuyType::Medium => draw_rect(96, 1072, 32, 64),
+            RockGuyType::Small1 => draw_rect(198, 1053, 22, 19),
             RockGuyType::Small2 { face_left } => {
                 if *face_left {
-                    draw_rect(425 + 14, 3122, -14, 14);
+                    draw_rect(72 + 14, 1122, -14, 14);
                 } else {
-                    draw_rect(425, 3122, 14, 14);
+                    draw_rect(72, 1122, 14, 14);
                 }
             }
         },
-        WobjType::RockGuySlider => draw_rect(384, 3136, 64, 32),
-        WobjType::RockGuySmasher => draw_rect(384, 3392, 32, 96),
-        WobjType::HealthSetTrigger { .. } => draw_rect(448, 3968, 64, 96),
-        WobjType::Vortex { .. } => draw_rect(256, 3968, 96, 96),
-        WobjType::GraphicsChangeTrigger { .. } => draw_rect(256, 1344, 32, 32),
-        WobjType::BossBarInfo { .. } => draw_rect(384, 1344, 32, 32),
+        WobjType::RockGuySlider => draw_rect(160, 1072, 64, 32),
+        WobjType::RockGuySmasher => draw_rect(320, 1136, 32, 96),
+        WobjType::HealthSetTrigger { .. } => draw_rect(448, editor_data.gfx_size.1 as i32 + 192, 64, 96),
+        WobjType::Vortex { .. } => draw_rect(128, 1136, 96, 96),
+        WobjType::GraphicsChangeTrigger { .. } => draw_rect(64, editor_data.gfx_size.1 as i32 + 64, 32, 32),
+        WobjType::BossBarInfo { .. } => draw_rect(160, editor_data.gfx_size.1 as i32, 32, 32),
         WobjType::BgSpeed { vertical_axis, .. } => {
-            draw_rect(480, 3392 + (32 * *vertical_axis as i32), 32, 32)
+            draw_rect(192, editor_data.gfx_size.1 as i32 + 128 + (32 * *vertical_axis as i32), 32, 32)
         }
-        WobjType::BgTransparency { .. } => draw_rect(480, 3392 + 64, 32, 32),
+        WobjType::BgTransparency { .. } => draw_rect(192, editor_data.gfx_size.1 as i32 + 192, 32, 32),
         WobjType::TeleportTrigger1 { link_id, .. } | WobjType::TeleportArea2 { link_id, .. } | WobjType::TeleportArea1 { link_id, .. } => {
             if matches!(spawner.type_data, WobjType::TeleportArea2 { .. }) {
-                draw_rect(384, 4224, 128, 128);
-                draw_rect(352, 4288, 32, 32);
+                draw_rect(0, editor_data.gfx_size.1 as i32 + 224, 128, 128);
+                draw_rect(32, editor_data.gfx_size.1 as i32 + 192, 32, 32);
             } else if matches!(spawner.type_data, WobjType::TeleportTrigger1 { .. }) {
-                draw_rect(480, 3392 + 96, 32, 96);
+                draw_rect(224, editor_data.gfx_size.1 as i32 + 96, 32, 96);
             } else {
-                draw_rect(384, 4224, 128, 128);
+                draw_rect(0, editor_data.gfx_size.1 as i32 + 224, 128, 128);
             }
             let text = format!("Link ID: {}", *link_id);
-            Sprite::create_string(spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
+            Sprite::create_string(384, editor_data.gfx_size.1, spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
         }
-        WobjType::SfxPoint { .. } => draw_rect(480, 3360, 32, 32),
-        WobjType::Wolf => draw_rect(352, 4480, 64, 32),
+        WobjType::SfxPoint { .. } => draw_rect(192, editor_data.gfx_size.1 as i32 + 96, 32, 32),
+        WobjType::Wolf => draw_rect(384, 1840, 64, 32),
         WobjType::Supervirus => sprites.push(Sprite::new_pure_color(
             (spawner.pos.0, spawner.pos.1, 0.0),
             (48.0, 96.0),
             (1.0, 0.0, 0.0, 0.8),
         )),
         WobjType::Lua { lua_wobj_type } => {
-            draw_rect(448, 1344, 32, 32);
+            draw_rect(96, editor_data.gfx_size.1 as i32 + 32, 32, 32);
             let text = format!("Lua Type ID: {}", *lua_wobj_type);
-            Sprite::create_string(spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
+            Sprite::create_string(384, editor_data.gfx_size.1, spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
         }
-        WobjType::PlayerSpawn => draw_rect(384, 1216, 32, 32),
-        WobjType::FinishTrigger { .. } => draw_rect(352, 2992, 32, 32),
-        WobjType::GravityTrigger { .. } => draw_rect(480, 1344, 32, 32),
+        WobjType::PlayerSpawn => draw_rect(96, editor_data.gfx_size.1 as i32, 32, 32),
+        WobjType::FinishTrigger { .. } => draw_rect(192, editor_data.gfx_size.1 as i32 + 64, 32, 32),
+        WobjType::GravityTrigger { .. } => draw_rect(128, editor_data.gfx_size.1 as i32 + 32, 32, 32),
         WobjType::CustomizeableMoveablePlatform {
             bitmap_x32,
             target_relative,
@@ -1885,7 +1893,7 @@ fn draw_spawner(
                 Sprite::new(
                     (spawner.pos.0, spawner.pos.1, 0.0),
                     (32.0, 32.0),
-                    (448.0, 7520.0, 32.0, 32.0)
+                    (416.0, editor_data.gfx_size.1 as f32 + 192.0, 32.0, 32.0)
                 )
             );
             sprites.push(
@@ -1893,17 +1901,17 @@ fn draw_spawner(
                     (spawner.pos.0, spawner.pos.1, 0.0),
                     (32.0, 32.0),
                     match id {
-			            0 => (128.0, 1824.0, 32.0, 32.0),
-			            1 => (256.0, 1824.0, 32.0, 32.0),
-			            2 => (256.0, 1920.0-32.0, 32.0, 32.0),
-			            3 => (256.0, 3392.0, 32.0, 32.0),
-			            4 => (128.0, 1984.0, 32.0, 32.0),
-			            5 => (0.0, 1280.0, 32.0, 32.0),
-			            6 => (128.0, 1280.0, 32.0, 32.0),
-			            7 => (0.0, 768.0, 32.0, 32.0),
-			            8 => (128.0, 768.0, 32.0, 32.0),
-			            9 => (5.0, 4616.0, 32.0, 32.0),
-                        10 => (0.0, 7776.0, 32.0, 32.0),
+                        0 => (0.0, 704.0, 32.0, 32.0),
+			            1 => (0.0, 768.0, 32.0, 32.0),
+			            2 => (0.0, 832.0, 32.0, 32.0),
+			            3 => (0.0, 1232.0, 32.0, 32.0),
+			            4 => (0.0, 1584.0, 40.0, 40.0),
+			            5 => (0.0, 640.0, 32.0, 32.0),
+			            6 => (128.0, 640.0, 32.0, 32.0),
+			            7 => (384.0, 640.0, 32.0, 32.0),
+			            8 => (0.0, 1712.0, 40.0, 40.0),
+			            9 => (0.0, 1328.0, 40.0, 40.0),
+			            10 => (0.0, 1456.0, 40.0, 40.0),
                         _ => (0.0, 0.0, 0.0, 0.0),
                     }
                 )
@@ -1917,7 +1925,7 @@ fn draw_spawner(
             let mut sprite = Sprite::new(
                 (spawner.pos.0, spawner.pos.1, 0.0),
                 (32.0, 32.0),
-                (352.0, 2112.0, 32.0, 32.0),
+                (256.0, 0.0, 32.0, 32.0),
             );
             let time = editor_data
                 .time_past
@@ -1930,6 +1938,6 @@ fn draw_spawner(
             }
             sprites.push(sprite);
         },
-        WobjType::InvisBlock => draw_rect(128, 7744, 32, 32),
+        WobjType::InvisBlock => draw_rect(384, editor_data.gfx_size.1 as i32 + 192, 32, 32),
     }
 }
