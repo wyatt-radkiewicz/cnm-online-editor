@@ -356,7 +356,11 @@ impl WorldPanel {
                                     (((pointer_pos.y - real_pos.y) / scale) as i32)
                                         .clamp(0, rect.h - 1),
                                 );
-                                if !editor_data.opaques[(local_pos.0 + rect.x) as usize]
+
+                                if (local_pos.0 + rect.x) as usize > editor_data.opaques.len() ||
+                                    (local_pos.1 + rect.y) as usize >= editor_data.opaques[(local_pos.0 + rect.x) as usize].len() {
+                                    selected_layer = None;
+                                } else if !editor_data.opaques[(local_pos.0 + rect.x) as usize]
                                     [(local_pos.1 + rect.y) as usize]
                                 {
                                     selected_layer = Some(idx);
