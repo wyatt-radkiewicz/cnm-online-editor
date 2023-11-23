@@ -1960,6 +1960,23 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(petid));
             ui.end_row();
         }
+        &mut WobjType::KeyRemover { ref mut remove_red, ref mut remove_green, ref mut remove_blue } => {
+            ui.label("Remove Red: ");
+            if ui.selectable_label(*remove_red, "Removes").clicked() {
+                *remove_red = !*remove_red;
+            }
+            ui.end_row();
+            ui.label("Remove Green: ");
+            if ui.selectable_label(*remove_green, "Removes").clicked() {
+                *remove_green = !*remove_green;
+            }
+            ui.end_row();
+            ui.label("Remove Blue: ");
+            if ui.selectable_label(*remove_blue, "Removes").clicked() {
+                *remove_blue = !*remove_blue;
+            }
+            ui.end_row();
+        }
         _ => {}
     }
 }
@@ -2317,21 +2334,26 @@ impl Iterator for WobjIter {
                 gravity: Default::default(),
             }),
             59 => Some(InvisBlock),
+            60 => Some(KeyRemover {
+                remove_red: false,
+                remove_green: false,
+                remove_blue: false,
+            }),
 
             // Collectables
-            60 => Some(DroppedItem {
+            61 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            61 => Some(UpgradeTrigger {
+            62 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            62 => Some(WandRune {
+            63 => Some(WandRune {
                 rune_type: Default::default(),
             }),
-            63 => Some(SkinUnlock {
+            64 => Some(SkinUnlock {
                 id: Default::default(),
             }),
-            64 => Some(PetUnlock {
+            65 => Some(PetUnlock {
                 petid: Default::default(),
             }),
             _ => None,
@@ -2407,5 +2429,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &TeleportArea2 { .. } => "Teleport Area (Teleports Everything)",
         &InvisBlock => "Invisible Block",
         &PetUnlock { .. } => "Pet Unlock",
+        &KeyRemover { .. } => "Key Remover",
     }
 }

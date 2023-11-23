@@ -580,6 +580,15 @@ pub enum WobjType {
         ///
         petid: u8,
     },
+    ///
+    KeyRemover {
+        ///
+        remove_red: bool,
+        ///
+        remove_green: bool,
+        ///
+        remove_blue: bool,
+    },
 }
 
 impl WobjType {
@@ -941,6 +950,11 @@ impl WobjType {
             153 => Ok(Self::InvisBlock),
             154 => Ok(Self::PetUnlock {
                 petid: custom_int as u8,
+            }),
+            156 => Ok(Self::KeyRemover {
+                remove_red: (custom_int & 0x1) != 0,
+                remove_green: (custom_int & 0x2) != 0,
+                remove_blue: (custom_int & 0x4) != 0,
             }),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
@@ -1332,7 +1346,16 @@ impl WobjType {
                 (150, (teleports.len() as i32 - 1) | teleport_players_bit | start_activated_bit, link_id as f32)
             },
             &Self::InvisBlock => (153, 0, 0.0),
-            &Self::PetUnlock { petid } => (154, petid as i32, 0.0)
+            &Self::PetUnlock { petid } => (154, petid as i32, 0.0),
+            &Self::KeyRemover { remove_red, remove_green, remove_blue } => {
+                (
+                    156,
+                    if remove_red { 0x1 } else { 0x0 } |
+                    if remove_green { 0x2 } else { 0x0 } |
+                    if remove_blue { 0x4 } else { 0x0 },
+                    0.0,
+                )
+            }
         }
     }
 }

@@ -1405,6 +1405,7 @@ fn get_spawner_size(spawner: &cnmo_parse::lparse::level_data::cnms_types::Spawne
         WobjType::RockGuySmasher | WobjType::TeleportTrigger1 { .. } => (32.0, 96.0),
         WobjType::RockGuySlider | WobjType::Wolf => (64.0, 32.0),
         WobjType::Supervirus => (48.0, 96.0),
+        WobjType::KeyRemover { .. } => (64.0, 96.0),
         _ => (32.0, 32.0),
     }
 }
@@ -1718,7 +1719,7 @@ fn draw_spawner(
         },
         WobjType::TtBoss { .. } => draw_rect(96, 64, 32, 32),
         WobjType::EaterBug { .. } => draw_rect(320, 576, 32, 96),
-        WobjType::SpiderWalker { .. } => draw_rect(228, 672, 32, 32),
+        WobjType::SpiderWalker { .. } => draw_rect(288, 672, 32, 32),
         WobjType::SpikeTrap => draw_rect(160, 576, 32, 32),
         WobjType::RotatingFireColunmPiece {
             origin_x,
@@ -1944,5 +1945,6 @@ fn draw_spawner(
         },
         WobjType::InvisBlock => draw_rect(384, editor_data.gfx_size.1 as i32 + 192, 32, 32),
         WobjType::PetUnlock { .. } => draw_rect(352, editor_data.gfx_size.1 as i32 + 192, 32, 32),
+        WobjType::KeyRemover { .. } => draw_rect(128, editor_data.gfx_size.1 as i32 + 224, 64, 96),
     }
 }
