@@ -101,10 +101,6 @@ pub enum PetAI {
     Fly {
         ///
         num_fly_frames: u8,
-        ///
-        fly_speed: f32,
-        ///
-        fly_thrust: f32,
     },
     ///
     Walk {
@@ -114,10 +110,17 @@ pub enum PetAI {
         num_walk_frames: u8,
         ///
         num_fall_frames: u8,
+    },
+    ///
+    Bounce {
         ///
-        walk_speed: f32,
+        num_idle_frames: u8,
+        ///
+        num_bounce_frames: u8,
         ///
         jump_height: f32,
+        ///
+        bounce_idly: bool,
     },
 }
 
@@ -125,8 +128,6 @@ impl Default for PetAI {
     fn default() -> Self {
         Self::Fly {
             num_fly_frames: 1,
-            fly_speed: 4.0,
-            fly_thrust: 2.0,
         }
     }
 }
@@ -142,6 +143,8 @@ pub struct PetDef {
     pub iconbase: (u16, u16),
     ///
     pub ai: PetAI,
+    ///
+    pub idle_snd: i32,
 }
 
 impl Default for PetDef {
@@ -151,6 +154,7 @@ impl Default for PetDef {
             animbase: (0, 0),
             iconbase: (0, 0),
             ai: Default::default(),
+            idle_snd: -1,
         }
     }
 }
@@ -159,39 +163,53 @@ impl PetDef {
     ///
     pub fn from_string(s: &str, line: usize) -> Result<Self, Error> {
         let words = s.split(' ').map(|s| s.to_owned()).collect::<Vec<String>>();
-        if words.len() < 6 { return Err(Error::CorruptedEntry(line)) }
+        if words.len() < 7 { return Err(Error::CorruptedEntry(line)) }
         let name = words[0].trim_end_matches('"').trim_matches('"').to_owned();
         let basex = words[1].parse::<u16>().unwrap_or(0);
         let basey = words[2].parse::<u16>().unwrap_or(0);
         let iconx = words[3].parse::<u16>().unwrap_or(0);
         let icony = words[4].parse::<u16>().unwrap_or(0);
+        let idle_snd = words[5].parse::<i32>().unwrap_or(0);
         
-        match words[5].chars().next() {
+        match words[6].chars().next() {
             Some('f') => {
-                if words.len() < 9 { return Err(Error::CorruptedEntry(line)) }
+                if words.len() < 8 { return Err(Error::CorruptedEntry(line)) }
                 Ok(Self {
                     name,
                     animbase: (basex, basey),
                     iconbase: (iconx, icony),
+                    idle_snd,
                     ai: PetAI::Fly {
-                        num_fly_frames: words[6].parse::<u8>().unwrap_or(1),
-                        fly_speed: words[7].parse::<f32>().unwrap_or(4.0),
-                        fly_thrust: words[8].parse::<f32>().unwrap_or(2.0),
+                        num_fly_frames: words[7].parse::<u8>().unwrap_or(1),
                     }
                 })
             },
             Some('w') => {
+                if words.len() < 10 { return Err(Error::CorruptedEntry(line)) }
+                Ok(Self {
+                    name,
+                    animbase: (basex, basey),
+                    iconbase: (iconx, icony),
+                    idle_snd,
+                    ai: PetAI::Walk {
+                        num_idle_frames: words[7].parse::<u8>().unwrap_or(1),
+                        num_walk_frames: words[8].parse::<u8>().unwrap_or(1),
+                        num_fall_frames: words[9].parse::<u8>().unwrap_or(1),
+                    }
+                })
+            },
+            Some('b') => {
                 if words.len() < 11 { return Err(Error::CorruptedEntry(line)) }
                 Ok(Self {
                     name,
                     animbase: (basex, basey),
                     iconbase: (iconx, icony),
-                    ai: PetAI::Walk {
-                        num_idle_frames: words[6].parse::<u8>().unwrap_or(1),
-                        num_walk_frames: words[7].parse::<u8>().unwrap_or(1),
-                        num_fall_frames: words[8].parse::<u8>().unwrap_or(1),
-                        walk_speed: words[9].parse::<f32>().unwrap_or(5.0),
-                        jump_height: words[10].parse::<f32>().unwrap_or(8.0),
+                    idle_snd,
+                    ai: PetAI::Bounce {
+                        num_idle_frames: words[7].parse::<u8>().unwrap_or(1),
+                        num_bounce_frames: words[8].parse::<u8>().unwrap_or(1),
+                        bounce_idly: words[9].parse::<i32>().unwrap_or(0) != 0,
+                        jump_height: words[10].parse::<f32>().unwrap_or(2.0),
                     }
                 })
             },
@@ -202,24 +220,28 @@ impl PetDef {
     ///
     pub fn as_string(&self) -> String {
         "\"".to_string() + &self.name + "\" " + &self.animbase.0.to_string() + " " + &self.animbase.1.to_string() + " " + 
-            &self.iconbase.0.to_string() + " " + &self.iconbase.1.to_string() + " " + 
+            &self.iconbase.0.to_string() + " " + &self.iconbase.1.to_string() + " " +
+            &self.idle_snd.to_string() + " " + 
         &(match self.ai {
             PetAI::Fly {
                 ref num_fly_frames,
-                ref fly_speed,
-                ref fly_thrust,
             } => {
-                "f ".to_string() + &num_fly_frames.to_string() + " " + &fly_speed.to_string() + " " + &fly_thrust.to_string()
+                "f ".to_string() + &num_fly_frames.to_string()
+            },
+            PetAI::Bounce {
+                ref num_idle_frames,
+                ref num_bounce_frames,
+                ref bounce_idly,
+                ref jump_height,
+            } => {
+                "b ".to_string() + &num_idle_frames.to_string() + " " + &num_bounce_frames.to_string() + " " + if *bounce_idly { "1" } else { "0" } + " " + &jump_height.to_string()
             },
             PetAI::Walk {
                 ref num_idle_frames,
                 ref num_walk_frames,
                 ref num_fall_frames,
-                ref walk_speed,
-                ref jump_height,
             } => {
                 "w ".to_string() + &num_idle_frames.to_string() + " " + &num_walk_frames.to_string() + " " + &num_fall_frames.to_string()
-                    + " " + &walk_speed.to_string() + " " + &jump_height.to_string()
             }
         })
     }

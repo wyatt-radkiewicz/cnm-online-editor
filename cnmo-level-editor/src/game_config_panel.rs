@@ -273,51 +273,68 @@ impl GameConfigPanel {
                                 ui.label("Icon Base Y: ").on_hover_text("This is what tile (32x32) in the graphics file it is");
                                 ui.add(egui::DragValue::new(&mut def.iconbase.1).clamp_range(0..=1023));
                                 ui.end_row();
+                                ui.label("Idle SFX ID: ").on_hover_text("-1 means no sound");
+                                ui.add(egui::DragValue::new(&mut def.idle_snd).clamp_range(-1..=255));
+                                ui.end_row();
 
                                 ui.label("Pet AI Type: ");
                                 egui::ComboBox::new("pet_ai_combo_box".to_string() + &ui_id.to_string(), "")
                                     .selected_text(match def.ai {
                                         PetAI::Fly { .. } => "Fly",
+                                        PetAI::Bounce { .. } => "Bounce",
                                         PetAI::Walk { .. } => "Walk",
                                     })
                                     .show_ui(ui, |ui| {
                                         ui.selectable_value(&mut def.ai, PetAI::Fly {
                                             num_fly_frames: 1,
-                                            fly_speed: 4.0,
-                                            fly_thrust: 2.0,
                                         }, "Fly");
                                         ui.selectable_value(&mut def.ai, PetAI::Walk {
                                             num_idle_frames: 1,
                                             num_walk_frames: 1,
                                             num_fall_frames: 1,
-                                            walk_speed: 5.0,
-                                            jump_height: 8.0,
                                         }, "Walk");
+                                        ui.selectable_value(&mut def.ai, PetAI::Bounce {
+                                            num_idle_frames: 1,
+                                            num_bounce_frames: 1,
+                                            bounce_idly: false,
+                                            jump_height: 7.0,
+                                        }, "Bounce");
                                     });
                                 ui.end_row();
 
                                 match &mut def.ai {
                                     &mut PetAI::Fly {
                                         ref mut num_fly_frames,
-                                        ref mut fly_speed,
-                                        ref mut fly_thrust,
                                     } => {
                                         ui.label("Number of Flying Frames: ");
                                         ui.add(egui::DragValue::new(num_fly_frames).clamp_range(0..=15));
                                         ui.end_row();
-                                        ui.label("Fly Speed: ").on_hover_text("Refrence: player walk speed is 5");
-                                        ui.add(egui::DragValue::new(fly_speed).clamp_range(-15.0..=15.0));
+                                    },
+                                    &mut PetAI::Bounce {
+                                        ref mut num_idle_frames,
+                                        ref mut num_bounce_frames,
+                                        ref mut bounce_idly,
+                                        ref mut jump_height,
+                                    } => {
+                                        ui.label("Number of Idle Frames: ");
+                                        ui.add(egui::DragValue::new(num_idle_frames).clamp_range(0..=15));
                                         ui.end_row();
-                                        ui.label("Fly Thrust: ").on_hover_text("Refrence: around 2-3 is a good place to start");
-                                        ui.add(egui::DragValue::new(fly_thrust).clamp_range(-15.0..=15.0));
+                                        ui.label("Number of Bouncing Frames: ");
+                                        ui.add(egui::DragValue::new(num_bounce_frames).clamp_range(0..=15));
+                                        ui.end_row();
+                                        ui.label("");
+                                        if ui.selectable_label(*bounce_idly, "Bounce When Idle").clicked() {
+                                            *bounce_idly = !*bounce_idly;
+                                        }
+                                        ui.end_row();
+                                        ui.label("Jump Thrust: ").on_hover_text("Refrence: player jump thrust is 10");
+                                        ui.add(egui::DragValue::new(jump_height).clamp_range(-15.0..=15.0));
                                         ui.end_row();
                                     },
                                     &mut PetAI::Walk {
                                         ref mut num_idle_frames,
                                         ref mut num_walk_frames,
                                         ref mut num_fall_frames,
-                                        ref mut walk_speed,
-                                        ref mut jump_height,
                                     } => {
                                         ui.label("Number of Idle Frames: ");
                                         ui.add(egui::DragValue::new(num_idle_frames).clamp_range(0..=15));
@@ -327,12 +344,6 @@ impl GameConfigPanel {
                                         ui.end_row();
                                         ui.label("Number of Fall Frames: ");
                                         ui.add(egui::DragValue::new(num_fall_frames).clamp_range(0..=15));
-                                        ui.end_row();
-                                        ui.label("Walk Speed: ").on_hover_text("Refrence: player walk speed is 5");
-                                        ui.add(egui::DragValue::new(walk_speed).clamp_range(-15.0..=15.0));
-                                        ui.end_row();
-                                        ui.label("Jump Thrust: ").on_hover_text("Refrence: player jump thrust is 10");
-                                        ui.add(egui::DragValue::new(jump_height).clamp_range(-15.0..=15.0));
                                         ui.end_row();
                                     },
                                 }
