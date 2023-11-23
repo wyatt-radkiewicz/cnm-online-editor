@@ -52,7 +52,7 @@ impl TilePanel {
                 let cw = size.0 as f32;
                 let ch = (rect.height() / rect.width()) * size.0 as f32;
                 self.scroll_offset -= response.ctx.input().scroll_delta.y;
-                self.scroll_offset = self.scroll_offset.clamp(0.0, size.1 as f32 - ch);
+                self.scroll_offset = self.scroll_offset.clamp(0.0, (size.1 as f32 - ch).max(0.0));
                 camera.set_projection(cw, ch, None, true);
                 let mut sprites = vec![Sprite::new(
                     (0.0, 0.0, 0.0),
