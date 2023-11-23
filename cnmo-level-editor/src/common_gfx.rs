@@ -62,6 +62,7 @@ impl GfxCommonResources {
 
         let palette = texture.palette.clone();
         let dimensions = texture.dimensions.clone();
+        let opaques = texture.opaques.clone();
 
         if paint_callback_resources.contains::<GfxCommonResources>() {
             let resource = paint_callback_resources.get_mut::<GfxCommonResources>().unwrap();
@@ -73,24 +74,6 @@ impl GfxCommonResources {
                 texture_bind_group,
                 texture,
             });
-        }
-
-        let image = image::load_from_memory(match std::fs::read("gfx.bmp") {
-            Ok(ref buffer) => buffer.as_slice(),
-            Err(_) => {
-                log::error!("Canno't find a gfx file! Loading backup graphics");
-                include_bytes!("gfx_backup.bmp")
-            },
-        }).unwrap();
-        let rgba = image.to_rgba8();
-        let (width, height) = rgba.dimensions();
-        let mut opaques = (0..width).map(|_| { (0..height).map(|_| { true }).collect::<Vec<bool>>() }).collect::<Vec<Vec<bool>>>();
-
-        for y in 0..height {
-            for x in 0..width {
-                let rgba = rgba.get_pixel(x, y).0;
-                opaques[x as usize][y as usize] = rgba[0] == 0 && rgba[1] == 255 && rgba[2] == 255 && rgba[3] == 255;
-            }
         }
 
         (palette, dimensions, opaques)

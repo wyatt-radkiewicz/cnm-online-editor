@@ -8,12 +8,14 @@ pub struct Texture {
     pub view: wgpu::TextureView,
     pub palette: Vec<[u8; 3]>,
     pub dimensions: (u32, u32),
+    pub opaques: Vec<Vec<bool>>,
 }
 
 struct ImageData {
     pub palette: Vec<[u8; 3]>,
     pub image: image::ImageBuffer<image::Rgba<u8>, Vec<u8>>,
     pub size: (u32, u32),
+    pub opaques: Vec<Vec<bool>>,
 }
 
 static EDITOR_BASE: &'static [u8] = include_bytes!("editorbase.bmp");
@@ -34,6 +36,20 @@ impl ImageData {
         }
     }
 
+    fn compute_opaques(rgba: &image::ImageBuffer<image::Rgba<u8>, Vec<u8>>) -> Vec<Vec<bool>> {
+        let (width, height) = rgba.dimensions();
+        let mut opaques = (0..width).map(|_| { (0..height).map(|_| { true }).collect::<Vec<bool>>() }).collect::<Vec<Vec<bool>>>();
+
+        for y in 0..height {
+            for x in 0..width {
+                let rgba = rgba.get_pixel(x, y).0;
+                opaques[x as usize][y as usize] = rgba[0] == 0 && rgba[1] == 255 && rgba[2] == 255 && rgba[3] == 255;
+            }
+        }
+
+        return opaques;
+    }
+
     fn get_image(buffer: &[u8]) -> Option<Self> {
         let decoder = match image::codecs::bmp::BmpDecoder::new(Cursor::new(buffer)) {
             Ok(decoder) => decoder,
@@ -49,6 +65,7 @@ impl ImageData {
                 Some(slice) => slice.to_owned(),
                 None => Vec::new(),
             },
+            opaques: Self::compute_opaques(&rgba),
             image: rgba,
             size: <image::DynamicImage as image::GenericImageView>::dimensions(&image),
         })
@@ -75,6 +92,7 @@ impl ImageData {
         (
             Self {
                 palette: self.palette,
+                opaques: Self::compute_opaques(&newimage),
                 image: newimage,
                 size: self.size,
             },
@@ -113,6 +131,7 @@ impl Texture {
             texture,
             view,
             sampler,
+            opaques: vec![],
             palette: Vec::new(),
             dimensions: (size.clone().into().0, size.clone().into().1),
         }
@@ -149,6 +168,7 @@ impl Texture {
             },
         );
         texture.dimensions = image.0.size;
+        texture.opaques = image.0.opaques;
         texture
     }
 }
