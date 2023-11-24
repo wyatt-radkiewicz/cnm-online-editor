@@ -641,7 +641,8 @@ impl WobjType {
             9 | 108 => {
                 // Ending Text/Dialoge Box
                 let mut text = "".to_string();
-                for i in (custom_int & 0x00ff_ffff) as usize..=custom_float as usize {
+                let end = custom_float as usize - if wobj_type_id == 108 { 0 } else { 1 };
+                for i in (custom_int & 0x00ff_ffff) as usize..=end {
                     text += (super::get_ending_text_line(cnms, version, i).unwrap_or_default()
                         + "\n")
                         .as_str();
@@ -1034,8 +1035,9 @@ impl WobjType {
                     (start, len)
                 };
                 //println!("{start} <- start");
+                let float = (start + num_lines - 1) + if dialoge_box { 0 } else { 1 };
 
-                (wobj_type_id, start as i32 | if despawn { 0x0100_0000u32 as i32 } else { 0 }, (start + num_lines - 1) as f32)
+                (wobj_type_id, start as i32 | if despawn { 0x0100_0000u32 as i32 } else { 0 }, float as f32)
             }
             &Self::BackgroundSwitcher {
                 shape,
