@@ -937,7 +937,7 @@ impl WobjType {
             }),
             150 => {
                 let loc = if ((custom_int & 0xffff) as usize) < version.get_num_teleports() {
-                    Teleport::from_lparse(cnms, version, custom_int as usize)?.loc
+                    Teleport::from_lparse(cnms, version, (custom_int & 0xffff) as usize)?.loc
                 } else {
                     Teleport::default().loc
                 };
