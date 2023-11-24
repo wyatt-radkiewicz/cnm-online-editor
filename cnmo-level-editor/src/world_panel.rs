@@ -1548,8 +1548,8 @@ fn draw_spawner(
             jumpthrough: _,
         } => {
             draw_rect(
-                if *bitmapx == 0 { 9 } else { *bitmapx as i32 } * 32,
-                if *bitmapy == 0 { 5 } else { *bitmapy as i32 } * 32,
+                if *bitmapx == 0 && *bitmapy == 0 { 9 } else { *bitmapx as i32 } * 32,
+                if *bitmapy == 0 && *bitmapy == 0 { 5 } else { *bitmapy as i32 } * 32,
                 32,
                 32
             );
