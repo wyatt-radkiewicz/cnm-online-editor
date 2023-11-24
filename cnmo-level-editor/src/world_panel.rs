@@ -1573,7 +1573,7 @@ fn draw_spawner(
             &Some(3) => draw_rect(288, 640, 32, 32),
             &Some(4) => draw_rect(256, 672, 32, 32),
             &Some(5) => draw_rect(32, 32, 32, 32),
-            _ => draw_rect(32, 32, 32, 32),
+            _ => draw_rect(64, 32, 32, 32),
         },
         WobjType::BackgroundSwitcher { shape, .. } => match shape {
             &BackgroundSwitcherShape::Small => draw_rect(32, editor_data.gfx_size.1 as i32 + 160, 32, 32),
