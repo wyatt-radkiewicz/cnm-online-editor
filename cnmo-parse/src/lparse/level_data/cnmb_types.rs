@@ -1,3 +1,5 @@
+use bitflags::bitflags;
+
 use crate::lparse::{EntryData, Error, LParse};
 
 use crate::Rect;
@@ -24,6 +26,24 @@ impl Default for BackgroundImage {
             w: 0,
             h: 0,
         })
+    }
+}
+
+bitflags! {
+    /// Flags used by background layers
+    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub struct BackgroundFlags: u32 {
+        /// Specifies that this layer shows up on 4:3 displays
+        const ShowOn4By3 = 1 << 0;
+        /// Specifies that this layer shows up on 16:9 widescreen displays
+        const ShowOn16By9 = 1 << 1;
+    }
+}
+
+impl Default for BackgroundFlags {
+    fn default() -> Self {
+        BackgroundFlags::ShowOn4By3 | BackgroundFlags::ShowOn16By9
     }
 }
 
@@ -59,6 +79,8 @@ pub struct BackgroundLayer {
     pub top3d: u32,
     /// How high the 3d projection is
     pub height3d: u32,
+    /// Background flags
+    pub flags: BackgroundFlags,
 }
 
 impl BackgroundLayer {
@@ -92,6 +114,11 @@ impl BackgroundLayer {
         } else {
             (0, 0, 0)
         };
+        let background_flags = if let Ok(flags) = cnmb.try_get_entry("BG_FLAGS") {
+            BackgroundFlags::from_bits(flags.try_get_i32()?[index] as u32).unwrap_or(Default::default())
+        } else {
+            Default::default()
+        };
 
         let image = if background_clear_color == 0 {
             BackgroundImage::Bitmap(background_rect)
@@ -113,6 +140,7 @@ impl BackgroundLayer {
             top3d: background_top3d,
             bottom3d: background_bottom3d,
             height3d: background_height3d,
+            flags: background_flags,
         })
     }
 
@@ -128,6 +156,7 @@ impl BackgroundLayer {
         bg_highlayer: &mut Vec<u8>,
         bg_trans: &mut Vec<u8>,
         bg_3d: &mut Vec<i32>,
+        bg_flags: &mut Vec<i32>,
         _version: &VersionSpecs,
     ) {
         bg_origin.push(self.origin.0);
@@ -160,6 +189,7 @@ impl BackgroundLayer {
         bg_3d.push(self.top3d as i32);
         bg_3d.push(self.bottom3d as i32);
         bg_3d.push(self.height3d as i32);
+        bg_flags.push((self.flags.0.bits() as u32) as i32);
     }
 }
 
@@ -179,6 +209,7 @@ pub(super) fn save_background_vec(
     let mut bg_highlayer = Vec::new();
     let mut bg_trans = Vec::new();
     let mut bg_3d = Vec::new();
+    let mut bg_flags = Vec::new();
 
     for background in &backgrounds[0..backgrounds.len().min(version.background_layers)] {
         bg_pos.push(0.0);
@@ -194,6 +225,7 @@ pub(super) fn save_background_vec(
             &mut bg_highlayer,
             &mut bg_trans,
             &mut bg_3d,
+            &mut bg_flags,
             version,
         );
     }
@@ -220,6 +252,8 @@ pub(super) fn save_background_vec(
         .insert("BG_TRANS".to_string(), EntryData::U8(bg_trans));
     cnmb.entries
         .insert("BG_RATIO3D".to_string(), EntryData::I32(bg_3d));
+    cnmb.entries
+        .insert("BG_FLAGS".to_string(), EntryData::I32(bg_flags));
 }
 
 /// How a tile will damage the player

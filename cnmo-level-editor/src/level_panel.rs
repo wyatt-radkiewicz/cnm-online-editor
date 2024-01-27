@@ -1,5 +1,5 @@
 use cnmo_parse::lparse::level_data;
-use cnmo_parse::lparse::level_data::cnmb_types::BackgroundImage;
+use cnmo_parse::lparse::level_data::cnmb_types::{BackgroundImage, BackgroundFlags};
 use cnmo_parse::lparse::level_data::cnms_types::item_type::ItemType;
 use cnmo_parse::lparse::level_data::cnms_types::wobj_type::{WobjType, CustomizableMovingPlatformType};
 use cnmo_parse::lparse::level_data::cnms_types::{Spawner, SpawnerMode};
@@ -991,6 +991,26 @@ impl PropertiesPanel {
                     .on_hover_text("How high the 3d projection is");
                 ui.add(egui::DragValue::new(&mut layer.height3d).speed(1.0));
                 ui.end_row();
+
+                ui.label("Show On [4:3]: ");
+                let flag_4by3 = layer.flags.contains(BackgroundFlags::ShowOn4By3);
+                if ui
+                    .selectable_label(flag_4by3, "Enabled")
+                    .clicked()
+                {
+                    layer.flags.set(BackgroundFlags::ShowOn4By3, !flag_4by3);
+                }
+                ui.end_row();
+                ui.label("Show On [16:9]: ");
+                let flag_16by9 = layer.flags.contains(BackgroundFlags::ShowOn16By9);
+                if ui
+                    .selectable_label(flag_16by9, "Enabled")
+                    .clicked()
+                {
+                    layer.flags.set(BackgroundFlags::ShowOn16By9, !flag_16by9);
+                }
+                ui.end_row();
+
                 ui.label("Image/Color: ");
                 egui::ComboBox::new("background_image_chooser", "")
                     .selected_text(match layer.image {
