@@ -98,7 +98,7 @@ impl GameConfigPanel {
                         let mut delete_idx = None;
                         for (idx, resource) in resources.iter_mut().enumerate() {
                             ui.horizontal(|ui| {
-                                ui.add(egui::DragValue::new(&mut resource.id).clamp_range(0..=63))
+                                ui.add(egui::DragValue::new(&mut resource.id).clamp_range(0..=255))
                                     .on_hover_text("The resource ID");
                                 ui.text_edit_singleline(&mut resource.path);
                                 if ui.button("Remove").clicked() {

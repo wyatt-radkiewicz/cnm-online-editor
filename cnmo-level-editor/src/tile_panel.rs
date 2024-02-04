@@ -143,7 +143,7 @@ impl TilePanel {
                         tile.damage_type = DamageType::None;
                     }
                     if ui.selectable_label(matches!(tile.damage_type, DamageType::Lava(_)), get_damage_type_name(&DamageType::Lava(0))).clicked() {
-                        tile.damage_type = DamageType::Lava(1);
+                        tile.damage_type = DamageType::Lava(0);
                     }
                     if ui.selectable_label(matches!(tile.damage_type, DamageType::Spikes(_)), get_damage_type_name(&DamageType::Spikes(0))).clicked() {
                         tile.damage_type = DamageType::Spikes(1);
@@ -154,11 +154,15 @@ impl TilePanel {
                     if ui.selectable_label(matches!(tile.damage_type, DamageType::Ice(_)), get_damage_type_name(&DamageType::Ice(1.0))).clicked() {
                         tile.damage_type = DamageType::Ice(1.0);
                     }
+                    if ui.selectable_label(matches!(tile.damage_type, DamageType::Splashes(_)), get_damage_type_name(&DamageType::Splashes(0))).clicked() {
+                        tile.damage_type = DamageType::Splashes(0);
+                    }
                 });
                 ui.end_row();
                 match &mut tile.damage_type {
                     DamageType::Lava(dmg) | 
                     DamageType::Spikes(dmg) | 
+                    DamageType::Splashes(dmg) |
                     DamageType::Quicksand(dmg) => {
                         ui.label("Damage delt per frame: ");
                         ui.horizontal(|ui| {
@@ -388,7 +392,8 @@ fn get_damage_type_name(dmg_type: &DamageType) -> &str {
         DamageType::Lava(..) => "Lava",
         DamageType::Quicksand(..) => "Quicksand",
         DamageType::Spikes(..) => "Spikes",
-        DamageType::Ice(..) => "Ice"
+        DamageType::Ice(..) => "Ice",
+        DamageType::Splashes(..) => "Splashes",
     }
 }
 

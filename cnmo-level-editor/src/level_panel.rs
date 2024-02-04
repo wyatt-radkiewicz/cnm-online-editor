@@ -651,6 +651,16 @@ impl PropertiesPanel {
         world_panel: &mut WorldPanel,
     ) {
         if matches!(editor_data.tool, Tool::Light) {
+            // Light Shortcuts
+            if ui.ctx().input().key_pressed(egui::Key::Num0) && editor_data.editing_text == None { editor_data.light_tool_level = 0; }
+            if ui.ctx().input().key_pressed(egui::Key::Num1) && editor_data.editing_text == None { editor_data.light_tool_level = 1; }
+            if ui.ctx().input().key_pressed(egui::Key::Num2) && editor_data.editing_text == None { editor_data.light_tool_level = 2; }
+            if ui.ctx().input().key_pressed(egui::Key::Num3) && editor_data.editing_text == None { editor_data.light_tool_level = 3; }
+            if ui.ctx().input().key_pressed(egui::Key::Num4) && editor_data.editing_text == None { editor_data.light_tool_level = 4; }
+            if ui.ctx().input().key_pressed(egui::Key::Num5) && editor_data.editing_text == None { editor_data.light_tool_level = 5; }
+            if ui.ctx().input().key_pressed(egui::Key::Num6) && editor_data.editing_text == None { editor_data.light_tool_level = 6; }
+            if ui.ctx().input().key_pressed(egui::Key::Num7) && editor_data.editing_text == None { editor_data.light_tool_level = 7; }
+
             ui.with_layout(egui::Layout::top_down(egui::Align::Center), |ui| {
                 ui.heading("Light Edit Mode");
             });

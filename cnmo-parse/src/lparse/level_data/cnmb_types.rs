@@ -270,6 +270,8 @@ pub enum DamageType {
     Quicksand(i32),
     /// It will make the player's friction worse
     Ice(f32),
+    /// Normal, but will have splashes (good for waterfalls)
+    Splashes(i32),
 }
 
 /// What collision type does the tile have?
@@ -358,6 +360,7 @@ impl TileProperties {
             (2, damage) => DamageType::Spikes(damage),
             (3, damage) => DamageType::Quicksand(damage),
             (4, damage) => DamageType::Ice(damage as f32 / 100.0),
+            (5, damage) => DamageType::Splashes(damage),
             _ if !ignore_warnings => {
                 return Err(Error::Corrupted("Unknown tile damage type!".to_string()))
             }
@@ -430,6 +433,7 @@ impl TileProperties {
             DamageType::Spikes(dmg) => (2, dmg),
             DamageType::Quicksand(dmg) => (3, dmg),
             DamageType::Ice(friction) => (4, (friction * 100.0) as i32),
+            DamageType::Splashes(dmg) => (5, dmg),
         };
         bp_dmg_type.push(dmg_type);
         bp_dmg.push(dmg);
