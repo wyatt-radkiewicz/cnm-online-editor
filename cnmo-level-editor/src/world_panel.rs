@@ -1624,6 +1624,7 @@ fn draw_spawner(
                 ItemType::KeyBlue => draw_rect(224, 480-256, 32, 32),
                 ItemType::ExtraLifeJuice => draw_rect(256, 96, 32, 32),
                 ItemType::Wrench => draw_rect(288, 96, 32, 32),
+                ItemType::GoopBottle => draw_rect(384, 32, 32, 32),
             }
         }
         WobjType::WandRune { rune_type } => match rune_type {

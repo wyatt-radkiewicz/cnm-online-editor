@@ -2094,6 +2094,7 @@ impl Iterator for ItemIter {
             38 => Some(KeyBlue),
             39 => Some(ExtraLifeJuice),
             40 => Some(Wrench),
+            41 => Some(GoopBottle),
             _ => None,
         }
     }
@@ -2144,6 +2145,7 @@ fn get_item_type_name(item_type: &ItemType) -> &str {
         &KeyBlue => "Key Blue",
         &ExtraLifeJuice => "1-Up Juice",
         &Wrench => "Wrench",
+        &GoopBottle => "Goop Bottle",
     }
 }
 

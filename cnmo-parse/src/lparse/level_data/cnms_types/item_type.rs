@@ -85,6 +85,8 @@ pub enum ItemType {
     ExtraLifeJuice,
     ///
     Wrench,
+    ///
+    GoopBottle,
 }
 
 impl ItemType {
