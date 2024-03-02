@@ -1947,5 +1947,6 @@ fn draw_spawner(
         WobjType::InvisBlock => draw_rect(384, editor_data.gfx_size.1 as i32 + 192, 32, 32),
         WobjType::PetUnlock { .. } => draw_rect(352, editor_data.gfx_size.1 as i32 + 192, 32, 32),
         WobjType::KeyRemover { .. } => draw_rect(128, editor_data.gfx_size.1 as i32 + 224, 64, 96),
+        WobjType::LensFlare => draw_rect(192, editor_data.gfx_size.1 as i32 + 224, 32, 32),
     }
 }

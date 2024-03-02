@@ -2371,21 +2371,22 @@ impl Iterator for WobjIter {
                 remove_green: false,
                 remove_blue: false,
             }),
+            61 => Some(LensFlare),
 
             // Collectables
-            61 => Some(DroppedItem {
+            62 => Some(DroppedItem {
                 item: Default::default(),
             }),
-            62 => Some(UpgradeTrigger {
+            63 => Some(UpgradeTrigger {
                 trigger_type: Default::default(),
             }),
-            63 => Some(WandRune {
+            64 => Some(WandRune {
                 rune_type: Default::default(),
             }),
-            64 => Some(SkinUnlock {
+            65 => Some(SkinUnlock {
                 id: Default::default(),
             }),
-            65 => Some(PetUnlock {
+            66 => Some(PetUnlock {
                 petid: Default::default(),
             }),
             _ => None,
@@ -2462,5 +2463,6 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &InvisBlock => "Invisible Block",
         &PetUnlock { .. } => "Pet Unlock",
         &KeyRemover { .. } => "Key Remover",
+        &LensFlare { .. } => "Lens Flare",
     }
 }

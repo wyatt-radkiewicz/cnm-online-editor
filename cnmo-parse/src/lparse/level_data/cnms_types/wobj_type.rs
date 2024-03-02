@@ -589,6 +589,8 @@ pub enum WobjType {
         ///
         remove_blue: bool,
     },
+    ///
+    LensFlare,
 }
 
 impl WobjType {
@@ -957,6 +959,7 @@ impl WobjType {
                 remove_green: (custom_int & 0x2) != 0,
                 remove_blue: (custom_int & 0x4) != 0,
             }),
+            159 => Ok(Self::LensFlare),
             _ if wobj_type_id >= 124 && wobj_type_id <= 139 => Ok(Self::Lua {
                 lua_wobj_type: (wobj_type_id - 124) as u8,
             }),
@@ -1358,6 +1361,7 @@ impl WobjType {
                     0.0,
                 )
             }
+            &Self::LensFlare => (159, 0, 0.0),
         }
     }
 }
