@@ -1852,7 +1852,7 @@ fn draw_spawner(
             let text = format!("Lua Type ID: {}", *lua_wobj_type);
             Sprite::create_string(384, editor_data.gfx_size.1, spawner.pos.0, spawner.pos.1 - 5.0, 4.0, &text, sprites);
         }
-        WobjType::PlayerSpawn => draw_rect(96, editor_data.gfx_size.1 as i32, 32, 32),
+        WobjType::PlayerSpawn { .. } => draw_rect(96, editor_data.gfx_size.1 as i32, 32, 32),
         WobjType::FinishTrigger { .. } => draw_rect(192, editor_data.gfx_size.1 as i32 + 64, 32, 32),
         WobjType::GravityTrigger { .. } => draw_rect(128, editor_data.gfx_size.1 as i32 + 32, 32, 32),
         WobjType::CustomizeableMoveablePlatform {

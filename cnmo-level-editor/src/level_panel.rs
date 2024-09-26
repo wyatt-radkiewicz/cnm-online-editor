@@ -1286,6 +1286,17 @@ fn show_spawner_properties(
             ui.add(egui::DragValue::new(music_id));
             ui.end_row();
         }
+        &mut WobjType::PlayerSpawn {
+            ref mut special_entrance,
+        } => {
+            if ui
+                .selectable_label(*special_entrance, "Special entrance")
+                .clicked()
+            {
+                *special_entrance = !*special_entrance;
+            }
+            ui.end_row();
+        },
         &mut WobjType::TextSpawner {
             ref mut dialoge_box,
             ref mut despawn,
@@ -2326,7 +2337,9 @@ impl Iterator for WobjIter {
             47 => Some(HealthSetTrigger {
                 target_health: Default::default(),
             }),
-            48 => Some(PlayerSpawn),
+            48 => Some(PlayerSpawn {
+                special_entrance: Default::default(),
+            }),
             49 => Some(SfxPoint {
                 sound_id: Default::default(),
             }),
@@ -2400,7 +2413,7 @@ fn get_wobj_type_name(wobj_type: &WobjType) -> &str {
         &Teleport(_) => "Teleport",
         &Slime { .. } => "Slime",
         &TunesTrigger { .. } => "Tunes Trigger",
-        &PlayerSpawn => "Player Spawn",
+        &PlayerSpawn { .. } => "Player Spawn",
         &TextSpawner { .. } => "Text Spawner",
         &MovingPlatform { .. } => "Moving Platform",
         &BreakableWall { .. } => "Breakable Wall",

@@ -227,7 +227,10 @@ pub enum WobjType {
         music_id: u32,
     },
     ///
-    PlayerSpawn,
+    PlayerSpawn {
+        ///
+        special_entrance: bool,
+    },
     ///
     TextSpawner {
         ///
@@ -639,7 +642,9 @@ impl WobjType {
                 size: TunesTriggerSize::VeryBig,
                 music_id: custom_int as u32,
             }),
-            8 => Ok(Self::PlayerSpawn),
+            8 => Ok(Self::PlayerSpawn {
+                special_entrance: custom_float > 1.0,
+            }),
             9 | 108 => {
                 // Ending Text/Dialoge Box
                 let mut text = "".to_string();
@@ -1000,10 +1005,14 @@ impl WobjType {
                 };
                 (wobj_type_id, music_id as i32, 0.0)
             }
-            &Self::PlayerSpawn => {
-                spawns.push(spawner.pos.0);
-                spawns.push(spawner.pos.1);
-                (8, spawns.len() as i32 / 2 - 1, 0.0)
+            &Self::PlayerSpawn { special_entrance } => {
+                if spawns.len() < 4 {
+                    spawns.resize(4, f32::NAN);
+                }
+                let idx = if special_entrance {1} else {0};
+                spawns[idx * 2 + 0] = spawner.pos.0;
+                spawns[idx * 2 + 1] = spawner.pos.1;
+                (8, idx as i32, if special_entrance {2.0} else {0.0})
             }
             &Self::TextSpawner {
                 dialoge_box,
